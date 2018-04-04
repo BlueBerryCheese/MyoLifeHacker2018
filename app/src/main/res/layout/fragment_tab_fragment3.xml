@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingTop="@dimen/title_margin"
+    tools:context=".TabFragment3">
+
+    <!-- TODO: Update blank fragment layout -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/title_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin">
+
+        <LinearLayout
+            android:id="@+id/topLinearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <Button
+                android:id="@+id/bStopEmg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="false"
+                android:textAllCaps="false"
+                android:text="Cancle" />
+
+            <Button
+                android:id="@+id/bEMG"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:textAllCaps="false"
+                android:layout_marginLeft="160dp"
+                android:text="Ready" />
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/RawLinearLayout"
+            android:layout_below="@+id/topLinearLayout"
+            android:layout_marginTop="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/emgDataTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@+id/bEMG"
+                android:layout_below="@+id/bEMG"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/editbox_transparent_frame"
+                android:text="Myo Status"
+                android:textSize="15dp" />
+
+            <com.jjoe64.graphview.GraphView
+                android:layout_width="match_parent"
+                android:layout_height="200dip"
+                android:id="@+id/graph"
+                android:layout_marginTop="10dp"/>
+
+            <TextView
+                android:id="@+id/maxData"
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Myo MaxData"
+                android:textSize="15dp"
+                android:background="@drawable/editbox_transparent_frame"
+                />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/BottomLinearLayout"
+            android:layout_alignParentBottom="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:weightSum="4"
+
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/bDetect"
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+
+                android:text="Detect" />
+
+            <TextView
+                android:id="@+id/gestureTextView"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textSize="13dp"
+                android:layout_weight="2"
+                android:text="Connect Myo " />
+
+            <Button
+                android:id="@+id/bSave"
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+
+                android:text="Save" />
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</FrameLayout>
