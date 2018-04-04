@@ -29,6 +29,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Toast;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -48,7 +54,7 @@ public class MainActivity extends AppCompatActivity
     private BluetoothGatt mBluetoothGatt;
     private MyoGattCallback mMyoCallback;
     private MyoCommandList commandList = new MyoCommandList();
-
+    BluetoothDevice bluetoothDevice;
     private String deviceName;
     private static final long SCAN_PERIOD = 5000;
 
@@ -77,8 +83,8 @@ public class MainActivity extends AppCompatActivity
         pagerAdapter.addFragment(new TabFragment1(), "FRAG1");
         pagerAdapter.addFragment(new TabFragment2(), "FRAG2");
         pagerAdapter.addFragment(new TabFragment3(), "Adaptation");
-        viewPager.setAdapter(pagerAdapter);
-
+        viewPager.setAdapter(pagerAdapter);//EventBus.getDefault().post(new EventData(device));
+        viewPager.addOnPageChangeListener(listener);
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
 
@@ -95,9 +101,25 @@ public class MainActivity extends AppCompatActivity
             if (mBluetoothAdapter == null || !mBluetoothAdapter.isEnabled()) {
                 Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
                 startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+            } else {
+                // Scanning Time out by Handler.
+                // The device scanning needs high energy.
+                mHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        mBluetoothAdapter.stopLeScan(MainActivity.this);
+                    }
+                }, SCAN_PERIOD);
+                mBluetoothAdapter.startLeScan(this);
             }
+
+
         }
+
+
     }
+
+
 
     // Adapter for the viewpager using FragmentPagerAdapter
     class FragmentAdapter extends FragmentPagerAdapter {
@@ -130,6 +152,24 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    private ViewPager.OnPageChangeListener listener = new ViewPager.OnPageChangeListener() {
+        @Override
+        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            //EventBus.getDefault().post(new EventData(bluetoothDevice));
+        }
+
+        @Override
+        public void onPageSelected(int position) {
+            Toast.makeText(getApplicationContext(), "Current position: "+position, Toast.LENGTH_SHORT).show();
+
+            EventBus.getDefault().post(new EventData(bluetoothDevice));
+        }
+
+        @Override
+        public void onPageScrollStateChanged(int state) {
+
+        }
+    };
 
     @Override
     public void onBackPressed() {
@@ -197,11 +237,12 @@ public class MainActivity extends AppCompatActivity
             mBluetoothAdapter.stopLeScan(this);
             // Trying to connect GATT
             HashMap<String,View> views = new HashMap<String,View>();
+            bluetoothDevice = device;
+//            mMyoCallback = new MyoGattCallback(mHandler, views);
+//            mBluetoothGatt = device.connectGatt(this, false, mMyoCallback);
 
 
-            mMyoCallback = new MyoGattCallback(mHandler, views);
-            mBluetoothGatt = device.connectGatt(this, false, mMyoCallback);
-            mMyoCallback.setBluetoothGatt(mBluetoothGatt);
+//            mMyoCallback.setBluetoothGatt(mBluetoothGatt);
         }
 
     }
@@ -220,4 +261,6 @@ public class MainActivity extends AppCompatActivity
             Log.d(TAG,resultCode+"");
         }
     }
+
+
 }

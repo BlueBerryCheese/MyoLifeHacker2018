@@ -1,16 +1,42 @@
 package blueberrycheese.myolifehacker;
 
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothGatt;
+import android.bluetooth.BluetoothManager;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
 
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
+import java.util.HashMap;
+
+import blueberrycheese.myolifehacker.myo_manage.GestureDetectMethod;
+import blueberrycheese.myolifehacker.myo_manage.GestureDetectModel;
+import blueberrycheese.myolifehacker.myo_manage.GestureDetectModelManager;
+import blueberrycheese.myolifehacker.myo_manage.GestureSaveMethod;
+import blueberrycheese.myolifehacker.myo_manage.GestureSaveModel;
+import blueberrycheese.myolifehacker.myo_manage.MyoCommandList;
+import blueberrycheese.myolifehacker.myo_manage.MyoGattCallback;
+import blueberrycheese.myolifehacker.myo_manage.NopModel;
+
+import static android.content.Context.BLUETOOTH_SERVICE;
 
 
 /**
@@ -23,16 +49,34 @@ import com.jjoe64.graphview.series.LineGraphSeries;
  */
 public class TabFragment3 extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
+    private static final String TAG = "TabFragment3";
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    private static final long SCAN_PERIOD = 5000;
+    private static final int REQUEST_ENABLE_BT = 1;
 
+    private Handler mHandler;
+    private BluetoothAdapter mBluetoothAdapter;
+    private BluetoothGatt mBluetoothGatt;
+    private MyoGattCallback mMyoCallback;
+    private MyoCommandList commandList = new MyoCommandList();
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-
+    private BluetoothDevice device;
     private OnFragmentInteractionListener mListener;
+    String deviceName;
 
+    private TextView emgDataText;
+    private TextView gestureText;
+    private TextView maxDataTextView;
+
+    private GestureSaveModel saveModel;
+    private GestureSaveMethod   saveMethod;
+    private Button btn_ready;
+
+    private int inds_num=0;
     public TabFragment3() {
         // Required empty public constructor
     }
@@ -80,9 +124,34 @@ public class TabFragment3 extends Fragment {
                 new DataPoint(4, 6)
         });
         graph.addSeries(series);
+        emgDataText = (TextView)view.findViewById(R.id.emgDataTextView);
+        gestureText = (TextView)view.findViewById(R.id.gestureTextView);
+
+        maxDataTextView=(TextView)view.findViewById(R.id.maxData);
+        btn_ready = (Button)view.findViewById(R.id.btnReady);
+        mHandler = new Handler();
+        BluetoothManager mBluetoothManager = (BluetoothManager) getActivity().getSystemService(BLUETOOTH_SERVICE);
+        mBluetoothAdapter = mBluetoothManager.getAdapter();
+        Log.d(TAG,deviceName+"--connected");
+
+        btn_ready.setOnClickListener(new Button.OnClickListener(){
+            public void onClick(View v){
+                if (mBluetoothGatt == null || !mMyoCallback.setMyoControlCommand(commandList.sendEmgOnly())) {
+                    Log.d(TAG,"False EMG");
+                } else {
+                    saveMethod  = new GestureSaveMethod();
+                    if (saveMethod.getSaveState() == GestureSaveMethod.SaveState.Have_Saved) {
+                        gestureText.setText("DETECT Ready");
+                    } else {
+                        gestureText.setText("Teach me \'Gesture\'");
+                    }
+                }
+            }
+        });
 
         return view;
     }
+
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
@@ -108,6 +177,33 @@ public class TabFragment3 extends Fragment {
         mListener = null;
     }
 
+    @Override
+    public void onStop() {
+        try{
+            EventBus.getDefault().unregister(this);
+        }catch (Exception e){}
+        super.onStop();
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        try {
+            EventBus.getDefault().register(this);
+        }catch (Exception e){}
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void testEvent(EventData event){
+        Log.e("test_event", event.device.getName() + "connected !!");
+        HashMap<String,View> views = new HashMap<String,View>();
+
+        device = event.device;
+        mMyoCallback = new MyoGattCallback(mHandler, emgDataText, views,maxDataTextView,inds_num);
+        mBluetoothGatt = device.connectGatt(getContext(), false, mMyoCallback);
+        mMyoCallback.setBluetoothGatt(mBluetoothGatt);
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -122,4 +218,11 @@ public class TabFragment3 extends Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
+
+
+
+    public void startNopModel() {
+        GestureDetectModelManager.setCurrentModel(new NopModel());
+    }
+
 }
