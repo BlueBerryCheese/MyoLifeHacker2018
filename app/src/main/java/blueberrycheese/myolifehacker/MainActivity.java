@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);  //윈도우 가장위에 배터리,wifi뜨는 부분 제거
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -83,8 +83,8 @@ public class MainActivity extends AppCompatActivity
         pagerAdapter.addFragment(new TabFragment1(), "FRAG1");
         pagerAdapter.addFragment(new TabFragment2(), "FRAG2");
         pagerAdapter.addFragment(new TabFragment3(), "Adaptation");
-        viewPager.setAdapter(pagerAdapter);//EventBus.getDefault().post(new EventData(device));
-        viewPager.addOnPageChangeListener(listener);
+        viewPager.setAdapter(pagerAdapter);
+        viewPager.addOnPageChangeListener(listener);    //페이지 변할때마다 이벤트 발생하도록 이벤트 리스너 붙착
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
 
@@ -94,6 +94,7 @@ public class MainActivity extends AppCompatActivity
 
         Intent intent = getIntent();
         deviceName = intent.getStringExtra(ScanListActivity.TAG);
+
         Log.d(TAG,deviceName+"--connected");
         if (deviceName != null) {
             // Ensures Bluetooth is available on the device and it is enabled. If not,
@@ -107,7 +108,7 @@ public class MainActivity extends AppCompatActivity
                 mHandler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        mBluetoothAdapter.stopLeScan(MainActivity.this);
+                        mBluetoothAdapter.stopLeScan(MainActivity.this);    //이벤트 핸들러로 지속해서 블루투스 연결을 확인한다고 보면 될듯합니다(베터리소모가 좀 클것으로 예상함)
                     }
                 }, SCAN_PERIOD);
                 mBluetoothAdapter.startLeScan(this);
@@ -152,7 +153,7 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    private ViewPager.OnPageChangeListener listener = new ViewPager.OnPageChangeListener() {
+    private ViewPager.OnPageChangeListener listener = new ViewPager.OnPageChangeListener() {    //페이지 변환 리스너 함수(scrolled랑 selected는 알겠는데 statechanged가 언제 뭐가 발생하는지를 모르곘음
         @Override
         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
             //EventBus.getDefault().post(new EventData(bluetoothDevice));
@@ -162,7 +163,7 @@ public class MainActivity extends AppCompatActivity
         public void onPageSelected(int position) {
             Toast.makeText(getApplicationContext(), "Current position: "+position, Toast.LENGTH_SHORT).show();
 
-            EventBus.getDefault().post(new EventData(bluetoothDevice));
+            EventBus.getDefault().post(new EventData(bluetoothDevice));     //다음부분에서 페이지가 변환이 발생되는 이벤트가 발생할때 이벤트버스를 발동시킴 다음 3페이지에서 이 이벤트에 의해서 디바이스데이터전송이 일어남을 알 수가 있다.
         }
 
         @Override
@@ -189,7 +190,8 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(MenuItem item) {       //우측 상단의 버튼 추후에 구현 필수
+        //TODO:: 세팅화면 구현
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
@@ -205,7 +207,8 @@ public class MainActivity extends AppCompatActivity
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(MenuItem item) {    //아마 현우가 뭘쓸지를 몰라서 걍 내비둠 마요연결부분만 따로 하나 추가해봄.
+        //TODO:: drawer 메뉴 구현
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
@@ -232,7 +235,11 @@ public class MainActivity extends AppCompatActivity
 
     /** Define of BLE Callback */
     @Override
-    public void onLeScan(BluetoothDevice device, int rssi, byte[] scanRecord) {
+    public void onLeScan(BluetoothDevice device, int rssi, byte[] scanRecord) { //현
+        /* 재는 1번페이지에선 블루투스 연결이 발생해서 나타나는 함수시행을 못하도록 만든상태입니다...
+        나중에 해결해야합니다.(textview에 대한 내용이 해당 페이지에 없어서 myocharacteristic 부분인가에서 오류가 뜰것입니다..
+         */
+         //TODO: 추후 블루투스 연결문제 해결 필요
         if (deviceName.equals(device.getName())) {
             mBluetoothAdapter.stopLeScan(this);
             // Trying to connect GATT
