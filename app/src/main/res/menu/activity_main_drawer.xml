@@ -5,18 +5,18 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_home"
-            android:icon="@drawable/ic_home_black_24dp"
-            android:title="Home" />
+            android:id="@+id/nav_camera"
+            android:icon="@drawable/ic_menu_slideshow"
+            android:title="Import" />
+        <item
+            android:id="@+id/nav_gallery"
+            android:icon="@drawable/ic_menu_gallery"
+            android:title="Gallery" />
         <item
             android:id="@+id/nav_myo"
             android:title="Connect Myo"
             android:icon="@drawable/ic_menu_myo"
              />
-        <item
-            android:id="@+id/nav_tutorial"
-            android:icon="@drawable/ic_helpcircle"
-            android:title="Tutorial" />
         <item
             android:id="@+id/nav_manage"
             android:icon="@drawable/ic_menu_manage"
