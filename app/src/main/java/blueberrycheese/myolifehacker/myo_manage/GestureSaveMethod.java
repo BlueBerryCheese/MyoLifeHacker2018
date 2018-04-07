@@ -24,7 +24,7 @@ import java.util.StringTokenizer;
  */
 
 public class GestureSaveMethod {
-    private final static String TAG = "Myo_compare";
+    private final static String TAG = "Myo_KMEANS_compare";
     private final static String FileName = "compareData.dat";
 
     private final static int COMPARE_NUM = 6;
@@ -49,49 +49,42 @@ public class GestureSaveMethod {
     private final static String FileList_Raw[] = {"Gesture1_Raw.txt","Gesture2_Raw.txt","Gesture3_Raw.txt","Gesture4_Raw.txt","Gesture5_Raw.txt","Gesture6_Raw.txt"};
 
 
-    private Clusterer<DoublePoint> clusterer;
+    private Clusterer<DoublePoint> clusterer;       //apache commons math structure
     private List<DoublePoint> doublePointList;
 
-    public GestureSaveMethod() {
-        MyoDataFileReader dataFileReader = new MyoDataFileReader(TAG,FileName);
-        if (dataFileReader.load().size() == COMPARE_NUM) {
-            compareGesture = dataFileReader.load();
-            saveState = SaveState.Have_Saved;
-        }
-    }
-
-    public GestureSaveMethod(int i) {
-        MyoDataFileReader dataFileReader = new MyoDataFileReader(TAG,FileList[i]);
-        if (dataFileReader.load().size() == JUST_SAVE_DATA_LEN) {
-            compareGesture = dataFileReader.load();
-
-            saveState = SaveState.Have_Saved;
-        }
+    public GestureSaveMethod(){
+        saveState=SaveState.Ready;
+        Log.d(TAG,"GestureSaveMethod None");
     }
 
     public GestureSaveMethod(int i,Context context) {
+        Log.d(TAG,"GestureSaveMethod None2");
+
+
         MyoDataFileReader dataFileReader = new MyoDataFileReader(TAG,FileList_kmeans);
+        if(!dataFileReader.getMyoDataFile().exists()){
+            dataFileReader.getMyoDataFile().getParentFile().mkdirs();
+        }
         clusterer = new KMeansPlusPlusClusterer<DoublePoint>(KMEANS_K,-1,new EuclideanDistance());
         if (dataFileReader.load().size() == KMEANS_K*COMPARE_NUM) {
             compareGesture_k = dataFileReader.load();
             saveState = SaveState.Have_Saved;
         }else{
             try{
-                Toast.makeText(context,"Loading Default Data... Plz Wait", Toast.LENGTH_LONG).show();
                 saveState = SaveState.Now_Saving;
                 InputStream in;
                 PrintWriter writer = null;
                 writer = new PrintWriter(dataFileReader.getMyoDataFile());
                 for(int j=0;j<COMPARE_NUM;j++){
                     doublePointList = new ArrayList<>();
-                    int resID= context.getResources().getIdentifier("gesture"+(j+1),"raw","com.blueberrycheese.reussite.myo_kmeans");
+                    int resID= context.getResources().getIdentifier("gesture"+(j+1),"raw","blueberrycheese.myolifehacker");
                     in = context.getResources().openRawResource(resID);
                     InputStreamReader streamReader = new InputStreamReader(in,"UTF-8");
                     BufferedReader bufferedReader = new BufferedReader(streamReader);
                     String line;
                     StringTokenizer stringTokenizer;
-                    int cntt=0;
-                    while(cntt++<1000&&((line = bufferedReader.readLine())!=null)){
+                    int cntt=1000;          //사실 지금 필요없는데 내 폰 상태가... ㅜㅜ 참고로 text파일 내전용임 내데이터만들가있음 실험할때 바꾸세요.
+                    while(cntt-->0&&((line = bufferedReader.readLine())!=null)){
                         stringTokenizer = new StringTokenizer(line,",");
                         double[] emgDat = new double[8];
                         for(int k=0;k<8;k++){
@@ -103,7 +96,7 @@ public class GestureSaveMethod {
                     bufferedReader.close();
                     stringTokenizer = null;
                     Log.d(TAG,"Loading txt size is "+doublePointList.size());
-                    Toast.makeText(context,"K-MEANS_lization about"+(i+1)+" data", Toast.LENGTH_LONG).show();
+//                    Toast.makeText(context,"K-MEANS_lization about"+(i+1)+" data", Toast.LENGTH_LONG).show();
                     List<? extends Cluster<DoublePoint>> res = clusterer.cluster(doublePointList);
 
                     try {
@@ -133,7 +126,7 @@ public class GestureSaveMethod {
                 if(writer != null){
                     writer.close();
                 }
-                Toast.makeText(context,"Loading Default Data... Plz Wait", Toast.LENGTH_LONG).show();
+//                Toast.makeText(context,"Loading Default Data... Plz Wait", Toast.LENGTH_LONG).show();
                 compareGesture_k = dataFileReader.load();
                 saveState = SaveState.Have_Saved;
             }catch(Exception e){
