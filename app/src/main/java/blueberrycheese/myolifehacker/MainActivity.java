@@ -32,6 +32,9 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+//import com.github.florent37.camerafragment.CameraFragment;
+//import com.github.florent37.camerafragment.configuration.Configuration;
+
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -117,7 +120,6 @@ public class MainActivity extends AppCompatActivity
 
 
         }
-
 
     }
 
@@ -213,9 +215,9 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
+        if (id == R.id.nav_home) {
             // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+        } else if (id == R.id.nav_tutorial) {
 
         } else if (id == R.id.nav_myo) {
             Intent intent = new Intent(this,ScanListActivity.class);

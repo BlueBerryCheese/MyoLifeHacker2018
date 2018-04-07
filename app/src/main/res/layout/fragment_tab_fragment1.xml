@@ -50,13 +50,15 @@
             app:icon="@drawable/ic_volume_up_black_24dp" />
 
         <!--<com.imangazaliev.circlemenu.CircleMenuButton-->
-        <!--android:id="@+id/edit"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--app:colorNormal="#FF9800"-->
-        <!--app:colorPressed="#FB8C00"-->
-        <!--app:hintText="Edit"-->
-        <!--app:icon="@drawable/ic_edit" />-->
+
+            <!--android:id="@+id/edit"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--app:colorNormal="#FF9800"-->
+            <!--app:colorPressed="#FB8C00"-->
+            <!--app:hintText="Edit"-->
+            <!--app:icon="@drawable/ic_edit" />-->
+
 
     </com.imangazaliev.circlemenu.CircleMenu>
 

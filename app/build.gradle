@@ -31,4 +31,7 @@ dependencies {
     compile 'org.greenrobot:eventbus:3.1.1'
     implementation project(':commons-math3-3.6.1')
 
+    // compile 'com.github.florent37:camerafragment:1.0.9'
+    implementation 'com.github.imangazalievm:circlemenu:2.0.1'
+
 }

@@ -49,11 +49,8 @@
             android:layout_alignParentBottom="true"
             />
 
+
     </RelativeLayout>
-
-
-
-
 
 
     <!--<android.support.design.widget.FloatingActionButton-->
