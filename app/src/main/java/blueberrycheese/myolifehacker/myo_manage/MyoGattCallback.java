@@ -43,7 +43,7 @@ public class MyoGattCallback extends BluetoothGattCallback {
 
     private String TAG = "MyoGatt";
 
-    private TextView dataView;
+    private TextView dataView=null;
     private String callback_msg;
     private Handler mHandler;
     private int[] maxData = new int[8];
@@ -60,6 +60,11 @@ public class MyoGattCallback extends BluetoothGattCallback {
     public MyoGattCallback(Handler handler, TextView view, HashMap<String,View> views) {
         mHandler = handler;
         dataView = view;
+    }
+
+    public MyoGattCallback(Handler handler, HashMap<String,View> views,int num) {
+        mHandler = handler;
+        inds_num=num;
     }
 
     public MyoGattCallback(Handler handler, TextView view, HashMap<String,View> views, TextView textView, int num) {
@@ -274,7 +279,8 @@ public class MyoGattCallback extends BluetoothGattCallback {
             mHandler.post(new Runnable() {
                 @Override
                 public void run() {
-                    dataView.setText(callback_msg);
+                    if(dataView!=null)
+                        dataView.setText(callback_msg);
                     sb=new StringBuilder("emg   ");
 
                     if(count<25) {
@@ -285,7 +291,6 @@ public class MyoGattCallback extends BluetoothGattCallback {
                             }
                             if (maxData[i] < checking[i])
                                 maxData[i] = checking[i];
-                            //Log.d(TAG, "Potato Park maxData: " + maxData[i]);
                         }
                         count++;
                     }
@@ -293,7 +298,6 @@ public class MyoGattCallback extends BluetoothGattCallback {
                         for (int k = 0; k < 8; k++) {
                             sb.append(maxData[k] + ",  ");
                         }
-                        //   Log.d(TAG, "Potato Park maxDataView: " + sb.toString());
 
                         maxDataTextView.setText(sb.toString());
                         sb=new StringBuilder("emg ");

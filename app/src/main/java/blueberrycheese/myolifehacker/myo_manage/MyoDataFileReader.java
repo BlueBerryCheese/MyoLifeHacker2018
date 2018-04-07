@@ -86,7 +86,11 @@ public class MyoDataFileReader {
     }
 
     public ArrayList<EmgData> load(){
+
+
         File directory = getDirectory();
+
+
         ArrayList<EmgData> dataList = new ArrayList<EmgData>();
         if(!directory.isDirectory()){
             return dataList;

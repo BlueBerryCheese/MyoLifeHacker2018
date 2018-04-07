@@ -9,12 +9,12 @@ import java.nio.ByteOrder;
 
 public class ByteReader {
     private byte[] byteData;
-    private ByteBuffer bbf;
+    private ByteBuffer byteBuffer;
 
     public void setByteData(byte[] data){
         this.byteData = data;
-        this.bbf = ByteBuffer.wrap(this.byteData);
-        bbf.order(ByteOrder.LITTLE_ENDIAN);
+        this.byteBuffer = ByteBuffer.wrap(this.byteData);
+        byteBuffer.order(ByteOrder.LITTLE_ENDIAN);
     }
 
     public byte[] getByteData() {
@@ -22,15 +22,15 @@ public class ByteReader {
     }
 
     public short getShort() {
-        return this.bbf.getShort();
+        return this.byteBuffer.getShort();
     }
 
     public byte getByte(){
-        return this.bbf.get();
+        return this.byteBuffer.get();
     }
 
     public int getInt(){
-        return this.bbf.getInt();
+        return this.byteBuffer.getInt();
     }
 
     public String getByteDataString() {

@@ -163,9 +163,11 @@ public class ScanListActivity extends AppCompatActivity implements BluetoothAdap
 
     public void permissionCheck_ble(final Context context){
         if (Build.VERSION.SDK_INT == Build.VERSION_CODES.M) {
-            int permissionResult = checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION)+checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION);
+            int permissionResult = checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION)+checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)
+                    +checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE);
             if (permissionResult != PackageManager.PERMISSION_GRANTED) {
-                if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)&&shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_COARSE_LOCATION)) {
+                if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)&&
+                        shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_COARSE_LOCATION)&&shouldShowRequestPermissionRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
                     AlertDialog.Builder dialog = new AlertDialog.Builder(context);
                     dialog.setTitle("권한이 필요합니다.")
                             .setMessage("이 기능을 사용하기 위해서는 단말기의 권한들이 필요합니다. 계속하시겠습니까?")
@@ -174,7 +176,7 @@ public class ScanListActivity extends AppCompatActivity implements BluetoothAdap
                                 public void onClick(DialogInterface dialog, int which) {
 
                                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                                        requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,Manifest.permission.ACCESS_FINE_LOCATION}, 1000);
+                                        requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.READ_EXTERNAL_STORAGE}, 1000);
                                     }
 
                                 }
@@ -188,7 +190,7 @@ public class ScanListActivity extends AppCompatActivity implements BluetoothAdap
                             .create()
                             .show();
                 }else{
-                    requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,Manifest.permission.ACCESS_FINE_LOCATION}, 1000);
+                    requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1000);
                 }
             }
         }
