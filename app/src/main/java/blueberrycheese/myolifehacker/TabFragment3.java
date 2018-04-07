@@ -1,5 +1,7 @@
 package blueberrycheese.myolifehacker;
 
+import android.app.Activity;
+import android.app.Dialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGatt;
@@ -15,7 +17,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.NumberPicker;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.DataPoint;
@@ -27,11 +31,14 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.HashMap;
 
+import blueberrycheese.myolifehacker.commons.LoadingDialog;
 import blueberrycheese.myolifehacker.myo_manage.GestureDetectMethod;
 import blueberrycheese.myolifehacker.myo_manage.GestureDetectModel;
 import blueberrycheese.myolifehacker.myo_manage.GestureDetectModelManager;
+import blueberrycheese.myolifehacker.myo_manage.GestureDetectSendResultAction;
 import blueberrycheese.myolifehacker.myo_manage.GestureSaveMethod;
 import blueberrycheese.myolifehacker.myo_manage.GestureSaveModel;
+import blueberrycheese.myolifehacker.myo_manage.IGestureDetectModel;
 import blueberrycheese.myolifehacker.myo_manage.MyoCommandList;
 import blueberrycheese.myolifehacker.myo_manage.MyoGattCallback;
 import blueberrycheese.myolifehacker.myo_manage.NopModel;
@@ -61,6 +68,7 @@ public class TabFragment3 extends Fragment {
     private BluetoothGatt mBluetoothGatt;
     private MyoGattCallback mMyoCallback;
     private MyoCommandList commandList = new MyoCommandList();
+    private Activity mactivity;
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -71,12 +79,23 @@ public class TabFragment3 extends Fragment {
     private TextView emgDataText;
     private TextView gestureText;
     private TextView maxDataTextView;
+    private NumberPicker gesturenNumberPicker;
+    private View views[]=new View[5];
 
     private GestureSaveModel saveModel;
     private GestureSaveMethod   saveMethod;
-    private Button btn_ready;
+    private GestureDetectModel  detectModel;
+    private GestureDetectMethod detectMethod;
+    private Button btn_ready,btn_cancle,btn_sync,btn_save;
 
     private int inds_num=0;
+
+    private  Dialog dialog;
+    public interface OnFragmentInteractionListener {
+        // TODO: Update argument type and name
+        public void onFragmentInteraction(Uri uri);
+    }
+
     public TabFragment3() {
         // Required empty public constructor
     }
@@ -114,7 +133,7 @@ public class TabFragment3 extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_tab_fragment3, container, false);
+        final View view = inflater.inflate(R.layout.fragment_tab_fragment3, container, false);
         GraphView graph = (GraphView)view.findViewById(R.id.graph);
         //TODO:: 실시간 데이터 변화 만들기(나중에)
         LineGraphSeries<DataPoint> series = new LineGraphSeries<DataPoint>(new DataPoint[] {    //추후에 데이터가 실시간으로 어떻게 들어오는지를 보여줄려고해서 만들어봤는데 어려우면 걍 뒤엎을각오가 있습니다.
@@ -129,18 +148,67 @@ public class TabFragment3 extends Fragment {
         gestureText = (TextView)view.findViewById(R.id.gestureTextView);
 
         maxDataTextView=(TextView)view.findViewById(R.id.maxData);
+        gesturenNumberPicker = (NumberPicker)view.findViewById(R.id.gestureNumberPicker);
         btn_ready = (Button)view.findViewById(R.id.btnReady);
+        btn_cancle = (Button)view.findViewById(R.id.btnCancle);
+        btn_sync = (Button)view.findViewById(R.id.btn_Sync);
+        btn_save = (Button)view.findViewById(R.id.btn_Save);
+        views[0] = (View)view.findViewById(R.id.view1);
+        views[1] = (View)view.findViewById(R.id.view2);
+        views[2] = (View)view.findViewById(R.id.view3);
+        views[3] = (View)view.findViewById(R.id.view4);
+        views[4] = (View)view.findViewById(R.id.view5);
+
+        //views[0].setBackgroundResource(R.drawable.imgbtn_pressed);
         mHandler = new Handler();
         BluetoothManager mBluetoothManager = (BluetoothManager) getActivity().getSystemService(BLUETOOTH_SERVICE);
         mBluetoothAdapter = mBluetoothManager.getAdapter();
         Log.d(TAG,deviceName+"--connected");
+        //saveMethod = new GestureSaveMethod(0,view.getContext());
+        saveMethod = new GestureSaveMethod();
+        Log.d(TAG,"Value changes "+(inds_num+1)+" to "+(inds_num+1));
+        if (saveMethod.getSaveState() == GestureSaveMethod.SaveState.Have_Saved) {
+            gestureText.setText("\'Gesture"+(inds_num+1)+"\'"+"SAVE complete. Save more?");
+        } else {
+            gestureText.setText("Teach me \'Gesture"+(inds_num+1)+"\'");
+        }
+
+        //현재 기본적으로 numberpicker는 0~5까지 하지만 번호변환으로 1~6으로 보이게 하였음
+        //6까지 올리면 더이상올라가지 않게 함
+        gesturenNumberPicker.setMinValue(0);
+        gesturenNumberPicker.setMaxValue(5);
+        gesturenNumberPicker.setWrapSelectorWheel(false);
+
+        gesturenNumberPicker.setFormatter(new NumberPicker.Formatter() {
+            @Override
+            public String format(int value) {
+                return Integer.toString(value+1);
+            }
+        });
+
+        gesturenNumberPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+            @Override
+            public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+                for(int i=0;i<views.length;i++){
+                    views[i].setBackgroundResource(R.drawable.imgbtn_default);
+                }
+                inds_num = newVal;
+                saveMethod = new GestureSaveMethod(inds_num,view.getContext());
+                Log.d(TAG,"Value changes "+(oldVal+1)+" to "+(newVal+1));
+                if (saveMethod.getSaveState() == GestureSaveMethod.SaveState.Have_Saved) {
+                    gestureText.setText("\'Gesture"+(newVal+1)+"\'"+"SAVE complete. Save more?");
+                } else {
+                    gestureText.setText("Teach me \'Gesture"+(newVal+1)+"\'");
+                }
+            }
+        });
 
         btn_ready.setOnClickListener(new Button.OnClickListener(){
             public void onClick(View v){            //이게 왜인지모르겠는데 xml쪽에서 함수시행 바로붙이면 안되는 경향이 있어서 이렇게 setonclicklistener 에서  붙이는 형식으로 했음
                 if (mBluetoothGatt == null || !mMyoCallback.setMyoControlCommand(commandList.sendEmgOnly())) {
                     Log.d(TAG,"False EMG");
                 } else {
-                    saveMethod  = new GestureSaveMethod();
+                    saveMethod  = new GestureSaveMethod(inds_num,v.getContext());
                     if (saveMethod.getSaveState() == GestureSaveMethod.SaveState.Have_Saved) {
                         gestureText.setText("DETECT Ready");
                     } else {
@@ -150,9 +218,91 @@ public class TabFragment3 extends Fragment {
             }
         });
 
+        btn_cancle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mBluetoothGatt == null
+                        || !mMyoCallback.setMyoControlCommand(commandList.sendUnsetData())
+                        || !mMyoCallback.setMyoControlCommand(commandList.sendNormalSleep())) {
+                    Log.d(TAG,"False Data Stop");
+                }
+            }
+        });
+
+
+
+        btn_save.setOnClickListener(new View.OnClickListener() {
+            //TODO: 적응모델 적용하기
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+
+        btn_sync.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v){
+                Log.d(TAG,"saveMethod state : "+saveMethod.getSaveState());
+//원래는 저장단계에서 저장과 저장과정이 분리되어있는 것이지만 우린 따로 저장부분을 추가하고, 지금 이 함수로 시행하는 부분은 sync이기때문에 if문의 구별이 없는 상태이다.
+                if (saveMethod.getSaveState() == GestureSaveMethod.SaveState.Ready ||
+                        saveMethod.getSaveState() == GestureSaveMethod.SaveState.Have_Saved) {
+
+                    saveMethod.setState(GestureSaveMethod.SaveState.Now_Saving);
+                    dialog= new LoadingDialog().setProgress(mactivity);
+                    dialog.show();
+
+
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            if(dialog.isShowing()) {
+                                saveMethod = new GestureSaveMethod(inds_num, mactivity);
+                                saveModel = new GestureSaveModel(saveMethod, inds_num);
+                                startSaveModel();
+                            }
+                            dialog.dismiss();
+                        }
+                    },1000);
+                } else if (saveMethod.getSaveState() == GestureSaveMethod.SaveState.Not_Saved) {
+                    saveMethod.setState(GestureSaveMethod.SaveState.Now_Saving);
+                    dialog= new LoadingDialog().setProgress(mactivity);
+                    dialog.show();
+
+
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            if(dialog.isShowing()) {
+                                saveMethod = new GestureSaveMethod(inds_num, mactivity);
+                                saveModel = new GestureSaveModel(saveMethod, inds_num);
+                                startSaveModel();
+                            }
+                            dialog.dismiss();
+                        }
+                    },1000);
+
+                    IGestureDetectModel model = saveModel;
+                    model.setAction(new GestureDetectSendResultAction(mactivity,TabFragment3.this));
+                    GestureDetectModelManager.setCurrentModel(model);
+                    startSaveModel();
+                }
+
+
+
+            }
+        });
+
         return view;
     }
 
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        this.mactivity = getActivity();
+
+    }
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
@@ -161,21 +311,58 @@ public class TabFragment3 extends Fragment {
         }
     }
 
-//    @Override
-//    public void onAttach(Context context) {
-//        super.onAttach(context);
-//        if (context instanceof OnFragmentInteractionListener) {
+    public void closeBLEGatt() {
+        if (mBluetoothGatt == null) {
+            return;
+        }
+        mMyoCallback.stopCallback();
+        mBluetoothGatt.close();
+        mBluetoothGatt = null;
+    }
+
+    public void startSaveModel() {
+        IGestureDetectModel model = saveModel;
+        model.setAction(new GestureDetectSendResultAction(mactivity,TabFragment3.this));
+        GestureDetectModelManager.setCurrentModel(model);
+    }
+
+    public void startDetectModel(View v) {
+        IGestureDetectModel model = detectModel;
+        model.setAction(new GestureDetectSendResultAction(getActivity()));
+        GestureDetectModelManager.setCurrentModel(model);
+    }
+
+    public void setGestureText(final String message) {
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                gestureText.setText(message);
+            }
+        });
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        if (context instanceof Activity) {
+            mactivity = (Activity) context;
+        }
+
+//        if (context instanceof OnFragmentInteractionListener) {   //이함수써서 원래 데이터 전송인데 어렵다.
 //            mListener = (OnFragmentInteractionListener) context;
 //        } else {
 //            throw new RuntimeException(context.toString()
 //                    + " must implement OnFragmentInteractionListener");
 //        }
-//    }
+    }
+
 
     @Override
     public void onDetach() {
         super.onDetach();
         mListener = null;
+
     }
 
     @Override
@@ -215,11 +402,6 @@ public class TabFragment3 extends Fragment {
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
-    }
-
 
 
     public void startNopModel() {

@@ -8,6 +8,7 @@ import android.bluetooth.BluetoothManager;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
@@ -31,9 +32,6 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 
-//import com.github.florent37.camerafragment.CameraFragment;
-//import com.github.florent37.camerafragment.configuration.Configuration;
-
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -47,7 +45,7 @@ import blueberrycheese.myolifehacker.myo_manage.MyoCommandList;
 import blueberrycheese.myolifehacker.myo_manage.MyoGattCallback;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener,BluetoothAdapter.LeScanCallback {
+        implements NavigationView.OnNavigationItemSelectedListener,BluetoothAdapter.LeScanCallback{
 
     /** Intent code for requesting Bluetooth enable */
     private static final int REQUEST_ENABLE_BT = 1;
@@ -119,6 +117,7 @@ public class MainActivity extends AppCompatActivity
 
 
         }
+
 
     }
 
@@ -214,9 +213,9 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_home) {
+        if (id == R.id.nav_camera) {
             // Handle the camera action
-        } else if (id == R.id.nav_tutorial) {
+        } else if (id == R.id.nav_gallery) {
 
         } else if (id == R.id.nav_myo) {
             Intent intent = new Intent(this,ScanListActivity.class);
@@ -270,6 +269,7 @@ public class MainActivity extends AppCompatActivity
             Log.d(TAG,resultCode+"");
         }
     }
+
 
 
 }
