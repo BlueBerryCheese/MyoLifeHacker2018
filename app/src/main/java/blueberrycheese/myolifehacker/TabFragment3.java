@@ -116,7 +116,8 @@ public class TabFragment3 extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_tab_fragment3, container, false);
         GraphView graph = (GraphView)view.findViewById(R.id.graph);
-        LineGraphSeries<DataPoint> series = new LineGraphSeries<DataPoint>(new DataPoint[] {
+        //TODO:: 실시간 데이터 변화 만들기(나중에)
+        LineGraphSeries<DataPoint> series = new LineGraphSeries<DataPoint>(new DataPoint[] {    //추후에 데이터가 실시간으로 어떻게 들어오는지를 보여줄려고해서 만들어봤는데 어려우면 걍 뒤엎을각오가 있습니다.
                 new DataPoint(0, 1),
                 new DataPoint(1, 5),
                 new DataPoint(2, 3),
@@ -135,7 +136,7 @@ public class TabFragment3 extends Fragment {
         Log.d(TAG,deviceName+"--connected");
 
         btn_ready.setOnClickListener(new Button.OnClickListener(){
-            public void onClick(View v){
+            public void onClick(View v){            //이게 왜인지모르겠는데 xml쪽에서 함수시행 바로붙이면 안되는 경향이 있어서 이렇게 setonclicklistener 에서  붙이는 형식으로 했음
                 if (mBluetoothGatt == null || !mMyoCallback.setMyoControlCommand(commandList.sendEmgOnly())) {
                     Log.d(TAG,"False EMG");
                 } else {
@@ -180,7 +181,7 @@ public class TabFragment3 extends Fragment {
     @Override
     public void onStop() {
         try{
-            EventBus.getDefault().unregister(this);
+            EventBus.getDefault().unregister(this);         //이벤트버스는 시행되면 계속 그곳에서 이벤트가 발생하는데 문제가 일어날수있다 생각하여 멈추거나할때 이벤트를 꺼주는것을 해야함 아니면 베터리소모가 크답니다.
         }catch (Exception e){}
         super.onStop();
     }
@@ -189,7 +190,7 @@ public class TabFragment3 extends Fragment {
     public void onResume(){
         super.onResume();
         try {
-            EventBus.getDefault().register(this);
+            EventBus.getDefault().register(this);           //이벤트 버스 다시 키는 역활
         }catch (Exception e){}
     }
 
@@ -199,7 +200,7 @@ public class TabFragment3 extends Fragment {
         HashMap<String,View> views = new HashMap<String,View>();
 
         device = event.device;
-        mMyoCallback = new MyoGattCallback(mHandler, emgDataText, views,maxDataTextView,inds_num);
+        mMyoCallback = new MyoGattCallback(mHandler, emgDataText, views,maxDataTextView,inds_num);  //이곳에서 문제가 일어나서 현재 이페이지에서밖에 시행이 안됨 inds_num(제스처 몇번을 저장할 것인가에 대한 내용이 담겨져 있음)
         mBluetoothGatt = device.connectGatt(getContext(), false, mMyoCallback);
         mMyoCallback.setBluetoothGatt(mBluetoothGatt);
     }

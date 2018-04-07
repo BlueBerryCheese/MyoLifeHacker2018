@@ -148,8 +148,7 @@ public class ScanListActivity extends AppCompatActivity implements BluetoothAdap
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == 1000) {
-            /* 요청한 권한을 사용자가 "허용"했다면 인텐트를 띄워라
-                내가 요청한 게 하나밖에 없기 때문에. 원래 같으면 for문을 돈다.*/
+
             for(int index=0;index<grantResults.length;index++){
                 if (grantResults[index] == PackageManager.PERMISSION_GRANTED) {
 
