@@ -48,6 +48,7 @@
             app:tabSelectedTextColor="@color/colorAccent"
             android:layout_alignParentBottom="true"
             />
+
     </RelativeLayout>
 
 
