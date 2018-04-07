@@ -3,11 +3,15 @@ package blueberrycheese.myolifehacker;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.imangazaliev.circlemenu.CircleMenu;
+import com.imangazaliev.circlemenu.CircleMenuButton;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -58,13 +62,60 @@ public class TabFragment1 extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        View view = inflater.inflate(R.layout.fragment_tab_fragment1, container, false);
+
+        CircleMenu circleMenu = (CircleMenu) view.findViewById(R.id.circleMenu);
+        circleMenu.setOnItemClickListener(new CircleMenu.OnItemClickListener() {
+            @Override
+            public void onItemClick(CircleMenuButton menuButton) {
+
+            }
+        });
+
+        circleMenu.setEventListener(new CircleMenu.EventListener() {
+            @Override
+            public void onMenuOpenAnimationStart() {
+                Log.d("CircleMenuStatus", "onMenuOpenAnimationStart");
+            }
+
+            @Override
+            public void onMenuOpenAnimationEnd() {
+                Log.d("CircleMenuStatus", "onMenuOpenAnimationEnd");
+            }
+
+            @Override
+            public void onMenuCloseAnimationStart() {
+                Log.d("CircleMenuStatus", "onMenuCloseAnimationStart");
+            }
+
+            @Override
+            public void onMenuCloseAnimationEnd() {
+                Log.d("CircleMenuStatus", "onMenuCloseAnimationEnd");
+            }
+
+            @Override
+            public void onButtonClickAnimationStart(@NonNull CircleMenuButton menuButton) {
+                Log.d("CircleMenuStatus", "onButtonClickAnimationStart");
+            }
+
+            @Override
+            public void onButtonClickAnimationEnd(@NonNull CircleMenuButton menuButton) {
+                Log.d("CircleMenuStatus", "onButtonClickAnimationEnd");
+            }
+
+        });
+
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_tab_fragment1, container, false);
+//        return inflater.inflate(R.layout.fragment_tab_fragment1, container, false);
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
