@@ -8,6 +8,7 @@ import android.bluetooth.BluetoothManager;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
@@ -47,7 +48,7 @@ import blueberrycheese.myolifehacker.myo_manage.MyoCommandList;
 import blueberrycheese.myolifehacker.myo_manage.MyoGattCallback;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener,BluetoothAdapter.LeScanCallback {
+        implements NavigationView.OnNavigationItemSelectedListener,BluetoothAdapter.LeScanCallback{
 
     /** Intent code for requesting Bluetooth enable */
     private static final int REQUEST_ENABLE_BT = 1;
@@ -270,6 +271,7 @@ public class MainActivity extends AppCompatActivity
             Log.d(TAG,resultCode+"");
         }
     }
+
 
 
 }

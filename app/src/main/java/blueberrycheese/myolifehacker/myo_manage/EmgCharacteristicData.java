@@ -3,7 +3,7 @@ package blueberrycheese.myolifehacker.myo_manage;
 import java.util.ArrayList;
 
 /**
- * Created by Seongho on 2017-12-01.
+ * Modified by Seongho on 2017-12-01.
  *
  * This class help you to read the raw EMG-data from Myo.
  * One raw byte array has 16 byte data. But Myo sensors are only 8.
@@ -35,7 +35,7 @@ public class EmgCharacteristicData {
         return return_SB.toString();
     }
 
-    public EmgData getEmg8Data_abs() {
+    public EmgData getEmg8Data_abs() {      //우리가 현재 받는 데이터는 절대값을 씌운데이터
         EmgData emg8Data_max_abs = new EmgData();
         ArrayList<Double> temp_Array = new ArrayList<>();
         for (int i_emg_num = 0; i_emg_num < 16; i_emg_num++) {
@@ -53,6 +53,9 @@ public class EmgCharacteristicData {
     }
 
     public EmgData getEmg8Data() {
+        /*
+            현재 사용하지 않음
+         */
         EmgData emg8Data_max = new EmgData();
         ArrayList<Double> temp_Array = new ArrayList<>();
         for (int i_emg_num = 0; i_emg_num < 16; i_emg_num++) {

@@ -8,7 +8,7 @@ public class GestureSaveModel implements IGestureDetectModel {
     private final static Object LOCK = new Object();
 
     private String name = "";
-    private IGestureDetectAction action;
+    private IGestureDetectAction action=null;
     private int num = -1;
     private GestureSaveMethod saveMethod;
 
