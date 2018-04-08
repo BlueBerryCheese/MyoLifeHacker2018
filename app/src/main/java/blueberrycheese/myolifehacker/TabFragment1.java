@@ -9,6 +9,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.content.Intent;
+
 
 import com.imangazaliev.circlemenu.CircleMenu;
 import com.imangazaliev.circlemenu.CircleMenuButton;
@@ -77,7 +79,16 @@ public class TabFragment1 extends Fragment {
         circleMenu.setOnItemClickListener(new CircleMenu.OnItemClickListener() {
             @Override
             public void onItemClick(CircleMenuButton menuButton) {
-
+                int viewId = menuButton.getId(); // 클릭한 메뉴 id를 가져온 후 switch 문 으로
+                switch(viewId){
+                    case R.id.camera_button:
+                        Log.d("cameracircle","cameraclicked");
+                        Intent intent = new Intent(getActivity().getApplicationContext(), CameraMainActivity.class);
+                        startActivity(intent);
+                        break;
+                    default:
+                        break;
+                }
             }
         });
 

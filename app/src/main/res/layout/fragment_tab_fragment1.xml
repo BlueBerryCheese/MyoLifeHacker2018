@@ -23,7 +23,7 @@
             app:icon="@drawable/ic_favorite" />
 
         <com.imangazaliev.circlemenu.CircleMenuButton
-            android:id="@+id/camera"
+            android:id="@+id/camera_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:colorNormal="#4CAF50"
