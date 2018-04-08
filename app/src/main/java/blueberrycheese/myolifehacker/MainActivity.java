@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity
         ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
         FragmentAdapter pagerAdapter = new FragmentAdapter(getSupportFragmentManager());
 
-        pagerAdapter.addFragment(new TabFragment1(), "FRAG1");
+        pagerAdapter.addFragment(new TabFragment1(), "Main");
         pagerAdapter.addFragment(new TabFragment2(), "FRAG2");
         pagerAdapter.addFragment(new TabFragment3(), "Adaptation");
         viewPager.setAdapter(pagerAdapter);
