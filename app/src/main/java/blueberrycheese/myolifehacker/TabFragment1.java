@@ -72,6 +72,7 @@ public class TabFragment1 extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_tab_fragment1, container, false);
 
+        //Main CirecleMenu 관련
         CircleMenu circleMenu = (CircleMenu) view.findViewById(R.id.circleMenu);
         circleMenu.setOnItemClickListener(new CircleMenu.OnItemClickListener() {
             @Override
