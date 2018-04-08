@@ -34,4 +34,5 @@ dependencies {
     implementation 'com.github.imangazalievm:circlemenu:2.0.1'
     implementation 'com.wonderkiln:camerakit:0.13.1'
     compile 'com.jakewharton:butterknife:8.8.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
 }
