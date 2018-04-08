@@ -62,10 +62,10 @@ public class CameraMainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_camera_main);
         ButterKnife.bind(this);
 
-//        setupDrawerAndToolbar();
+        setupDrawerAndToolbar();
 
-//        camera.setMethod(cameraMethod);
-//        camera.setCropOutput(cropOutput);
+        camera.setMethod(cameraMethod);
+        camera.setCropOutput(cropOutput);
     }
 
     @Override
