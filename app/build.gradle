@@ -32,4 +32,7 @@ dependencies {
     implementation project(':commons-math3-3.6.1')
     // compile 'com.github.florent37:camerafragment:1.0.9'
     implementation 'com.github.imangazalievm:circlemenu:2.0.1'
+    implementation 'com.wonderkiln:camerakit:0.13.1'
+    compile 'com.jakewharton:butterknife:8.8.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
 }

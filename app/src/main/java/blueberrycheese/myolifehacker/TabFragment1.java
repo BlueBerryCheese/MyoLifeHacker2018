@@ -1,8 +1,11 @@
 package blueberrycheese.myolifehacker;
 
+import android.app.Activity;
+import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCallback;
+import android.bluetooth.BluetoothManager;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
@@ -13,6 +16,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.content.Intent;
+
 
 import com.imangazaliev.circlemenu.CircleMenu;
 import com.imangazaliev.circlemenu.CircleMenuButton;
@@ -24,7 +29,10 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.HashMap;
 
 import blueberrycheese.myolifehacker.myo_manage.GestureSaveMethod;
+import blueberrycheese.myolifehacker.myo_manage.MyoCommandList;
 import blueberrycheese.myolifehacker.myo_manage.MyoGattCallback;
+
+import static android.content.Context.BLUETOOTH_SERVICE;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -47,8 +55,16 @@ public class TabFragment1 extends Fragment {
     private View view;
     private CircleMenu circleMenu;
     private CircleMenuButton circleMenuButton_volume ;
+
+    private Handler mHandler;
+    private BluetoothAdapter mBluetoothAdapter;
+    private BluetoothGatt mBluetoothGatt;
+    private MyoGattCallback mMyoCallback;
+    private MyoCommandList commandList = new MyoCommandList();
+    private Activity mactivity;
+    private BluetoothDevice device;
     private OnFragmentInteractionListener mListener;
-    private GestureSaveMethod saveMethod;
+    String deviceName;
 
     public TabFragment1() {
         // Required empty public constructor
@@ -89,13 +105,26 @@ public class TabFragment1 extends Fragment {
 
         view = inflater.inflate(R.layout.fragment_tab_fragment1, container, false);
         mHandler = new Handler();
+        BluetoothManager mBluetoothManager = (BluetoothManager) getActivity().getSystemService(BLUETOOTH_SERVICE);
+        mBluetoothAdapter = mBluetoothManager.getAdapter();
+
         //Main CirecleMenu 관련
         circleMenu = (CircleMenu) view.findViewById(R.id.circleMenu);
         circleMenuButton_volume = (CircleMenuButton)view.findViewById(R.id.volume);
         circleMenu.setOnItemClickListener(new CircleMenu.OnItemClickListener() {
             @Override
             public void onItemClick(CircleMenuButton menuButton) {
-
+                int viewId = menuButton.getId(); // 클릭한 메뉴 id를 가져온 후 switch 문 으로
+                switch(viewId){
+                    case R.id.camera_button:
+                        Log.d("cameracircle","cameraclicked");
+                        Intent intent = new Intent(getActivity().getApplicationContext(), CameraMainActivity.class);
+                        intent.putExtra("bluetoothDevice", device);
+                        startActivity(intent);
+                        break;
+                    default:
+                        break;
+                }
             }
         });
 
@@ -185,6 +214,17 @@ public class TabFragment1 extends Fragment {
         }catch (Exception e){}
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void testEvent(EventData event){
+        Log.e("test_event", event.device.getName() + "connected !!");
+        HashMap<String,View> views = new HashMap<String,View>();
+
+        device = event.device;
+        mMyoCallback = new MyoGattCallback(mHandler);
+        mBluetoothGatt = device.connectGatt(getContext(), false, mMyoCallback);
+        mMyoCallback.setBluetoothGatt(mBluetoothGatt);
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -198,32 +238,5 @@ public class TabFragment1 extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
-    }
-    BluetoothDevice device;
-    MyoGattCallback mMyoCallback;
-    BluetoothGatt mBluetoothGatt;
-    Handler mHandler;
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void testEvent(EventData event){
-        Log.e("test_event", event.device.getName() + "connected !!");
-        HashMap<String,View> views = new HashMap<String,View>();
-
-        device = event.device;
-        mMyoCallback = new MyoGattCallback(mHandler, null, views,null,-1);  //이곳에서 문제가 일어나서 현재 이페이지에서밖에 시행이 안됨 inds_num(제스처 몇번을 저장할 것인가에 대한 내용이 담겨져 있음)
-        mBluetoothGatt = device.connectGatt(getContext(), false, mMyoCallback);
-        mMyoCallback.setBluetoothGatt(mBluetoothGatt);
-
-        if (mBluetoothGatt == null) {
-            Log.d(TAG,"False EMG");
-        } else {
-            saveMethod  = new GestureSaveMethod(-1,view.getContext());
-            if (saveMethod.getSaveState() == GestureSaveMethod.SaveState.Have_Saved) {
-                Log.e("test_event", event.device.getName() + "connected !!& Linking gesture");
-                //gestureText.setText("DETECT Ready");
-            } else {
-                //gestureText.setText("Teach me \'Gesture\'");
-            }
-        }
     }
 }
