@@ -1,6 +1,7 @@
 package blueberrycheese.myolifehacker;
 
 import android.app.Activity;
+import android.app.FragmentTransaction;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGatt;
@@ -213,6 +214,7 @@ public class TabFragment1 extends Fragment {
 
     @Override
     public void onResume(){
+
         super.onResume();
         try {
             EventBus.getDefault().register(this);           //이벤트 버스 다시 키는 역활
@@ -225,6 +227,8 @@ public class TabFragment1 extends Fragment {
         HashMap<String,View> views = new HashMap<String,View>();
 
         device = event.device;
+        android.support.v4.app.FragmentTransaction ft = getFragmentManager().beginTransaction();
+        ft.detach(this).attach(this).commit();  //처음에 보내졌을당시에 refresh 한번시킴.
         mMyoCallback = new MyoGattCallback(mHandler);
         mBluetoothGatt = device.connectGatt(getContext(), false, mMyoCallback);
         mMyoCallback.setBluetoothGatt(mBluetoothGatt);

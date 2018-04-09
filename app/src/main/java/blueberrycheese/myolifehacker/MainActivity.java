@@ -121,7 +121,11 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+    @Override
+    protected void onResume(){
+        super.onResume();
 
+    }
 
     // Adapter for the viewpager using FragmentPagerAdapter
     class FragmentAdapter extends FragmentPagerAdapter {
@@ -249,7 +253,7 @@ public class MainActivity extends AppCompatActivity
 //            mMyoCallback = new MyoGattCallback(mHandler, views);
 //            mBluetoothGatt = device.connectGatt(this, false, mMyoCallback);
 
-
+            EventBus.getDefault().post(new EventData(bluetoothDevice)); //post위치변경
 //            mMyoCallback.setBluetoothGatt(mBluetoothGatt);
         }
 
@@ -258,6 +262,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
         if (requestCode == REQUEST_ENABLE_BT && resultCode == RESULT_OK){
             mHandler.postDelayed(new Runnable() {
                 @Override
