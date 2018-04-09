@@ -28,6 +28,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.HashMap;
 
+import blueberrycheese.myolifehacker.SystemControl.SystemControlActivity;
 import blueberrycheese.myolifehacker.myo_manage.GestureSaveMethod;
 import blueberrycheese.myolifehacker.myo_manage.MyoCommandList;
 import blueberrycheese.myolifehacker.myo_manage.MyoGattCallback;
@@ -110,7 +111,7 @@ public class TabFragment1 extends Fragment {
 
         //Main CirecleMenu 관련
         circleMenu = (CircleMenu) view.findViewById(R.id.circleMenu);
-        circleMenuButton_volume = (CircleMenuButton)view.findViewById(R.id.volume);
+
         circleMenu.setOnItemClickListener(new CircleMenu.OnItemClickListener() {
             @Override
             public void onItemClick(CircleMenuButton menuButton) {
@@ -122,18 +123,22 @@ public class TabFragment1 extends Fragment {
                         intent.putExtra("bluetoothDevice", device);
                         startActivity(intent);
                         break;
+                    case R.id.volume:
+                        if(device!=null) {
+                            Log.d("volumecircle", "volume_clicked");
+                            Log.d("volumecircle", device.getName());
+                            Intent intent2 = new Intent(getActivity().getApplicationContext(), SystemControlActivity.class);
+                            intent2.putExtra("bluetoothDevice", device);
+
+                            startActivity(intent2);
+                        }
+                        break;
                     default:
                         break;
                 }
             }
         });
 
-        circleMenuButton_volume.setOnClickListener(new CircleMenuButton.OnClickListener(){
-            @Override
-            public void onClick(View v){
-
-            }
-        });
 
 
         circleMenu.setEventListener(new CircleMenu.EventListener() {

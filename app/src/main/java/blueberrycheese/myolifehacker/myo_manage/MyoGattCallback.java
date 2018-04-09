@@ -304,8 +304,8 @@ public class MyoGattCallback extends BluetoothGattCallback {
                         for (int k = 0; k < 8; k++) {
                             sb.append(maxData[k] + ",  ");
                         }
-
-                        maxDataTextView.setText(sb.toString());
+                        Log.d("data",sb.toString());
+//                        maxDataTextView.setText(sb.toString());
                         sb=new StringBuilder("emg ");
                         count=0;
                     }
