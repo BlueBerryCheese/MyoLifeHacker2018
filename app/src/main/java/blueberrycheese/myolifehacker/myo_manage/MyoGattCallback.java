@@ -225,7 +225,8 @@ public class MyoGattCallback extends BluetoothGattCallback {
                     mHandler.post(new Runnable() {
                         @Override
                         public void run() {
-                            dataView.setText(callback_msg);
+                            if(dataView!=null)
+                                dataView.setText(callback_msg);
                         }
                     });
 

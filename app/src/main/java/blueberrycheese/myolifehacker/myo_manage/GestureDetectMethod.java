@@ -7,6 +7,8 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import blueberrycheese.myolifehacker.SystemControl.SystemFeature;
+
 /**
  * Created by Seongho on 2017-12-01.
  * ver 1.1 Manhattan, Norm-3 distance, Weight Ratio, CorrelationEfficient detect Method
@@ -31,6 +33,7 @@ public class GestureDetectMethod {
     private Context mcontext;
     private TextView maxDataTextView;
     private NumberSmoother numberSmoother;
+    private NumberSmoother numberSmoother2;
     private double[] maxData = new double[8];
     private StringBuilder sb;
     private Handler handler;
@@ -51,6 +54,7 @@ public class GestureDetectMethod {
         numberSmoother = new NumberSmoother();
     }
 
+
     public enum GestureState {
         No_Gesture,
         Gesture_1,
@@ -60,6 +64,7 @@ public class GestureDetectMethod {
         Gesture_5,
         Gesture_6
     }
+
 
     private GestureState getEnum(int i_gesture) {
         switch (i_gesture) {
