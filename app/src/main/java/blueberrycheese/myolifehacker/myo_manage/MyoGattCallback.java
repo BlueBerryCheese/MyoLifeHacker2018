@@ -53,6 +53,11 @@ public class MyoGattCallback extends BluetoothGattCallback {
     private StringBuilder sb;
     private int count=0;
     private int inds_num=-1;
+
+    public MyoGattCallback(Handler handler) {
+        mHandler = handler;
+    }
+
     public MyoGattCallback(Handler handler, HashMap<String,View> views) {
         mHandler = handler;
     }

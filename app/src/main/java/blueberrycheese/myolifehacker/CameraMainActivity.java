@@ -23,14 +23,33 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothGatt;
+import android.bluetooth.BluetoothManager;
+import blueberrycheese.myolifehacker.commons.LoadingDialog;
+import blueberrycheese.myolifehacker.myo_manage.GestureDetectMethod;
+import blueberrycheese.myolifehacker.myo_manage.GestureDetectModel;
+import blueberrycheese.myolifehacker.myo_manage.GestureDetectModelManager;
+import blueberrycheese.myolifehacker.myo_manage.GestureDetectSendResultAction;
+import blueberrycheese.myolifehacker.myo_manage.GestureSaveMethod;
+import blueberrycheese.myolifehacker.myo_manage.GestureSaveModel;
+import blueberrycheese.myolifehacker.myo_manage.IGestureDetectModel;
+import blueberrycheese.myolifehacker.myo_manage.MyoCommandList;
+import blueberrycheese.myolifehacker.myo_manage.MyoGattCallback;
+import blueberrycheese.myolifehacker.myo_manage.NopModel;
+
 import com.wonderkiln.camerakit.CameraKit;
 import com.wonderkiln.camerakit.CameraView;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import blueberrycheese.myolifehacker.myo_manage.MyoGattCallback;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static java.security.AccessController.getContext;
 
 
 public class CameraMainActivity extends AppCompatActivity {
@@ -55,6 +74,13 @@ public class CameraMainActivity extends AppCompatActivity {
 
     private int cameraMethod = CameraKit.Constants.METHOD_STANDARD;
     private boolean cropOutput = false;
+
+    private BluetoothAdapter mBluetoothAdapter;
+    private BluetoothGatt mBluetoothGatt;
+    private MyoGattCallback mMyoCallback;
+    private MyoCommandList commandList = new MyoCommandList();
+    private BluetoothDevice device;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,11 +137,11 @@ public class CameraMainActivity extends AppCompatActivity {
                         .setIcon(icon)
                         .setTitle(getString(R.string.about_dialog_title))
                         .setMessage(getString(
-                                R.string.about_dialog_message,
-                                BuildConfig.VERSION_NAME,
-                                BuildConfig.VERSION_CODE,
-//                                com.wonderkiln.camerakit.BuildConfig.VERSION_NAME 주석하고 아래껄로 바꿈
-                                BuildConfig.VERSION_NAME
+                                R.string.about_dialog_message
+//                                BuildConfig.VERSION_NAME,
+//                                BuildConfig.VERSION_CODE,
+////                                com.wonderkiln.camerakit.BuildConfig.VERSION_NAME 주석하고 아래껄로 바꿈
+//                                BuildConfig.VERSION_NAME
                         ))
                         .setPositiveButton("DONE", null)
                         .show();
@@ -175,7 +201,7 @@ public class CameraMainActivity extends AppCompatActivity {
 
             View toolbarView = getLayoutInflater().inflate(R.layout.camera_action_bar, null, false);
             TextView titleView = toolbarView.findViewById(R.id.toolbar_title);
-            titleView.setText(Html.fromHtml("<b>Camera</b>Kit"));
+            titleView.setText(Html.fromHtml("<b>Camera</b>"));
 
             getSupportActionBar().setCustomView(toolbarView, new ActionBar.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
             getSupportActionBar().setDisplayShowCustomEnabled(true);
