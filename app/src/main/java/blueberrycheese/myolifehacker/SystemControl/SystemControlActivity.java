@@ -1,5 +1,14 @@
 package blueberrycheese.myolifehacker.SystemControl;
 
+/*
+DetectMethod에 연동시켜서 하는게 중요한데 이럴때 필요한게
+DetectMethod.java
+DetectModel.java
+DetectSendResultAction.java
+이 파일의 변형이 필요하다
+다른 activity에 적용할때 이 폴더를 보고 비슷하게 만들도록 하면 될거같습니다.
+ */
+
 import android.app.NotificationManager;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -21,11 +30,8 @@ import android.widget.TextView;
 import java.util.HashMap;
 
 import blueberrycheese.myolifehacker.R;
-import blueberrycheese.myolifehacker.TabFragment3;
-import blueberrycheese.myolifehacker.myo_manage.GestureDetectMethod;
-import blueberrycheese.myolifehacker.myo_manage.GestureDetectModel;
+
 import blueberrycheese.myolifehacker.myo_manage.GestureDetectModelManager;
-import blueberrycheese.myolifehacker.myo_manage.GestureDetectSendResultAction;
 import blueberrycheese.myolifehacker.myo_manage.GestureSaveMethod;
 import blueberrycheese.myolifehacker.myo_manage.GestureSaveModel;
 import blueberrycheese.myolifehacker.myo_manage.IGestureDetectModel;
@@ -44,7 +50,7 @@ public class SystemControlActivity extends AppCompatActivity implements Bluetoot
     private static final int REQUEST_ENABLE_BT = 1;
 
     private static final String TAG = "BLE_Myo";
-
+    private BluetoothDevice bluetoothDevice;
     private Handler mHandler;
     private BluetoothAdapter mBluetoothAdapter;
     private BluetoothGatt mBluetoothGatt;
@@ -60,8 +66,8 @@ public class SystemControlActivity extends AppCompatActivity implements Bluetoot
 
     private GestureSaveModel saveModel;
     private GestureSaveMethod saveMethod;
-    private GestureDetectModel detectModel;
-    private GestureDetectMethod detectMethod;
+    private GestureDetectModel_System detectModel;
+    private GestureDetectMethod_System detectMethod;
 
     private Button Option1;
     private Button Option2;
@@ -95,30 +101,23 @@ public class SystemControlActivity extends AppCompatActivity implements Bluetoot
         mHandler = new Handler();
         algorithm1 = (TextView)findViewById(R.id.algorithm1);
         maxDataTextView=(TextView)findViewById(R.id.maxData);
+
         startNopModel();
-        BluetoothManager mBluetoothManager = (BluetoothManager) getSystemService(BLUETOOTH_SERVICE);
-        mBluetoothAdapter = mBluetoothManager.getAdapter();
+
         Intent intent = getIntent();
         if(intent!=null){
-            deviceName = intent.getStringExtra("deviceName");
-            if (deviceName != null) {
-                // Ensures Bluetooth is available on the device and it is enabled. If not,
-                // displays a dialog requesting user permission to enable Bluetooth.
-                if (mBluetoothAdapter == null || !mBluetoothAdapter.isEnabled()) {
-                    Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                    startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
-                } else {
-                    // Scanning Time out by Handler.
-                    // The device scanning needs high energy.
-                    mHandler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            mBluetoothAdapter.stopLeScan(SystemControlActivity.this);
-                        }
-                    }, SCAN_PERIOD);
-                    mBluetoothAdapter.startLeScan(this);
-                }
-            }
+
+            bluetoothDevice = intent.getExtras().getParcelable("bluetoothDevice");
+            deviceName = bluetoothDevice.getName();
+            HashMap<String,View> views = new HashMap<String,View>();
+            mMyoCallback = new MyoGattCallback(mHandler, emgDataText, views,maxDataTextView,-1);
+            mBluetoothGatt = bluetoothDevice.connectGatt(this, false, mMyoCallback);
+            mMyoCallback.setBluetoothGatt(mBluetoothGatt);
+            Log.d(TAG,"bluetoothDevice is "+deviceName);
+            BluetoothManager mBluetoothManager = (BluetoothManager) getSystemService(BLUETOOTH_SERVICE);
+            mBluetoothAdapter = mBluetoothManager.getAdapter();
+
+
         }
 
     }
@@ -131,11 +130,12 @@ public class SystemControlActivity extends AppCompatActivity implements Bluetoot
     /** Define of BLE Callback */
     @Override
     public void onLeScan(BluetoothDevice device, int rssi, byte[] scanRecord) {
+        Log.d(TAG,"Hello onLeSacn");
+        device = bluetoothDevice;
         if (deviceName.equals(device.getName())) {
             mBluetoothAdapter.stopLeScan(this);
             // Trying to connect GATT
             HashMap<String,View> views = new HashMap<String,View>();
-
 
             mMyoCallback = new MyoGattCallback(mHandler, emgDataText, views,maxDataTextView,-1);
             mBluetoothGatt = device.connectGatt(this, false, mMyoCallback);
@@ -181,9 +181,9 @@ public class SystemControlActivity extends AppCompatActivity implements Bluetoot
         if (saveMethod.getSaveState() == GestureSaveMethod.SaveState.Have_Saved) {
             gestureText.setText("Let's Go !!");
             /*detectMethod = new GestureDetectMethod(saveMethod.getCompareDataList());*/
-            //detectMethod = new GestureDetectMethod(mHandler,saveMethod.getCompareDataList(),algorithm1,systemFeature);    //아예 새롭게 각각의 detectMethod를 구현하는것이 빠를것으로 예상된다.
+            detectMethod = new GestureDetectMethod_System(mHandler,saveMethod.getCompareDataList(),algorithm1,systemFeature);    //아예 새롭게 각각의 detectMethod를 구현하는것이 빠를것으로 예상된다.
             //detectMethod = new GestureDetectMethod(saveMethod.getCompareDataList(),algorithm1);
-            detectModel = new GestureDetectModel(detectMethod);
+            detectModel = new GestureDetectModel_System(detectMethod);
             startDetectModel();
         }
     }
@@ -199,13 +199,13 @@ public class SystemControlActivity extends AppCompatActivity implements Bluetoot
 
     public void startSaveModel() {
         IGestureDetectModel model = saveModel;
-        model.setAction(new GestureDetectSendResultAction(this));
+        model.setAction(new GestureDetectSendResultAction_System(this)); //변경
         GestureDetectModelManager.setCurrentModel(model);
     }
 
     public void startDetectModel() {
         IGestureDetectModel model = detectModel;
-        model.setAction(new GestureDetectSendResultAction(this));
+        model.setAction(new GestureDetectSendResultAction_System(this));    //변경
         GestureDetectModelManager.setCurrentModel(model);
     }
 

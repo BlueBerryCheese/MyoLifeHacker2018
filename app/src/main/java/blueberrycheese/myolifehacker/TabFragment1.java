@@ -1,6 +1,7 @@
 package blueberrycheese.myolifehacker;
 
 import android.app.Activity;
+import android.app.FragmentTransaction;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGatt;
@@ -28,6 +29,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.HashMap;
 
+import blueberrycheese.myolifehacker.SystemControl.SystemControlActivity;
 import blueberrycheese.myolifehacker.myo_manage.GestureSaveMethod;
 import blueberrycheese.myolifehacker.myo_manage.MyoCommandList;
 import blueberrycheese.myolifehacker.myo_manage.MyoGattCallback;
@@ -110,7 +112,7 @@ public class TabFragment1 extends Fragment {
 
         //Main CirecleMenu 관련
         circleMenu = (CircleMenu) view.findViewById(R.id.circleMenu);
-        circleMenuButton_volume = (CircleMenuButton)view.findViewById(R.id.volume);
+
         circleMenu.setOnItemClickListener(new CircleMenu.OnItemClickListener() {
             @Override
             public void onItemClick(CircleMenuButton menuButton) {
@@ -122,18 +124,22 @@ public class TabFragment1 extends Fragment {
                         intent.putExtra("bluetoothDevice", device);
                         startActivity(intent);
                         break;
+                    case R.id.volume:
+                        if(device!=null) {
+                            Log.d("volumecircle", "volume_clicked");
+                            Log.d("volumecircle", device.getName());
+                            Intent intent2 = new Intent(getActivity().getApplicationContext(), SystemControlActivity.class);
+                            intent2.putExtra("bluetoothDevice", device);
+
+                            startActivity(intent2);
+                        }
+                        break;
                     default:
                         break;
                 }
             }
         });
 
-        circleMenuButton_volume.setOnClickListener(new CircleMenuButton.OnClickListener(){
-            @Override
-            public void onClick(View v){
-
-            }
-        });
 
 
         circleMenu.setEventListener(new CircleMenu.EventListener() {
@@ -208,6 +214,7 @@ public class TabFragment1 extends Fragment {
 
     @Override
     public void onResume(){
+
         super.onResume();
         try {
             EventBus.getDefault().register(this);           //이벤트 버스 다시 키는 역활
@@ -220,6 +227,8 @@ public class TabFragment1 extends Fragment {
         HashMap<String,View> views = new HashMap<String,View>();
 
         device = event.device;
+        android.support.v4.app.FragmentTransaction ft = getFragmentManager().beginTransaction();
+        ft.detach(this).attach(this).commit();  //처음에 보내졌을당시에 refresh 한번시킴.
         mMyoCallback = new MyoGattCallback(mHandler);
         mBluetoothGatt = device.connectGatt(getContext(), false, mMyoCallback);
         mMyoCallback.setBluetoothGatt(mBluetoothGatt);
