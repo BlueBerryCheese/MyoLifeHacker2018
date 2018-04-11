@@ -84,7 +84,7 @@ public class GestureSaveMethod {
                     String line;
                     StringTokenizer stringTokenizer;
                     int cntt=1000;          //사실 지금 필요없는데 내 폰 상태가... ㅜㅜ 참고로 text파일 내전용임 내데이터만들가있음 실험할때 바꾸세요.
-                    while(cntt-->0&&((line = bufferedReader.readLine())!=null)){
+                    while(((line = bufferedReader.readLine())!=null)){
                         stringTokenizer = new StringTokenizer(line,",");
                         double[] emgDat = new double[8];
                         for(int k=0;k<8;k++){

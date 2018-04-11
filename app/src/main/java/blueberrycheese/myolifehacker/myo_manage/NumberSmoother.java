@@ -78,4 +78,28 @@ public class NumberSmoother {
         }
         return -1;
     }
+
+    //Delete
+//    boolean flg = false;
+//    public int getSmoothingNumber_system() {
+//        if(flg){
+//            gestureNumArray=new LinkedList<>();
+//            numCounter =  new int[MAX_SAVE_LENGTH];
+//            flg = false;
+//        }
+//
+//        for (int i_element = 0; i_element < MAX_SAVE_LENGTH; i_element++) {
+//            if (numCounter[i_element] >= THRESHOLD_LENGTH) {//50개중 20개이상 일치하지 않으면 불일치(인지되지 않은 제스처)
+//                Log.d("number success","number success : "+(i_element+1));
+//                //gestureNumArray=new LinkedList<>();
+//                //Log.d("detect_gesture","-> "+(int)(i_element+1));
+//                Log.d("detect_gesture cnt","-> "+numCounter[0]+","+numCounter[1]+","+numCounter[2]+","+numCounter[3]+","+numCounter[4]+","+numCounter[5]);
+//                systemFeature.function(i_element);
+//                flg = true;
+//                return i_element;
+//            }
+//        }
+//        return -1;
+//    }
+
 }

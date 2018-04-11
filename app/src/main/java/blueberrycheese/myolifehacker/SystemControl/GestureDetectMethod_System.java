@@ -90,8 +90,11 @@ public class GestureDetectMethod_System{
             default:
                 return GestureState.No_Gesture;
         }
+
     }
 
+    int cnt = 0;
+    int old_gesture_num=-1;
     //getDetectGesture Use By K-MEANS
     public GestureState getDetectGesture(byte[] data) {
         EmgData streamData = new EmgData(new EmgCharacteristicData(data));
@@ -117,11 +120,20 @@ public class GestureDetectMethod_System{
             }
         }
 
+
         //Log.d("detect_gesture","distance ("+detect_distance+") -> "+(int)(detect_Num));
         numberSmoother.addArray((Integer) (detect_Num));
         //streamCount = 0;
+        cnt++;
+        if(cnt%10==0){
+            cnt=0;
+            int result = numberSmoother.getSmoothingNumber_system();
+            if(old_gesture_num!=result)
+                old_gesture_num = result;
 
-        return getEnum(numberSmoother.getSmoothingNumber_system());
+        }
+        return getEnum(old_gesture_num);
+
     }
 
     private double getThreshold() {
