@@ -23,8 +23,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="false"
-
             android:onClick="onClickNoEMG"
+            android:background="@drawable/color_button"
             android:text="noEMG" />
 
         <Button
@@ -33,9 +33,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-
-
             android:layout_marginLeft="160dp"
+            android:background="@drawable/color_button"
             android:onClick="onClickEMG"
             android:text="EMG" />
     </LinearLayout>
@@ -46,42 +45,46 @@
         android:layout_marginTop="5dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="vertical">
 
-    </LinearLayout>
+        <TextView
+            android:id="@+id/emgDataTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/maxData"
+            android:layout_alignParentStart="true"
+            android:background="@android:drawable/editbox_dropdown_light_frame"
+            android:text="Myo Status"
+            android:textSize="15dp" />`
 
+        <TextView
+            android:id="@+id/maxData"
+            android:layout_marginTop="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Myo MaxData"
+            android:textSize="15dp"
+            android:background="@android:drawable/editbox_dropdown_light_frame"
+            />
 
-
-    <TextView
-        android:id="@+id/maxData"
-        android:layout_marginTop="5dp"
-        android:layout_below="@+id/RawLinearLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Myo MaxData"
-        android:textSize="15dp"
-        android:background="@android:drawable/editbox_dropdown_light_frame"
-        />
-
-
-    <LinearLayout
-        android:id="@+id/distanceLinearLayout"
-        android:layout_below="@+id/maxData"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:orientation="horizontal">
 
         <TextView
             android:id="@+id/algorithm1"
             android:layout_width="wrap_content"
+            android:layout_marginTop="5dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Myo correlation distance"
             android:background="@android:drawable/editbox_dropdown_light_frame"
+            android:visibility="invisible"
             />
 
+
     </LinearLayout>
+
+
+
+
     <TextView
         android:id="@+id/gestureTextView"
         android:layout_width="wrap_content"
@@ -102,11 +105,12 @@
 
         <Button
             android:id="@+id/bDetect"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
             android:layout_weight="1"
             android:layout_alignParentLeft="true"
             android:onClick="onClickDetect"
+            android:background="@drawable/imgbtn_states"
             android:text="Detect" />
 
 
@@ -117,17 +121,10 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:onClick="onClickSave"
+            android:visibility="invisible"
             android:text="Save" />
+
     </RelativeLayout>
 
-    <TextView
-        android:id="@+id/emgDataTextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/maxData"
-        android:layout_alignParentStart="true"
-        android:background="@android:drawable/editbox_dropdown_light_frame"
-        android:text="Myo Status"
-        android:textSize="15dp" />
 
 </RelativeLayout>
