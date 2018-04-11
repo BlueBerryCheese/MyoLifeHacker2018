@@ -24,6 +24,7 @@ import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -83,7 +84,7 @@ public class SystemControlActivity extends AppCompatActivity implements Bluetoot
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_systemcontrol);
-
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         if((Build.VERSION.SDK_INT>=Build.VERSION_CODES.M)){
             notificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
             if (!Settings.System.canWrite(getApplicationContext())) {
