@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity
         FragmentAdapter pagerAdapter = new FragmentAdapter(getSupportFragmentManager());
 
         pagerAdapter.addFragment(new TabFragment1(), "Main");
-        pagerAdapter.addFragment(new TabFragment2(), "FRAG2");
+        pagerAdapter.addFragment(new TabFragment2(), "2");
         pagerAdapter.addFragment(new TabFragment3(), "Adaptation");
         viewPager.setAdapter(pagerAdapter);
         viewPager.addOnPageChangeListener(listener);    //페이지 변할때마다 이벤트 발생하도록 이벤트 리스너 붙착
@@ -166,7 +166,7 @@ public class MainActivity extends AppCompatActivity
 
         @Override
         public void onPageSelected(int position) {
-            Toast.makeText(getApplicationContext(), "Current position: "+position, Toast.LENGTH_SHORT).show();
+//            Toast.makeText(getApplicationContext(), "Current position: "+position, Toast.LENGTH_SHORT).show();
 
             EventBus.getDefault().post(new EventData(bluetoothDevice));     //다음부분에서 페이지가 변환이 발생되는 이벤트가 발생할때 이벤트버스를 발동시킴 다음 3페이지에서 이 이벤트에 의해서 디바이스데이터전송이 일어남을 알 수가 있다.
         }
@@ -227,11 +227,12 @@ public class MainActivity extends AppCompatActivity
             return true;
         } else if (id == R.id.nav_manage) {
 
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
         }
+//        else if (id == R.id.nav_share) {
+//
+//        } else if (id == R.id.nav_send) {
+//
+//        }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
