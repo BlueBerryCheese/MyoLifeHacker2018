@@ -18,6 +18,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -72,7 +73,7 @@ public class CameraMainActivity extends AppCompatActivity {
 
     private ArrayAdapter drawerAdapter;
 
-    private int cameraMethod = CameraKit.Constants.METHOD_STANDARD;
+    private int cameraMethod = CameraKit.Constants.METHOD_STILL;
     private boolean cropOutput = false;
 
     private BluetoothAdapter mBluetoothAdapter;
@@ -87,7 +88,7 @@ public class CameraMainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera_main);
         ButterKnife.bind(this);
-
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setupDrawerAndToolbar();
 
         camera.setMethod(cameraMethod);
@@ -98,6 +99,8 @@ public class CameraMainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         camera.start();
+        camera.setZoom(1);
+        camera.setMethod(CameraKit.Constants.METHOD_STILL);
     }
 
     @Override

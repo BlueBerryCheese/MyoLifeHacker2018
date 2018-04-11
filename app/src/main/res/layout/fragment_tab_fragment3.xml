@@ -26,6 +26,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="false"
                 android:textAllCaps="false"
+                android:background="@drawable/imgbtn_rect_state"
                 android:text="Cancle" />
 
             <Button
@@ -36,6 +37,7 @@
                 android:layout_alignParentTop="true"
                 android:textAllCaps="false"
                 android:layout_marginLeft="160dp"
+                android:background="@drawable/imgbtn_rect_state"
                 android:text="Ready" />
         </LinearLayout>
         <LinearLayout
@@ -146,6 +148,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:textAllCaps="false"
+                android:background="@drawable/imgbtn_rect_state"
                 android:text="Sync" />
 
             <TextView
@@ -163,6 +166,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:textAllCaps="false"
+                android:background="@drawable/imgbtn_rect_state"
                 android:text="Save" />
         </LinearLayout>
 

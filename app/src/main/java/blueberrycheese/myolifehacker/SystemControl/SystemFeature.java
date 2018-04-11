@@ -18,6 +18,7 @@ public class SystemFeature {
     private ContentResolver cResolver;
     int currentBrightness;
     int BrightnessDiff = 5;
+    int old_pos = -1;
     public SystemFeature(Context mContext){
         this.mContext = mContext;
         wifiManager = (WifiManager) mContext.getSystemService(Context.WIFI_SERVICE);
@@ -136,4 +137,89 @@ public class SystemFeature {
                 break;
         }
     }
+//public void function(int poseNum){
+//    if(old_pos!=poseNum){
+//        old_pos=poseNum;
+//        switch(poseNum){
+//            case 0:
+//
+//                    if(!wifiManager.isWifiEnabled()){
+//                        WifiEnable();
+//                        //Toast.makeText(mContext,"WiFi On",Toast.LENGTH_LONG).show();
+//                    } else{
+//                        WifiDisable();
+//                        //Toast.makeText(mContext,"WiFi OFF",Toast.LENGTH_LONG).show();
+//                    }
+//                    //Wifi On off
+//                    resetSmoothCount();
+//                    //smoothcount[poseNum]=-1;
+//
+//                break;
+//            case 1:
+//                //Sound on off vibration
+//
+//                    switch(audioManager.getRingerMode()){
+//                        case AudioManager.RINGER_MODE_NORMAL:
+//                            audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+//                            //Toast.makeText(mContext,"RingerModeSilent",Toast.LENGTH_LONG).show();
+//                            break;
+//                        case AudioManager.RINGER_MODE_SILENT:
+//                            audioManager.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
+//                            //Toast.makeText(mContext,"RingerModeVibrate",Toast.LENGTH_LONG).show();
+//                            break;
+//                        case AudioManager.RINGER_MODE_VIBRATE:
+//                            audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
+//                            //Toast.makeText(mContext,"RingerModeNormal",Toast.LENGTH_LONG).show();
+//                            break;
+//                        default:
+//                            audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
+//                            //Toast.makeText(mContext,"RingerModeNormal",Toast.LENGTH_LONG).show();
+//                            break;
+//                    }
+//                    resetSmoothCount();
+//
+//                break;
+//            case 2:
+//                //Volume up
+//
+//                    VolumeUp();
+//                    //smoothcount[poseNum]=-1;
+//                    resetSmoothCount();
+//
+//                break;
+//            case 3:
+//                //Volume Down
+//
+//                    VolumeDown();
+//                    //smoothcount[poseNum]=-1;
+//                    resetSmoothCount();
+//
+//                break;
+//            case 4:
+//                //Brightness up
+//
+//                    currentBrightness = Settings.System.getInt(cResolver, Settings.System.SCREEN_BRIGHTNESS,0);
+//                    Settings.System.putInt(cResolver, Settings.System.SCREEN_BRIGHTNESS_MODE, Settings.System.SCREEN_BRIGHTNESS_MODE_MANUAL);
+//                    Settings.System.putInt(cResolver, Settings.System.SCREEN_BRIGHTNESS, ((currentBrightness + BrightnessDiff)>95)?currentBrightness:currentBrightness + BrightnessDiff);
+//                    resetSmoothCount();
+//                    //smoothcount[poseNum]=-1;
+//
+//                break;
+//            case 5:
+//                //Brightness down
+//
+//                    currentBrightness = Settings.System.getInt(cResolver, Settings.System.SCREEN_BRIGHTNESS,0
+//                    );
+//                    Settings.System.putInt(cResolver, Settings.System.SCREEN_BRIGHTNESS_MODE, Settings.System.SCREEN_BRIGHTNESS_MODE_MANUAL);
+//                    Settings.System.putInt(cResolver, Settings.System.SCREEN_BRIGHTNESS, ((currentBrightness - BrightnessDiff)<20)?currentBrightness:currentBrightness - BrightnessDiff);
+//                    resetSmoothCount();
+//
+//                break;
+//            default :
+//                break;
+//        }
+//
+//    }
+//
+//}
 }
