@@ -97,7 +97,7 @@ public class PreviewActivity extends AppCompatActivity {
         if (getSupportActionBar() != null) {
             View toolbarView = getLayoutInflater().inflate(R.layout.camera_action_bar, null, false);
             TextView titleView = toolbarView.findViewById(R.id.toolbar_title);
-            titleView.setText(Html.fromHtml("<b>Camera</b>Kit"));
+            titleView.setText(Html.fromHtml("<b>Camera</b>"));
 
             getSupportActionBar().setCustomView(toolbarView, new ActionBar.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
             getSupportActionBar().setDisplayShowCustomEnabled(true);
