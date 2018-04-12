@@ -45,6 +45,8 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
     private Size mCaptureNativeSize;
     private long mCaptureTime;
 
+    boolean videoRecording = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -139,7 +141,15 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         switch (view.getId()) {
             case R.id.edit: edit(); break;
             case R.id.capturePhoto: capturePhoto(); break;
-            case R.id.captureVideo: captureVideo(); break;
+            case R.id.captureVideo:
+                if(videoRecording == false){
+                    videoRecording = true;
+                    captureVideo();
+                } else if(videoRecording == true){
+                    videoRecording = false;
+                    camera.stopCapturingVideo();
+                }
+                break;
             case R.id.toggleCamera: toggleCamera(); break;
         }
     }
@@ -176,7 +186,8 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         if (mCapturingPicture || mCapturingVideo) return;
         mCapturingVideo = true;
         message("Recording for 8 seconds...", true);
-        camera.startCapturingVideo(null, 8000);
+//        camera.startCapturingVideo(null, 8000);
+        camera.startCapturingVideo(null);
     }
 
     private void toggleCamera() {

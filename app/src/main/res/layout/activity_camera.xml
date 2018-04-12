@@ -28,7 +28,9 @@ android:layout_height="match_parent">
     app:cameraGestureScrollHorizontal="exposureCorrection"
     app:cameraGestureScrollVertical="none"
     app:cameraJpegQuality="100"
-    app:cameraSessionType="picture" />
+    app:cameraSessionType="picture"
+    app:cameraVideoQuality="max720p"
+    app:cameraVideoMaxDuration="0"/>
 
 <!-- Controls -->
 <LinearLayout
