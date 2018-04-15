@@ -3,87 +3,244 @@
 <android.support.design.widget.CoordinatorLayout
 xmlns:android="http://schemas.android.com/apk/res/android"
 xmlns:app="http://schemas.android.com/apk/res-auto"
-android:id="@+id/root"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root"
 android:background="#FF444444"
 android:layout_width="match_parent"
-android:layout_height="match_parent">
+android:layout_height="match_parent"
+    android:weightSum="10">
 
 <!-- Camera -->
-<com.otaliastudios.cameraview.CameraView
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/camera"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_gravity="center"
-    android:keepScreenOn="true"
-    app:cameraPlaySounds="false"
-    app:cameraGrid="off"
-    app:cameraCropOutput="false"
-    app:cameraFacing="back"
-    app:cameraFlash="off"
-    app:cameraAudio="on"
-    app:cameraGestureTap="focusWithMarker"
-    app:cameraGestureLongTap="none"
-    app:cameraGesturePinch="zoom"
-    app:cameraGestureScrollHorizontal="exposureCorrection"
-    app:cameraGestureScrollVertical="none"
-    app:cameraJpegQuality="100"
-    app:cameraSessionType="picture"
-    app:cameraVideoQuality="max720p"
-    app:cameraVideoMaxDuration="0"/>
+    <com.otaliastudios.cameraview.CameraView xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/camera"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="top"
+        android:layout_weight="3"
+        android:keepScreenOn="true"
+        app:cameraAudio="on"
+        app:cameraCropOutput="false"
+        app:cameraFacing="back"
+        app:cameraFlash="off"
+        app:cameraGestureLongTap="none"
+        app:cameraGesturePinch="zoom"
+        app:cameraGestureScrollHorizontal="exposureCorrection"
+        app:cameraGestureScrollVertical="none"
+        app:cameraGestureTap="focusWithMarker"
+        app:cameraGrid="off"
+        app:cameraJpegQuality="100"
+        app:cameraPlaySounds="false"
+        app:cameraSessionType="picture"
+        app:cameraVideoMaxDuration="0"
+        app:cameraVideoQuality="max720p" />
 
-<!-- Controls -->
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_gravity="bottom"
-    android:padding="16dp"
-    android:orientation="horizontal"
-    android:weightSum="3">
+    <TextView
+        android:id="@+id/cameraActivityGesture"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:text="x"
+        android:textAlignment="center"
+        android:textColor="@color/colorPrimary"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_anchor="@+id/camera"
+        app:layout_anchorGravity="right|top" />
 
-    <ImageButton
-        android:id="@+id/edit"
-        android:layout_width="56dp"
-        android:layout_height="56dp"
-        android:background="@color/CamButtonColor"
-        app:srcCompat="@drawable/ic_edit" />
+    <LinearLayout
+        android:id="@+id/linearlayout1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:orientation="vertical"
+        android:weightSum="10">
 
-    <Space
-        android:layout_width="0dp"
-        android:layout_height="1dp"
-        android:layout_weight="1" />
+        <!-- Controls -->
+        <LinearLayout
+            android:id="@+id/buttonlinearlayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_weight="5"
+            android:orientation="horizontal"
+            android:padding="4dp"
+            android:weightSum="5">
 
-    <ImageButton
-        android:id="@+id/capturePhoto"
-        android:layout_width="56dp"
-        android:layout_height="56dp"
-        android:background="@color/CamButtonColor"
-        app:srcCompat="@drawable/ic_photo" />
+            <ImageButton
+                android:id="@+id/edit"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:background="@color/CamButtonColor"
+                app:srcCompat="@drawable/ic_edit" />
 
-    <Space
-        android:layout_width="0dp"
-        android:layout_height="1dp"
-        android:layout_weight="1" />
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1" />
 
-    <ImageButton
-        android:id="@+id/captureVideo"
-        android:layout_width="56dp"
-        android:layout_height="56dp"
-        android:background="@color/CamButtonColor"
-        app:srcCompat="@drawable/ic_video" />
+            <ImageButton
+                android:id="@+id/capturePhoto"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:background="@color/CamButtonColor"
+                app:srcCompat="@drawable/ic_photo" />
 
-    <Space
-        android:layout_width="0dp"
-        android:layout_height="1dp"
-        android:layout_weight="1" />
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1" />
 
-    <ImageButton
-        android:id="@+id/toggleCamera"
-        android:layout_width="56dp"
-        android:layout_height="56dp"
-        android:background="@color/CamButtonColor"
-        app:srcCompat="@drawable/ic_switch" />
-</LinearLayout>
+            <ImageButton
+                android:id="@+id/captureVideo"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:background="@color/CamButtonColor"
+                app:srcCompat="@drawable/ic_video" />
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1" />
+
+            <ImageButton
+                android:id="@+id/toggleCamera"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:background="@color/CamButtonColor"
+                app:srcCompat="@drawable/ic_switch" />
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1" />
+
+            <Button
+                android:id="@+id/dttButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/color_button"
+                android:onClick="onClickdtt"
+                android:text="off"
+                android:textAlignment="center" />
+        </LinearLayout>
+
+        <!--Gesture 안내 표시용 Layout-->
+        <LinearLayout
+            android:id="@+id/maingesturelinearlayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:background="#ffffff"
+            android:orientation="horizontal"
+            android:weightSum="12">
+
+            <LinearLayout
+                android:id="@+id/gesturelinearlayout1"
+                android:layout_width="0dp"
+                android:layout_height="64dp"
+                android:layout_gravity="bottom"
+                android:layout_weight="3"
+                android:background="#ffffff"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:weightSum="10">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="7"
+                    android:src="@drawable/gesture_fist" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="3"
+                    android:gravity="center"
+                    android:text="Photo" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/gesturelinearlayout2"
+                android:layout_width="0dp"
+                android:layout_height="64dp"
+                android:layout_gravity="bottom"
+                android:layout_weight="3"
+                android:background="#ffffff"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:weightSum="10">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="7"
+                    android:src="@drawable/gesture_spread" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="3"
+                    android:gravity="center"
+                    android:text="Video" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/gesturelinearlayout3"
+                android:layout_width="0dp"
+                android:layout_height="64dp"
+                android:layout_gravity="bottom"
+                android:layout_weight="3"
+                android:background="#ffffff"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:weightSum="10">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="7"
+                    android:src="@drawable/gesture_wavein" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="3"
+                    android:gravity="center"
+                    android:text="Flash Toggle" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/gesturelinearlayout4"
+                android:layout_width="0dp"
+                android:layout_height="64dp"
+                android:layout_gravity="bottom"
+                android:layout_weight="3"
+                android:background="#ffffff"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:weightSum="10">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="7"
+                    android:src="@drawable/gesture_waveout" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="3"
+                    android:gravity="center"
+                    android:text="Grid Toggle" />
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+    </LinearLayout>
 
 <!-- Edit -->
 <android.support.v4.widget.NestedScrollView
@@ -98,7 +255,9 @@ android:layout_height="match_parent">
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content">
+    </LinearLayout>
+
 </android.support.v4.widget.NestedScrollView>
 
 </android.support.design.widget.CoordinatorLayout>

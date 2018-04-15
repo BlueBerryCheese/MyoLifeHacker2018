@@ -1,11 +1,13 @@
 package blueberrycheese.myolifehacker.CameraView;
 
+import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -13,6 +15,8 @@ import android.widget.TextView;
 import com.otaliastudios.cameraview.AspectRatio;
 import com.otaliastudios.cameraview.CameraUtils;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.lang.ref.WeakReference;
 
 import blueberrycheese.myolifehacker.R;
@@ -52,6 +56,7 @@ public class PicturePreviewActivity extends AppCompatActivity {
             @Override
             public void onBitmapReady(Bitmap bitmap) {
                 imageView.setImageBitmap(bitmap);
+                saveImage(bitmap, "" + System.currentTimeMillis());
 
                 // approxUncompressedSize.setTitle("Approx. uncompressed size");
                 // approxUncompressedSize.setMessage(getApproximateFileMegabytes(bitmap) + "MB");
@@ -74,6 +79,27 @@ public class PicturePreviewActivity extends AppCompatActivity {
 
     private static float getApproximateFileMegabytes(Bitmap bitmap) {
         return (bitmap.getRowBytes() * bitmap.getHeight()) / 1024 / 1024;
+    }
+
+    private void saveImage(Bitmap finalBitmap, String image_name) {
+        String root = Environment.getExternalStorageDirectory().toString();
+//        String time = "" + System.currentTimeMillis();
+        File myDir = new File(root+"/MHL_Camera");
+        myDir.mkdirs();
+        String fname = "MHL_Image_" + image_name+ ".jpg";
+        File file = new File(myDir, fname);
+        if (file.exists()){
+            file.delete();
+        }
+        Log.i("LOAD", root + fname);
+        try {
+            FileOutputStream out = new FileOutputStream(file);
+            finalBitmap.compress(Bitmap.CompressFormat.JPEG, 90, out);
+            out.flush();
+            out.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }
