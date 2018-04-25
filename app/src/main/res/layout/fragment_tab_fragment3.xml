@@ -27,7 +27,7 @@
                 android:layout_alignParentEnd="false"
                 android:textAllCaps="false"
                 android:background="@drawable/imgbtn_rect_state"
-                android:text="Delete" />
+                android:text="Cancle" />
 
             <Button
                 android:id="@+id/btnReady"
@@ -88,7 +88,6 @@
                 android:id="@+id/gestureNumberPicker">
 
             </NumberPicker>
-
             <View
                 android:layout_width="40dp"
                 android:layout_height="40dp"
@@ -97,18 +96,18 @@
                 android:layout_gravity="center"
                 android:layout_marginLeft="@dimen/activity_horizontal_margin"
                 android:background="@drawable/imgbtn_default" />
-
             <View
-                android:id="@+id/view2"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
+                android:textColor="@android:color/black"
+                android:id="@+id/view2"
                 android:layout_gravity="center"
                 android:layout_marginLeft="@dimen/cnt_margin"
-                android:background="@drawable/imgbtn_default"
-                android:textColor="@android:color/black" />
+                android:background="@drawable/imgbtn_default" />
             <View
                 android:layout_width="40dp"
                 android:layout_height="40dp"
+                android:text="Hello"
                 android:textColor="@android:color/black"
                 android:id="@+id/view3"
                 android:layout_gravity="center"
@@ -117,6 +116,7 @@
             <View
                 android:layout_width="40dp"
                 android:layout_height="40dp"
+                android:text="Hello"
                 android:textColor="@android:color/black"
                 android:id="@+id/view4"
                 android:layout_gravity="center"
@@ -125,6 +125,7 @@
             <View
                 android:layout_width="40dp"
                 android:layout_height="40dp"
+                android:text="Hello"
                 android:textColor="@android:color/black"
                 android:id="@+id/view5"
                 android:layout_gravity="center"

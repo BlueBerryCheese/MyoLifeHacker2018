@@ -8,7 +8,6 @@ import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothManager;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -41,7 +40,6 @@ import blueberrycheese.myolifehacker.myo_manage.GestureSaveMethod;
 import blueberrycheese.myolifehacker.myo_manage.GestureSaveModel;
 import blueberrycheese.myolifehacker.myo_manage.IGestureDetectModel;
 import blueberrycheese.myolifehacker.myo_manage.MyoCommandList;
-import blueberrycheese.myolifehacker.myo_manage.MyoDataFileReader;
 import blueberrycheese.myolifehacker.myo_manage.MyoGattCallback;
 import blueberrycheese.myolifehacker.myo_manage.NopModel;
 
@@ -64,9 +62,6 @@ public class TabFragment3 extends Fragment {
     private static final String ARG_PARAM2 = "param2";
     private static final long SCAN_PERIOD = 5000;
     private static final int REQUEST_ENABLE_BT = 1;
-
-    private final static String FileList_kmeans = "KMEANS_DATA.dat";
-    private final static String FileList[] = {"Gesture1.txt","Gesture2.txt","Gesture3.txt","Gesture4.txt","Gesture5.txt","Gesture6.txt"}; //
 
     private Handler mHandler;
     private BluetoothAdapter mBluetoothAdapter;
@@ -226,14 +221,11 @@ public class TabFragment3 extends Fragment {
         btn_cancle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-           /*     if (mBluetoothGatt == null
+                if (mBluetoothGatt == null
                         || !mMyoCallback.setMyoControlCommand(commandList.sendUnsetData())
                         || !mMyoCallback.setMyoControlCommand(commandList.sendNormalSleep())) {
                     Log.d(TAG,"False Data Stop");
                 }
-                */
-                MyoDataFileReader dataFileReader = new MyoDataFileReader(TAG,FileList_kmeans);
-                dataFileReader.removeFile();
             }
         });
 
@@ -243,27 +235,8 @@ public class TabFragment3 extends Fragment {
             //TODO: 적응모델 적용하기
             @Override
             public void onClick(View v) {
-                //inds_num=0;
-               // for(inds_num=0; inds_num<6; inds_num++) {
-                    inds_num=saveMethod.getSaveIndex();
-                    saveModel = new GestureSaveModel(saveMethod, inds_num);
-                    startSaveModel();
-                    saveMethod.setState(GestureSaveMethod.SaveState.Now_Saving);
-                    if(saveMethod.getGestureCounter()==0) {     //위에 setValue로는 setOnValueChangedListener가 인식을 못해서 따로 빼줌.
-                        gesturenNumberPicker.setValue(inds_num);
-                        for(int i=0;i<views.length;i++){
-                            views[i].setBackgroundResource(R.drawable.imgbtn_default);
-                        }
-                    }
-                    gestureText.setText("Gesture" + (inds_num + 1) + "'s Saving Count : " + (saveMethod.getGestureCounter() + 1));
-                  //  views[inds_num].setDrawingCacheBackgroundColor(Color.BLUE);
-                    // views[inds_num].setBackground(imgbtn_passed);
-                   views[saveMethod.getGestureCounter()].setBackgroundResource(R.drawable.imgbtn_pressed);
-             //   }
+
             }
-
-
-
         });
 
 
@@ -434,5 +407,5 @@ public class TabFragment3 extends Fragment {
     public void startNopModel() {
         GestureDetectModelManager.setCurrentModel(new NopModel());
     }
-  //  public int getIndex_num() { return inds_num;}
+
 }
