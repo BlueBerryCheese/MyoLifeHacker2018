@@ -3,12 +3,9 @@ package blueberrycheese.myolifehacker.myo_manage;
 import android.content.Context;
 import android.util.Log;
 
-import org.greenrobot.eventbus.EventBus;
-
 import java.util.LinkedList;
 import java.util.Queue;
 
-import blueberrycheese.myolifehacker.CameraView.CameraEvent;
 import blueberrycheese.myolifehacker.SystemControl.SystemFeature;
 
 /**
@@ -81,27 +78,6 @@ public class NumberSmoother {
         }
         return -1;
     }
-
-    /*
-    Camera 부분 SmootingNumber
-     */
-    public int getSmoothingNumber_camera() {
-        for (int i_element = 0; i_element < MAX_SAVE_LENGTH; i_element++) {
-            if (numCounter[i_element] >= THRESHOLD_LENGTH) {//50개중 20개이상 일치하지 않으면 불일치(인지되지 않은 제스처)
-                Log.d("number success","number success : "+(i_element+1));
-                //gestureNumArray=new LinkedList<>();
-                //Log.d("detect_gesture","-> "+(int)(i_element+1));
-                Log.d("detect_gesture cnt","-> "+numCounter[0]+","+numCounter[1]+","+numCounter[2]+","+numCounter[3]+","+numCounter[4]+","+numCounter[5]);
-//                systemFeature.function(i_element);
-//                Log.d("smoothGesture","SmoothGesture(i_element+1) : "+(i_element+1));
-                EventBus.getDefault().post(new CameraEvent(i_element));
-                return i_element;
-            }
-        }
-        return -1;
-    }
-
-
 
     //Delete
 //    boolean flg = false;

@@ -29,7 +29,6 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.HashMap;
 
-import blueberrycheese.myolifehacker.CameraView.CameraActivity;
 import blueberrycheese.myolifehacker.SystemControl.SystemControlActivity;
 import blueberrycheese.myolifehacker.myo_manage.GestureSaveMethod;
 import blueberrycheese.myolifehacker.myo_manage.MyoCommandList;
@@ -121,7 +120,7 @@ public class TabFragment1 extends Fragment {
                 switch(viewId){
                     case R.id.camera_button:
                         Log.d("cameracircle","cameraclicked");
-                        Intent intent = new Intent(getActivity().getApplicationContext(), CameraActivity.class);
+                        Intent intent = new Intent(getActivity().getApplicationContext(), CameraMainActivity.class);
                         intent.putExtra("bluetoothDevice", device);
                         startActivity(intent);
                         break;
