@@ -11,37 +11,11 @@
     android:background="@drawable/redpinkblurgradation"
     tools:context=".MainActivity">
 
-    <LinearLayout
-        android:id="@+id/topLinearLayout"
-        android:layout_alignParentTop="true"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/bStopEmg"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="false"
-            android:onClick="onClickNoEMG"
-            android:background="@drawable/color_button"
-            android:text="noEMG" />
-
-        <Button
-            android:id="@+id/bEMG"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginLeft="160dp"
-            android:background="@drawable/color_button"
-            android:onClick="onClickEMG"
-            android:text="EMG" />
-    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/RawLinearLayout"
-        android:layout_below="@+id/topLinearLayout"
+        android:layout_alignParentTop="true"
         android:layout_marginTop="5dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -54,8 +28,17 @@
             android:layout_above="@+id/maxData"
             android:layout_alignParentStart="true"
             android:background="@android:drawable/editbox_dropdown_light_frame"
+            android:layout_marginTop="50dp"
             android:text="Myo Status"
-            android:textSize="15dp" />`
+            android:textSize="15dp" />
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:onClick="onClickEMG"/>`
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:onClick="onClickDetect"/>`
 
         <TextView
             android:id="@+id/maxData"
@@ -65,6 +48,7 @@
             android:text="Myo MaxData"
             android:textSize="15dp"
             android:background="@android:drawable/editbox_dropdown_light_frame"
+            android:visibility="invisible"
             />
 
 
@@ -93,38 +77,203 @@
         android:textSize="25dp"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="60dp"
-        android:layout_above="@+id/BottomRelativeLayout"
+        android:layout_above="@+id/BottomLinearLayout"
         android:text="Connect Myo "
         android:textStyle="bold" />
 
     <RelativeLayout
-        android:id="@+id/BottomRelativeLayout"
-        android:layout_alignParentBottom="true"
+        android:id="@+id/BottomLinearLayout"
+        android:layout_above="@id/BottomLinearLayout2"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
-
-        <Button
-            android:id="@+id/bDetect"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:layout_weight="1"
-            android:layout_alignParentLeft="true"
-            android:onClick="onClickDetect"
-            android:background="@drawable/imgbtn_states"
-            android:text="Detect" />
+        android:layout_height="wrap_content">
 
 
-
-        <Button
-            android:id="@+id/bSave"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:id="@+id/gesturelinearlayout_tot1"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:onClick="onClickSave"
-            android:visibility="invisible"
-            android:text="Save" />
+            android:layout_gravity="bottom"
+            android:background="#ffffff"
+            android:orientation="horizontal"
+            android:weightSum="3">
+
+            <LinearLayout
+                android:id="@+id/gesturelinearlayout1"
+                android:layout_width="0dp"
+                android:layout_height="64dp"
+                android:layout_gravity="bottom"
+                android:layout_weight="1"
+                android:background="#ffffff"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:weightSum="10">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="7"
+                    android:src="@drawable/gesture_fist" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="3"
+                    android:gravity="center"
+                    android:text="Wi-fi" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/gesturelinearlayout2"
+                android:layout_width="0dp"
+                android:layout_height="64dp"
+                android:layout_gravity="bottom"
+                android:layout_weight="1"
+                android:background="#ffffff"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:weightSum="10">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="7"
+                    android:src="@drawable/gesture_wavein" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="3"
+                    android:gravity="center"
+                    android:text="Volume Down" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/gesturelinearlayout3"
+                android:layout_width="0dp"
+                android:layout_height="64dp"
+                android:layout_gravity="bottom"
+                android:layout_weight="1"
+                android:background="#ffffff"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:weightSum="10">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="7"
+                    android:src="@drawable/gesture_waveout" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="3"
+                    android:gravity="center"
+                    android:text="Volume Up" />
+
+            </LinearLayout>
+
+        </LinearLayout>
 
     </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/BottomLinearLayout2"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
+
+        <LinearLayout
+            android:id="@+id/gesturelinearlayout_tot2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:background="#ffffff"
+            android:orientation="horizontal"
+            android:weightSum="3">
+
+            <LinearLayout
+                android:id="@+id/gesturelinearlayout4"
+                android:layout_width="0dp"
+                android:layout_height="64dp"
+                android:layout_gravity="bottom"
+                android:layout_weight="1"
+                android:background="#ffffff"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:weightSum="10">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="7"
+                    android:src="@drawable/gesture_spread" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="3"
+                    android:gravity="center"
+                    android:text="Sound-Vibrate" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/gesturelinearlayout5"
+                android:layout_width="0dp"
+                android:layout_height="64dp"
+                android:layout_gravity="bottom"
+                android:layout_weight="1"
+                android:background="#ffffff"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:weightSum="10">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="7"
+                    android:src="@drawable/gesture_wavein" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="3"
+                    android:gravity="center"
+                    android:text="Screen Brighter" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/gesturelinearlayout6"
+                android:layout_width="0dp"
+                android:layout_height="64dp"
+                android:layout_gravity="bottom"
+                android:layout_weight="1"
+                android:background="#ffffff"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:weightSum="10">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="7"
+                    android:src="@drawable/gesture_waveout" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="3"
+                    android:gravity="center"
+                    android:text="Screen Darker" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </RelativeLayout>
 
 </RelativeLayout>

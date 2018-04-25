@@ -94,6 +94,7 @@ public class GestureDetectMethod_System{
     }
 
     int cnt = 0;
+    int cnt_thr = 0;
     int old_gesture_num=-1;
     //getDetectGesture Use By K-MEANS
     public GestureState getDetectGesture(byte[] data) {
@@ -125,12 +126,20 @@ public class GestureDetectMethod_System{
         numberSmoother.addArray((Integer) (detect_Num));
         //streamCount = 0;
         cnt++;
-        if(cnt%10==0){
+        if(cnt%30==0){
             cnt=0;
             int result = numberSmoother.getSmoothingNumber_system();
-            if(old_gesture_num!=result)
+            if(old_gesture_num!=result){
                 old_gesture_num = result;
-
+                cnt_thr=0;
+            }else{
+                cnt_thr++;
+                if(cnt_thr>3){
+                    numberSmoother.clearArray();    // 같은게 계속 반복되면 클리어 한판!
+                    cnt_thr=0;
+                    old_gesture_num=-1;
+                }
+            }
         }
         return getEnum(old_gesture_num);
 

@@ -53,6 +53,12 @@ public class NumberSmoother {
         Log.d("numbersmoother","["+numCounter[0]+","+numCounter[1]+","+numCounter[2]+","+numCounter[3]+","+numCounter[4]+","+numCounter[5]+"]");
     }
 
+    public void clearArray(){
+        gestureNumArray = new LinkedList<>();
+        numCounter =  new int[MAX_SAVE_LENGTH];
+        storageDataCount = 0;
+    }
+
     public int getSmoothingNumber() {
         for (int i_element = 0; i_element < MAX_SAVE_LENGTH; i_element++) {
             if (numCounter[i_element] >= THRESHOLD_LENGTH) {//50개중 20개이상 일치하지 않으면 불일치(인지되지 않은 제스처)
@@ -74,7 +80,7 @@ public class NumberSmoother {
                 Log.d("number success","number success : "+(i_element+1));
                 //gestureNumArray=new LinkedList<>();
                 //Log.d("detect_gesture","-> "+(int)(i_element+1));
-                Log.d("detect_gesture cnt","-> "+numCounter[0]+","+numCounter[1]+","+numCounter[2]+","+numCounter[3]+","+numCounter[4]+","+numCounter[5]);
+                Log.d("system_gesture cnt","-> "+numCounter[0]+","+numCounter[1]+","+numCounter[2]+","+numCounter[3]+","+numCounter[4]+","+numCounter[5]);
                 systemFeature.function(i_element);
                 return i_element;
             }

@@ -161,7 +161,7 @@ public class MainActivity extends AppCompatActivity
     private ViewPager.OnPageChangeListener listener = new ViewPager.OnPageChangeListener() {    //페이지 변환 리스너 함수(scrolled랑 selected는 알겠는데 statechanged가 언제 뭐가 발생하는지를 모르곘음
         @Override
         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-            //EventBus.getDefault().post(new EventData(bluetoothDevice));
+//            EventBus.getDefault().post(new EventData(bluetoothDevice));
         }
 
         @Override
@@ -269,11 +269,14 @@ public class MainActivity extends AppCompatActivity
                 @Override
                 public void run() {
                     mBluetoothAdapter.stopLeScan(MainActivity.this);
+                    EventBus.getDefault().post(new EventData(bluetoothDevice));
                 }
             }, SCAN_PERIOD);
             mBluetoothAdapter.startLeScan(this);
             Log.d(TAG,resultCode+"");
+
         }
+
     }
 
 

@@ -11,6 +11,7 @@ import org.apache.commons.math3.ml.clustering.KMeansPlusPlusClusterer;
 import org.apache.commons.math3.ml.distance.EuclideanDistance;
 
 import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
@@ -30,8 +31,8 @@ public class GestureSaveMethod {
     private final static int COMPARE_NUM = 6;
     private final static int SAVE_DATA_LENGTH = 5;
     private final static int AVERAGING_LENGTH = 10;
-
-    private final static int JUST_SAVE_DATA_LEN = 10;
+    private final static int READING_LENGTH = 1000;  //
+    private final static int JUST_SAVE_DATA_LEN = 5;
 
     private ArrayList<EmgCharacteristicData> rawDataList = new ArrayList<>();
     private ArrayList<EmgData> maxDataList = new ArrayList<>();
@@ -42,6 +43,7 @@ public class GestureSaveMethod {
 
     private int dataCounter = 0;
     private int gestureCounter = 0;
+    private int save_index = 0;     //
 
     private final static int KMEANS_K = 128;
     private final static String FileList_kmeans = "KMEANS_DATA.dat";
@@ -75,6 +77,12 @@ public class GestureSaveMethod {
                 InputStream in;
                 PrintWriter writer = null;
                 writer = new PrintWriter(dataFileReader.getMyoDataFile());
+
+                //////////
+                FileReader fr =null; //
+                BufferedReader br =null;
+
+                //////////
                 for(int j=0;j<COMPARE_NUM;j++){
                     doublePointList = new ArrayList<>();
                     int resID= context.getResources().getIdentifier("gesture"+(j+1),"raw","blueberrycheese.myolifehacker");
@@ -83,6 +91,36 @@ public class GestureSaveMethod {
                     BufferedReader bufferedReader = new BufferedReader(streamReader);
                     String line;
                     StringTokenizer stringTokenizer;
+
+
+                    //////////////////////
+
+
+                    try {
+                        MyoDataFileReader dataFileReader2 = new MyoDataFileReader(TAG, FileList_Raw[j]);  //
+                        fr = new FileReader(dataFileReader2.getMyoDataFile()); //
+                        br = new BufferedReader(fr);  //
+                        // Log.e(TAG, fr.ready());
+                        // if (fr.ready()) {
+
+
+                        int cnt_adapter = 0;
+                        while ((line = br.readLine()) != null) {
+                            //while(cnt_adapter++<READING_LENGTH&&((line = br.readLine())!=null)){
+                            stringTokenizer = new StringTokenizer(line, ",");
+                            double[] emgDat = new double[8];
+                            for (int k = 0; k < 8; k++) {
+                                emgDat[k] = Double.parseDouble(stringTokenizer.nextToken());
+                            }
+                            doublePointList.add(new DoublePoint(emgDat));
+                        }
+                        //   }
+                        fr.close();
+                        br.close();
+                    }catch (Exception e){
+                        Log.e(TAG,e.getMessage());
+                    }
+                    ////////////////////////////////
                     int cntt=1000;          //사실 지금 필요없는데 내 폰 상태가... ㅜㅜ 참고로 text파일 내전용임 내데이터만들가있음 실험할때 바꾸세요.
                     while(((line = bufferedReader.readLine())!=null)){
                         stringTokenizer = new StringTokenizer(line,",");
@@ -94,6 +132,7 @@ public class GestureSaveMethod {
                     }
                     streamReader.close();
                     bufferedReader.close();
+
                     stringTokenizer = null;
                     Log.d(TAG,"Loading txt size is "+doublePointList.size());
 //                    Toast.makeText(context,"K-MEANS_lization about"+(i+1)+" data", Toast.LENGTH_LONG).show();
@@ -121,7 +160,7 @@ public class GestureSaveMethod {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                    }
+                }
 
                 if(writer != null){
                     writer.close();
@@ -234,6 +273,11 @@ public class GestureSaveMethod {
             dataFileReader2.saveRAW_max(getRawCompareDataList());
             compareGesture = new ArrayList<EmgData>();
             rawcompareGesture = new ArrayList<EmgData>();
+            if(save_index==COMPARE_NUM-1) {     //  6번 제스처 까지 저장 완료하면
+                save_index=0;       //
+            }else {                 //
+                save_index++;       //
+            }                       //
         }
     }
 
@@ -289,6 +333,12 @@ public class GestureSaveMethod {
     public int getGestureCounter() {
         return gestureCounter;
     }
+
+    public int getSaveIndex() {
+        return save_index;
+    }  //
+
+
 
     public ArrayList<EmgData> getCompareDataList() {
         return compareGesture_k;

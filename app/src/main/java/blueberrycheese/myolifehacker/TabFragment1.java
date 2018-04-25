@@ -18,6 +18,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.content.Intent;
+import android.widget.Button;
 
 
 import com.imangazaliev.circlemenu.CircleMenu;
@@ -31,7 +32,10 @@ import java.util.HashMap;
 
 import blueberrycheese.myolifehacker.CameraView.CameraActivity;
 import blueberrycheese.myolifehacker.SystemControl.SystemControlActivity;
+import blueberrycheese.myolifehacker.myo_manage.GestureDetectMethod;
+import blueberrycheese.myolifehacker.myo_manage.GestureDetectModel;
 import blueberrycheese.myolifehacker.myo_manage.GestureSaveMethod;
+import blueberrycheese.myolifehacker.myo_manage.GestureSaveModel;
 import blueberrycheese.myolifehacker.myo_manage.MyoCommandList;
 import blueberrycheese.myolifehacker.myo_manage.MyoGattCallback;
 
@@ -51,14 +55,14 @@ public class TabFragment1 extends Fragment {
     private static final String TAG = "TabFragment1";
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
+    private static final long SCAN_PERIOD = 5000;
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
     private View view;
     private CircleMenu circleMenu;
     private CircleMenuButton circleMenuButton_volume ;
-
+    private CircleMenuButton circleMenuButton_camera;
     private Handler mHandler;
     private BluetoothAdapter mBluetoothAdapter;
     private BluetoothGatt mBluetoothGatt;
@@ -68,6 +72,11 @@ public class TabFragment1 extends Fragment {
     private BluetoothDevice device;
     private OnFragmentInteractionListener mListener;
     String deviceName;
+
+    private GestureSaveModel saveModel;
+    private GestureSaveMethod   saveMethod;
+    private GestureDetectModel detectModel;
+    private GestureDetectMethod detectMethod;
 
     public TabFragment1() {
         // Required empty public constructor
@@ -101,7 +110,7 @@ public class TabFragment1 extends Fragment {
 
 
     }
-
+    public Button btn_hello;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -113,7 +122,8 @@ public class TabFragment1 extends Fragment {
 
         //Main CirecleMenu 관련
         circleMenu = (CircleMenu) view.findViewById(R.id.circleMenu);
-
+        circleMenuButton_volume = (CircleMenuButton)view.findViewById(R.id.volume);
+        circleMenuButton_camera = (CircleMenuButton)view.findViewById(R.id.camera_button);
         circleMenu.setOnItemClickListener(new CircleMenu.OnItemClickListener() {
             @Override
             public void onItemClick(CircleMenuButton menuButton) {
@@ -140,6 +150,17 @@ public class TabFragment1 extends Fragment {
                 }
             }
         });
+
+//        btn_hello=view.findViewById(R.id.btn_hello);
+//        btn_hello.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Log.d("btn_hello", "__Btn CLICK");
+//                circleMenu.onOpenAnimationStart();
+//                circleMenu.onOpenAnimationEnd();
+//                circleMenu.toggle();
+//            }
+//        });   토글방식수행!
 
 
 
@@ -220,19 +241,41 @@ public class TabFragment1 extends Fragment {
         try {
             EventBus.getDefault().register(this);           //이벤트 버스 다시 키는 역활
         }catch (Exception e){}
+
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void testEvent(EventData event){
-        Log.e("test_event", event.device.getName() + "connected !!");
-        HashMap<String,View> views = new HashMap<String,View>();
+        if(event.device!=null){
+            Log.e("test_event", event.device.getName() + "connected !! Tab1");
+            HashMap<String,View> views = new HashMap<String,View>();
 
-        device = event.device;
-        android.support.v4.app.FragmentTransaction ft = getFragmentManager().beginTransaction();
-        ft.detach(this).attach(this).commit();  //처음에 보내졌을당시에 refresh 한번시킴.
-        mMyoCallback = new MyoGattCallback(mHandler);
-        mBluetoothGatt = device.connectGatt(getContext(), false, mMyoCallback);
-        mMyoCallback.setBluetoothGatt(mBluetoothGatt);
+            device = event.device;
+//            android.support.v4.app.FragmentTransaction ft = getFragmentManager().beginTransaction();
+//            ft.detach(this).attach(this).commit();  //처음에 보내졌을당시에 refresh 한번시킴.
+            mMyoCallback = new MyoGattCallback(mHandler);
+            mBluetoothGatt = device.connectGatt(view.getContext(), false, mMyoCallback);
+            mMyoCallback.setBluetoothGatt(mBluetoothGatt);
+
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if (mBluetoothGatt == null || !mMyoCallback.setMyoControlCommand(commandList.sendEmgOnly())) {
+                        Log.d(TAG,"False EMG");
+                    } else {
+                        saveMethod  = new GestureSaveMethod(-1, view.getContext());
+                        Log.d(TAG,"True EMG");
+                        if (saveMethod.getSaveState() == GestureSaveMethod.SaveState.Have_Saved) {
+                            //gestureText.setText("DETECT Ready");
+                        } else {
+                            //gestureText.setText("Teach me \'Gesture\'");
+                        }
+                    }
+                }
+            },SCAN_PERIOD);
+
+        }
+
     }
 
     /**
@@ -249,4 +292,6 @@ public class TabFragment1 extends Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
+
+
 }

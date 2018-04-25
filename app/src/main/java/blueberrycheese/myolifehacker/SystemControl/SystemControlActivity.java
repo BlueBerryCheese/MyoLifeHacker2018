@@ -79,7 +79,7 @@ public class SystemControlActivity extends AppCompatActivity implements Bluetoot
     private SystemFeature systemFeature;
     NotificationManager notificationManager;
     boolean retVal = true;
-
+    private Context mContext;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -102,7 +102,7 @@ public class SystemControlActivity extends AppCompatActivity implements Bluetoot
         mHandler = new Handler();
         algorithm1 = (TextView)findViewById(R.id.algorithm1);
         maxDataTextView=(TextView)findViewById(R.id.maxData);
-
+        mContext = this;
         startNopModel();
 
         Intent intent = getIntent();
@@ -112,16 +112,31 @@ public class SystemControlActivity extends AppCompatActivity implements Bluetoot
             deviceName = bluetoothDevice.getName();
             HashMap<String,View> views = new HashMap<String,View>();
             mMyoCallback = new MyoGattCallback(mHandler, emgDataText, views,maxDataTextView,-1);
-            mBluetoothGatt = bluetoothDevice.connectGatt(this, false, mMyoCallback);
+            mBluetoothGatt = bluetoothDevice.connectGatt(this, true, mMyoCallback);
             mMyoCallback.setBluetoothGatt(mBluetoothGatt);
             Log.d(TAG,"bluetoothDevice is "+deviceName);
+
             BluetoothManager mBluetoothManager = (BluetoothManager) getSystemService(BLUETOOTH_SERVICE);
             mBluetoothAdapter = mBluetoothManager.getAdapter();
-
-
+            //onClickEMG(this);
+            //onClickDetect();
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    onClickEMG(mContext);
+                    onClickDetect();
+                }
+            },SCAN_PERIOD);
         }
 
+
+
     }
+
+    public void onResume(){
+        super.onResume();
+    }
+
     @Override
     public void onStop(){
         super.onStop();
@@ -139,15 +154,15 @@ public class SystemControlActivity extends AppCompatActivity implements Bluetoot
             HashMap<String,View> views = new HashMap<String,View>();
 
             mMyoCallback = new MyoGattCallback(mHandler, emgDataText, views,maxDataTextView,-1);
-            mBluetoothGatt = device.connectGatt(this, false, mMyoCallback);
+            mBluetoothGatt = device.connectGatt(this, true, mMyoCallback);
             mMyoCallback.setBluetoothGatt(mBluetoothGatt);
         }
     }
-    public void onClickEMG(View v) {
+    public void onClickEMG(Context context) {
         if (mBluetoothGatt == null || !mMyoCallback.setMyoControlCommand(commandList.sendEmgOnly())) {
             Log.d(TAG,"False EMG");
         } else {
-            saveMethod  = new GestureSaveMethod(-1, this);
+            saveMethod  = new GestureSaveMethod(-1, context);
             if (saveMethod.getSaveState() == GestureSaveMethod.SaveState.Have_Saved) {
                 gestureText.setText("DETECT Ready");
             } else {
@@ -156,29 +171,8 @@ public class SystemControlActivity extends AppCompatActivity implements Bluetoot
         }
     }
 
-    public void onClickNoEMG(View v) {
-        if (mBluetoothGatt == null
-                || !mMyoCallback.setMyoControlCommand(commandList.sendUnsetData())
-                || !mMyoCallback.setMyoControlCommand(commandList.sendNormalSleep())) {
-            Log.d(TAG,"False Data Stop");
-        }
 
-    }
-
-    public void onClickSave(View v) {
-        if (saveMethod.getSaveState() == GestureSaveMethod.SaveState.Ready ||
-                saveMethod.getSaveState() == GestureSaveMethod.SaveState.Have_Saved) {
-            saveModel   = new GestureSaveModel(saveMethod,-1);
-            startSaveModel();
-        } else if (saveMethod.getSaveState() == GestureSaveMethod.SaveState.Not_Saved) {
-            startSaveModel();
-        }
-        saveMethod.setState(GestureSaveMethod.SaveState.Now_Saving);
-
-        gestureText.setText("Saving ; " + gestureString[saveMethod.getGestureCounter()] + " Gesture");
-    }
-
-    public void onClickDetect(View v) {
+    public void onClickDetect() {
         if (saveMethod.getSaveState() == GestureSaveMethod.SaveState.Have_Saved) {
             gestureText.setText("Let's Go !!");
             /*detectMethod = new GestureDetectMethod(saveMethod.getCompareDataList());*/

@@ -8,6 +8,7 @@ import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothManager;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -40,6 +41,7 @@ import blueberrycheese.myolifehacker.myo_manage.GestureSaveMethod;
 import blueberrycheese.myolifehacker.myo_manage.GestureSaveModel;
 import blueberrycheese.myolifehacker.myo_manage.IGestureDetectModel;
 import blueberrycheese.myolifehacker.myo_manage.MyoCommandList;
+import blueberrycheese.myolifehacker.myo_manage.MyoDataFileReader;
 import blueberrycheese.myolifehacker.myo_manage.MyoGattCallback;
 import blueberrycheese.myolifehacker.myo_manage.NopModel;
 
@@ -62,6 +64,9 @@ public class TabFragment3 extends Fragment {
     private static final String ARG_PARAM2 = "param2";
     private static final long SCAN_PERIOD = 5000;
     private static final int REQUEST_ENABLE_BT = 1;
+
+    private final static String FileList_kmeans = "KMEANS_DATA.dat";
+    private final static String FileList[] = {"Gesture1.txt","Gesture2.txt","Gesture3.txt","Gesture4.txt","Gesture5.txt","Gesture6.txt"}; //
 
     private Handler mHandler;
     private BluetoothAdapter mBluetoothAdapter;
@@ -87,7 +92,7 @@ public class TabFragment3 extends Fragment {
     private GestureDetectModel  detectModel;
     private GestureDetectMethod detectMethod;
     private Button btn_ready,btn_cancle,btn_sync,btn_save;
-
+    private View view;
     private int inds_num=0;
 
     private  Dialog dialog;
@@ -133,7 +138,7 @@ public class TabFragment3 extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        final View view = inflater.inflate(R.layout.fragment_tab_fragment3, container, false);
+        view = inflater.inflate(R.layout.fragment_tab_fragment3, container, false);
         GraphView graph = (GraphView)view.findViewById(R.id.graph);
         //TODO:: 실시간 데이터 변화 만들기(나중에)
         LineGraphSeries<DataPoint> series = new LineGraphSeries<DataPoint>(new DataPoint[] {    //추후에 데이터가 실시간으로 어떻게 들어오는지를 보여줄려고해서 만들어봤는데 어려우면 걍 뒤엎을각오가 있습니다.
@@ -221,11 +226,14 @@ public class TabFragment3 extends Fragment {
         btn_cancle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mBluetoothGatt == null
+           /*     if (mBluetoothGatt == null
                         || !mMyoCallback.setMyoControlCommand(commandList.sendUnsetData())
                         || !mMyoCallback.setMyoControlCommand(commandList.sendNormalSleep())) {
                     Log.d(TAG,"False Data Stop");
                 }
+                */
+                MyoDataFileReader dataFileReader = new MyoDataFileReader(TAG,FileList_kmeans);
+                dataFileReader.removeFile();
             }
         });
 
@@ -235,8 +243,27 @@ public class TabFragment3 extends Fragment {
             //TODO: 적응모델 적용하기
             @Override
             public void onClick(View v) {
-
+                //inds_num=0;
+                // for(inds_num=0; inds_num<6; inds_num++) {
+                inds_num=saveMethod.getSaveIndex();
+                saveModel = new GestureSaveModel(saveMethod, inds_num);
+                startSaveModel();
+                saveMethod.setState(GestureSaveMethod.SaveState.Now_Saving);
+                if(saveMethod.getGestureCounter()==0) {     //위에 setValue로는 setOnValueChangedListener가 인식을 못해서 따로 빼줌.
+                    gesturenNumberPicker.setValue(inds_num);
+                    for(int i=0;i<views.length;i++){
+                        views[i].setBackgroundResource(R.drawable.imgbtn_default);
+                    }
+                }
+                gestureText.setText("Gesture" + (inds_num + 1) + "'s Saving Count : " + (saveMethod.getGestureCounter() + 1));
+                //  views[inds_num].setDrawingCacheBackgroundColor(Color.BLUE);
+                // views[inds_num].setBackground(imgbtn_passed);
+                views[saveMethod.getGestureCounter()].setBackgroundResource(R.drawable.imgbtn_pressed);
+                //   }
             }
+
+
+
         });
 
 
@@ -388,8 +415,25 @@ public class TabFragment3 extends Fragment {
 
         device = event.device;
         mMyoCallback = new MyoGattCallback(mHandler, emgDataText, views,maxDataTextView,inds_num);  //이곳에서 문제가 일어나서 현재 이페이지에서밖에 시행이 안됨 inds_num(제스처 몇번을 저장할 것인가에 대한 내용이 담겨져 있음)
-        mBluetoothGatt = device.connectGatt(getContext(), false, mMyoCallback);
+        mBluetoothGatt = device.connectGatt(getContext(), true, mMyoCallback);
         mMyoCallback.setBluetoothGatt(mBluetoothGatt);
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (mBluetoothGatt == null || !mMyoCallback.setMyoControlCommand(commandList.sendEmgOnly())) {
+                    Log.d(TAG,"False EMG");
+                } else {
+                    saveMethod  = new GestureSaveMethod(inds_num, view.getContext());
+                    Log.d(TAG,"True EMG22");
+                    if (saveMethod.getSaveState() == GestureSaveMethod.SaveState.Have_Saved) {
+                        gestureText.setText("DETECT Ready");
+                    } else {
+                        gestureText.setText("Teach me \'Gesture\'");
+                    }
+                }
+            }
+        },500);
     }
 
     /**
@@ -407,5 +451,5 @@ public class TabFragment3 extends Fragment {
     public void startNopModel() {
         GestureDetectModelManager.setCurrentModel(new NopModel());
     }
-
+    //  public int getIndex_num() { return inds_num;}
 }
