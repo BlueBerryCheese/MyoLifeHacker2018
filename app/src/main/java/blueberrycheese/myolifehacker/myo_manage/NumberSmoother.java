@@ -9,6 +9,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 import blueberrycheese.myolifehacker.CameraView.CameraEvent;
+import blueberrycheese.myolifehacker.MenuControl.MenuEvent;
 import blueberrycheese.myolifehacker.SystemControl.SystemFeature;
 
 /**
@@ -26,6 +27,7 @@ public class NumberSmoother {
 
     private SystemFeature systemFeature;
 
+
     private Context mcontext;
     public NumberSmoother(){
 
@@ -34,6 +36,7 @@ public class NumberSmoother {
     public  NumberSmoother(SystemFeature systemFeature){
         this.systemFeature=systemFeature;
     }
+
 
     public void addArray(Integer gestureNum) {
         gestureNumArray.offer(gestureNum);
@@ -82,6 +85,20 @@ public class NumberSmoother {
                 //Log.d("detect_gesture","-> "+(int)(i_element+1));
                 Log.d("system_gesture cnt","-> "+numCounter[0]+","+numCounter[1]+","+numCounter[2]+","+numCounter[3]+","+numCounter[4]+","+numCounter[5]);
                 systemFeature.function(i_element);
+                return i_element;
+            }
+        }
+        return -1;
+    }
+
+    public int getSmoothingNumber_menu() {
+        for (int i_element = 0; i_element < MAX_SAVE_LENGTH; i_element++) {
+            if (numCounter[i_element] >= THRESHOLD_LENGTH) {//50개중 20개이상 일치하지 않으면 불일치(인지되지 않은 제스처)
+                Log.d("number success","number success : "+(i_element+1));
+                //gestureNumArray=new LinkedList<>();
+                //Log.d("detect_gesture","-> "+(int)(i_element+1));
+                Log.d("menu_gesture cnt","-> "+numCounter[0]+","+numCounter[1]+","+numCounter[2]+","+numCounter[3]+","+numCounter[4]+","+numCounter[5]);
+                EventBus.getDefault().post(new MenuEvent(i_element));
                 return i_element;
             }
         }

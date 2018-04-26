@@ -1,9 +1,7 @@
 package blueberrycheese.myolifehacker.myo_manage;
 
 import android.app.Activity;
-import android.support.v4.app.FragmentActivity;
 
-import blueberrycheese.myolifehacker.MainActivity;
 import blueberrycheese.myolifehacker.TabFragment3;
 
 

@@ -23,6 +23,9 @@ import android.widget.Button;
 
 import com.imangazaliev.circlemenu.CircleMenu;
 import com.imangazaliev.circlemenu.CircleMenuButton;
+import com.otaliastudios.cameraview.Flash;
+import com.otaliastudios.cameraview.Grid;
+import com.otaliastudios.cameraview.SessionType;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -31,11 +34,18 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.HashMap;
 
 import blueberrycheese.myolifehacker.CameraView.CameraActivity;
+import blueberrycheese.myolifehacker.CameraView.CameraEvent;
+import blueberrycheese.myolifehacker.MenuControl.GestureDetectMethod_Menu;
+import blueberrycheese.myolifehacker.MenuControl.GestureDetectModel_Menu;
+import blueberrycheese.myolifehacker.MenuControl.GestureDetectSendResultAction_Menu;
+import blueberrycheese.myolifehacker.MenuControl.MenuEvent;
 import blueberrycheese.myolifehacker.SystemControl.SystemControlActivity;
 import blueberrycheese.myolifehacker.myo_manage.GestureDetectMethod;
 import blueberrycheese.myolifehacker.myo_manage.GestureDetectModel;
+import blueberrycheese.myolifehacker.myo_manage.GestureDetectModelManager;
 import blueberrycheese.myolifehacker.myo_manage.GestureSaveMethod;
 import blueberrycheese.myolifehacker.myo_manage.GestureSaveModel;
+import blueberrycheese.myolifehacker.myo_manage.IGestureDetectModel;
 import blueberrycheese.myolifehacker.myo_manage.MyoCommandList;
 import blueberrycheese.myolifehacker.myo_manage.MyoGattCallback;
 
@@ -75,8 +85,11 @@ public class TabFragment1 extends Fragment {
 
     private GestureSaveModel saveModel;
     private GestureSaveMethod   saveMethod;
-    private GestureDetectModel detectModel;
-    private GestureDetectMethod detectMethod;
+    private GestureDetectModel_Menu detectModel;
+    private GestureDetectMethod_Menu detectMethod;
+
+    int[] smoothcount = new int[6];
+    private int gestureNum = -1;
 
     public TabFragment1() {
         // Required empty public constructor
@@ -151,16 +164,6 @@ public class TabFragment1 extends Fragment {
             }
         });
 
-//        btn_hello=view.findViewById(R.id.btn_hello);
-//        btn_hello.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Log.d("btn_hello", "__Btn CLICK");
-//                circleMenu.onOpenAnimationStart();
-//                circleMenu.onOpenAnimationEnd();
-//                circleMenu.toggle();
-//            }
-//        });   토글방식수행!
 
 
 
@@ -222,6 +225,7 @@ public class TabFragment1 extends Fragment {
 
     @Override
     public void onDetach() {
+
         super.onDetach();
         mListener = null;
     }
@@ -266,6 +270,12 @@ public class TabFragment1 extends Fragment {
                         saveMethod  = new GestureSaveMethod(-1, view.getContext());
                         Log.d(TAG,"True EMG");
                         if (saveMethod.getSaveState() == GestureSaveMethod.SaveState.Have_Saved) {
+                            detectMethod = new GestureDetectMethod_Menu(mHandler, saveMethod.getCompareDataList());    //아예 새롭게 각각의 detectMethod를 구현하는것이 빠를것으로 예상된다.
+                            detectModel = new GestureDetectModel_Menu(detectMethod);
+                            startDetectModel();
+                        }
+
+                        if (saveMethod.getSaveState() == GestureSaveMethod.SaveState.Have_Saved) {
                             //gestureText.setText("DETECT Ready");
                         } else {
                             //gestureText.setText("Teach me \'Gesture\'");
@@ -276,6 +286,11 @@ public class TabFragment1 extends Fragment {
 
         }
 
+    }
+    public void startDetectModel() {
+        IGestureDetectModel model = detectModel;
+        model.setAction(new GestureDetectSendResultAction_Menu(this));    //변경
+        GestureDetectModelManager.setCurrentModel(model);
     }
 
     /**
@@ -293,5 +308,68 @@ public class TabFragment1 extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(MenuEvent event) {
+        gestureNum = event.gesture;
+        Log.d("MenuEvent","MenuEvent Gesture num : "+event.gesture);
 
+        switch(gestureNum){
+            case 0 :
+                if(smoothcount[gestureNum]>1) {
+                    circleMenu.onOpenAnimationStart();
+                    circleMenu.toggle();
+                    circleMenu.onOpenAnimationEnd();
+
+                    smoothcount[gestureNum]=-1;
+                    resetSmoothCount();
+                }
+                smoothcount[gestureNum]++;
+
+                break;
+
+            case 1 :
+                if(smoothcount[gestureNum]>1) {
+                    circleMenu.onSelectAnimationStart(circleMenuButton_volume);
+                    circleMenu.onSelectAnimationEnd(circleMenuButton_volume);
+                    smoothcount[gestureNum]=-1;
+                    resetSmoothCount();
+                }
+                smoothcount[gestureNum]++;
+                break;
+
+            case 2 :
+                if(smoothcount[gestureNum]>1) {
+                    circleMenu.onSelectAnimationStart(circleMenuButton_camera);
+                    circleMenu.onSelectAnimationEnd(circleMenuButton_camera);
+
+                    smoothcount[gestureNum]=-1;
+                    resetSmoothCount();
+                }
+                smoothcount[gestureNum]++;
+
+                break;
+
+            case 3 :
+                if(smoothcount[gestureNum]>1) {
+                    circleMenu.onCloseAnimationStart();
+                    circleMenu.toggle();
+                    circleMenu.onCloseAnimationEnd();
+
+                    smoothcount[gestureNum]=-1;
+                    resetSmoothCount();
+                }
+                smoothcount[gestureNum]++;
+                break;
+
+            default :
+                break;
+
+        }
+    }
+
+    public void resetSmoothCount(){
+        for(int i : smoothcount){
+            i = -1;
+        }
+    }
 }

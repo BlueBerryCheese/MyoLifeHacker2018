@@ -34,16 +34,16 @@ public class MyoDataFileReader {
 
     public void saveRAW(ArrayList<EmgCharacteristicData> myoDataList) {
         File targetFile = getMyoDataFile();
-        targetFile.getParentFile().mkdirs();
+            targetFile.getParentFile().mkdirs();
 
-        PrintWriter writer = null;
-        try {
+            PrintWriter writer = null;
+            try {
 
-            writer = new PrintWriter(targetFile);
-            for(EmgCharacteristicData myoData : myoDataList){
-                writer.println(myoData.getLine());
-            }
-        } catch (Exception e) {
+                writer = new PrintWriter(targetFile);
+                for(EmgCharacteristicData myoData : myoDataList){
+                    writer.println(myoData.getLine());
+                }
+            } catch (Exception e) {
             e.printStackTrace();
         } finally {
             if(writer != null){
@@ -82,7 +82,7 @@ public class MyoDataFileReader {
         try {
             BufferedWriter bw= new BufferedWriter(new FileWriter(targetFile,true));  //
             writer = new PrintWriter(bw,true);                //
-            //  writer = new PrintWriter(targetFile);
+          //  writer = new PrintWriter(targetFile);
             for(EmgData myoData : myoDataList){
                 writer.println(myoData.getLine());
             }
@@ -98,13 +98,13 @@ public class MyoDataFileReader {
 
     ////////////////////////////////////////////////////
     public void removeFile() {
-        // File dir = getDirectory();
+       // File dir = getDirectory();
         String mPath = "/sdcard/"+TAG+"/";
         File dir = new File(mPath);
-        //dir.getParentFile().mkdirs();
+      //dir.getParentFile().mkdirs();
         String[] d_file=dir.list();
-        // Log.e(TAG,BASE_DIR);
-        //   Log.e(TAG,dirname);
+       // Log.e(TAG,BASE_DIR);
+     //   Log.e(TAG,dirname);
         Log.e(TAG,dirname);
         Log.e(TAG,"remove in :  "+d_file.length);
         //Log.e(TAG,);
@@ -122,8 +122,6 @@ public class MyoDataFileReader {
         }
     }
 //////////////////////////////////////////////////////////
-
-
 
     public ArrayList<EmgData> load(){
 

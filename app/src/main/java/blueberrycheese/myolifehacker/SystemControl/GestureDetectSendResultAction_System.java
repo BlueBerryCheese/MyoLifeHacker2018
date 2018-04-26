@@ -1,8 +1,5 @@
 package blueberrycheese.myolifehacker.SystemControl;
 
-import android.app.Activity;
-
-import blueberrycheese.myolifehacker.TabFragment3;
 import blueberrycheese.myolifehacker.myo_manage.IGestureDetectAction;
 
 
