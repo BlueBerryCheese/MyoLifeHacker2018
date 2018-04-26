@@ -143,3 +143,5 @@ fabric.properties
 #.externalNativeBuild
 
 .idea/
+
+app/src/main/res/raw/
