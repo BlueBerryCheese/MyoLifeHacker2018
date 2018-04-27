@@ -86,6 +86,7 @@ public class TabFragment3 extends Fragment {
     private TextView maxDataTextView;
     private NumberPicker gesturenNumberPicker;
     private NumberPicker remove_gesturenNumberPicker;
+    private NumberPicker adapter_gesturenNumberPicker;
     private View views[]=new View[5];
 
     private GestureSaveModel saveModel;
@@ -96,6 +97,8 @@ public class TabFragment3 extends Fragment {
     private View view;
     private int inds_num=0;
     private int inds_remove=0;
+    private int inds_adapter=0;
+    private double pass_adapter=0;
 
     private  Dialog dialog;
     public interface OnFragmentInteractionListener {
@@ -159,6 +162,7 @@ public class TabFragment3 extends Fragment {
         maxDataTextView=(TextView)view.findViewById(R.id.maxData);
         gesturenNumberPicker = (NumberPicker)view.findViewById(R.id.gestureNumberPicker);
         remove_gesturenNumberPicker = (NumberPicker)view.findViewById(R.id.remove_gestureNumberPicker); //
+        adapter_gesturenNumberPicker = (NumberPicker)view.findViewById(R.id.AdapterNumberPicker); //
         //btn_ready = (Button)view.findViewById(R.id.btnReady);
         btn_remove = (Button)view.findViewById(R.id.btnRemove);
         btn_sync = (Button)view.findViewById(R.id.btn_Sync);
@@ -188,6 +192,12 @@ public class TabFragment3 extends Fragment {
         remove_gesturenNumberPicker.setMaxValue(8);
         remove_gesturenNumberPicker.setDisplayedValues(new String[]{"Model","All","All_Gesture","Gesture 1","Gesture 2","Gesture 3","Gesture 4","Gesture 5","Gesture 6"});
         remove_gesturenNumberPicker.setWrapSelectorWheel(false);
+
+        adapter_gesturenNumberPicker.setMinValue(0);
+        adapter_gesturenNumberPicker.setMaxValue(4);
+        adapter_gesturenNumberPicker.setWrapSelectorWheel(false);
+        adapter_gesturenNumberPicker.setDisplayedValues(new String[]{"100%","80%","60%","40%","20%"});
+
         ///////
 
         //현재 기본적으로 numberpicker는 0~5까지 하지만 번호변환으로 1~6으로 보이게 하였음
@@ -203,11 +213,19 @@ public class TabFragment3 extends Fragment {
             }
         });
 
+
         //////
         remove_gesturenNumberPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
                 inds_remove=newVal;
+            }
+        });
+
+        adapter_gesturenNumberPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+            @Override
+            public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+                inds_adapter=newVal;
             }
         });
         /////
@@ -219,7 +237,7 @@ public class TabFragment3 extends Fragment {
                     views[i].setBackgroundResource(R.drawable.imgbtn_default);
                 }
                 inds_num = newVal;
-                saveMethod = new GestureSaveMethod(inds_num,view.getContext());
+                saveMethod = new GestureSaveMethod(inds_num,view.getContext(),1);
                 Log.d(TAG,"Value changes "+(oldVal+1)+" to "+(newVal+1));
                 if (saveMethod.getSaveState() == GestureSaveMethod.SaveState.Have_Saved) {
                     gestureText.setText("\'Gesture"+(newVal+1)+"\'"+"SAVE complete. Save more?");
@@ -292,7 +310,26 @@ public class TabFragment3 extends Fragment {
 
             @Override
             public void onClick(View v){
-                Log.d(TAG,"saveMethod state : "+saveMethod.getSaveState());
+                switch (inds_adapter) {
+                    case 0:
+                        pass_adapter=1;
+                        break;
+                    case 1:
+                        pass_adapter=0.8;
+                        break;
+                    case 2:
+                        pass_adapter=0.6;
+                        break;
+                    case 3:
+                        pass_adapter=0.4;
+                        break;
+                    case 4:
+                        pass_adapter=0.2;
+                        break;
+                }
+
+
+                Log.e(TAG,"pass_adapter: "+pass_adapter);
 //원래는 저장단계에서 저장과 저장과정이 분리되어있는 것이지만 우린 따로 저장부분을 추가하고, 지금 이 함수로 시행하는 부분은 sync이기때문에 if문의 구별이 없는 상태이다.
                 if (saveMethod.getSaveState() == GestureSaveMethod.SaveState.Ready ||
                         saveMethod.getSaveState() == GestureSaveMethod.SaveState.Have_Saved) {
@@ -306,7 +343,7 @@ public class TabFragment3 extends Fragment {
                         @Override
                         public void run() {
                             if(dialog.isShowing()) {
-                                saveMethod = new GestureSaveMethod(inds_num, mactivity);
+                                saveMethod = new GestureSaveMethod(inds_num, mactivity,pass_adapter);
                                 saveModel = new GestureSaveModel(saveMethod, inds_num);
                                 startSaveModel();
                             }
@@ -323,7 +360,7 @@ public class TabFragment3 extends Fragment {
                         @Override
                         public void run() {
                             if(dialog.isShowing()) {
-                                saveMethod = new GestureSaveMethod(inds_num, mactivity);
+                                saveMethod = new GestureSaveMethod(inds_num, mactivity,pass_adapter);
                                 saveModel = new GestureSaveModel(saveMethod, inds_num);
                                 startSaveModel();
                             }
@@ -445,7 +482,7 @@ public class TabFragment3 extends Fragment {
                 if (mBluetoothGatt == null || !mMyoCallback.setMyoControlCommand(commandList.sendEmgOnly())) {
                     Log.d(TAG,"False EMG");
                 } else {
-                    saveMethod  = new GestureSaveMethod(inds_num, view.getContext());
+                    saveMethod  = new GestureSaveMethod(inds_num, view.getContext(),1);
                     Log.d(TAG,"True EMG22");
                     if (saveMethod.getSaveState() == GestureSaveMethod.SaveState.Have_Saved) {
                         gestureText.setText("DETECT Ready");
@@ -476,4 +513,7 @@ public class TabFragment3 extends Fragment {
    // public int getRemoveIndex() {
       //  return inds_remove;
   //  }  //
+    // public double getAdapterIndex() {
+   //   return pass_adapter;
+  //   }  //
 }

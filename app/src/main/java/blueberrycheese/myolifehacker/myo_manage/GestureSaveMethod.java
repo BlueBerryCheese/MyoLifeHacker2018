@@ -33,6 +33,7 @@ public class GestureSaveMethod {
     private final static int AVERAGING_LENGTH = 10;
     private final static int READING_LENGTH = 1000;  //
     private final static int JUST_SAVE_DATA_LEN = 5;
+   // private final static int JUST_SAVE_DATA_LEN = 5;
 
     private ArrayList<EmgCharacteristicData> rawDataList = new ArrayList<>();
     private ArrayList<EmgData> maxDataList = new ArrayList<>();
@@ -44,7 +45,7 @@ public class GestureSaveMethod {
     private int dataCounter = 0;
     private int gestureCounter = 0;
     private int save_index = 0;     //
-
+    private  int count_adap=0;
     private final static int KMEANS_K = 128;
     private final static String FileList_kmeans = "KMEANS_DATA.dat";
     private final static String FileList[] = {"Gesture1.txt", "Gesture2.txt", "Gesture3.txt", "Gesture4.txt", "Gesture5.txt", "Gesture6.txt"};
@@ -59,7 +60,7 @@ public class GestureSaveMethod {
         Log.d(TAG, "GestureSaveMethod None");
     }
 
-    public GestureSaveMethod(int i, Context context) {
+    public GestureSaveMethod(int i, Context context,double percent) {
         Log.d(TAG, "GestureSaveMethod None2");
 
 
@@ -67,11 +68,13 @@ public class GestureSaveMethod {
         if (!dataFileReader.getMyoDataFile().exists()) {
             dataFileReader.getMyoDataFile().getParentFile().mkdirs();
         }
+        Log.e(TAG, "1");
         clusterer = new KMeansPlusPlusClusterer<DoublePoint>(KMEANS_K, -1, new EuclideanDistance());
         if (dataFileReader.load().size() == KMEANS_K * COMPARE_NUM) {
             compareGesture_k = dataFileReader.load();
             saveState = SaveState.Have_Saved;
         } else {
+            Log.e(TAG, "2");
             try {
                 saveState = SaveState.Now_Saving;
                 InputStream in;
@@ -83,8 +86,10 @@ public class GestureSaveMethod {
                 BufferedReader br = null;
 
                 //////////
+                Log.e(TAG, "3");
                 for (int j = 0; j < COMPARE_NUM; j++) {
                     doublePointList = new ArrayList<>();
+                    Log.e(TAG, "4");
                     int resID = context.getResources().getIdentifier("gesture" + (j + 1), "raw", "blueberrycheese.myolifehacker");
                     in = context.getResources().openRawResource(resID);
                     InputStreamReader streamReader = new InputStreamReader(in, "UTF-8");
@@ -113,6 +118,7 @@ public class GestureSaveMethod {
                                 emgDat[k] = Double.parseDouble(stringTokenizer.nextToken());
                             }
                             doublePointList.add(new DoublePoint(emgDat));
+                            Log.e(TAG, "Loading Adapter txt size is " + doublePointList.size());
                         }
                         //   }
                         fr.close();
@@ -121,20 +127,23 @@ public class GestureSaveMethod {
                         Log.e(TAG, e.getMessage());
                     }
                     ////////////////////////////////
-                    int cntt = 1000;          //사실 지금 필요없는데 내 폰 상태가... ㅜㅜ 참고로 text파일 내전용임 내데이터만들가있음 실험할때 바꾸세요.
-                    while (((line = bufferedReader.readLine()) != null)) {
+                    //int cntt = 1000;          //사실 지금 필요없는데 내 폰 상태가... ㅜㅜ 참고로 text파일 내전용임 내데이터만들가있음 실험할때 바꾸세요.
+                    count_adap=0;
+                    //Log.d(TAG, "Loading txt size is " + doublePointList.size());
+                    while (READING_LENGTH*percent>count_adap && ((line = bufferedReader.readLine()) != null)) {
                         stringTokenizer = new StringTokenizer(line, ",");
                         double[] emgDat = new double[8];
                         for (int k = 0; k < 8; k++) {
                             emgDat[k] = Double.parseDouble(stringTokenizer.nextToken());
                         }
                         doublePointList.add(new DoublePoint(emgDat));
+                        count_adap++;
                     }
                     streamReader.close();
                     bufferedReader.close();
 
                     stringTokenizer = null;
-                    Log.d(TAG, "Loading txt size is " + doublePointList.size());
+                    Log.e(TAG, "Loading txt size is================ " + doublePointList.size());
 //                    Toast.makeText(context,"K-MEANS_lization about"+(i+1)+" data", Toast.LENGTH_LONG).show();
                     List<? extends Cluster<DoublePoint>> res = clusterer.cluster(doublePointList);
 

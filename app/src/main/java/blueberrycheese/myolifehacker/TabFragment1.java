@@ -267,7 +267,7 @@ public class TabFragment1 extends Fragment {
                     if (mBluetoothGatt == null || !mMyoCallback.setMyoControlCommand(commandList.sendEmgOnly())) {
                         Log.d(TAG,"False EMG");
                     } else {
-                        saveMethod  = new GestureSaveMethod(-1, view.getContext());
+                        saveMethod  = new GestureSaveMethod(-1, view.getContext(),1);
                         Log.d(TAG,"True EMG");
                         if (saveMethod.getSaveState() == GestureSaveMethod.SaveState.Have_Saved) {
                             detectMethod = new GestureDetectMethod_Menu(mHandler, saveMethod.getCompareDataList());    //아예 새롭게 각각의 detectMethod를 구현하는것이 빠를것으로 예상된다.
