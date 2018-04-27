@@ -85,15 +85,17 @@ public class TabFragment3 extends Fragment {
     private TextView gestureText;
     private TextView maxDataTextView;
     private NumberPicker gesturenNumberPicker;
+    private NumberPicker remove_gesturenNumberPicker;
     private View views[]=new View[5];
 
     private GestureSaveModel saveModel;
     private GestureSaveMethod   saveMethod;
     private GestureDetectModel  detectModel;
     private GestureDetectMethod detectMethod;
-    private Button btn_ready,btn_cancle,btn_sync,btn_save;
+    private Button btn_ready,btn_remove,btn_sync,btn_save;
     private View view;
     private int inds_num=0;
+    private int inds_remove=0;
 
     private  Dialog dialog;
     public interface OnFragmentInteractionListener {
@@ -139,6 +141,7 @@ public class TabFragment3 extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_tab_fragment3, container, false);
+        /*
         GraphView graph = (GraphView)view.findViewById(R.id.graph);
         //TODO:: 실시간 데이터 변화 만들기(나중에)
         LineGraphSeries<DataPoint> series = new LineGraphSeries<DataPoint>(new DataPoint[] {    //추후에 데이터가 실시간으로 어떻게 들어오는지를 보여줄려고해서 만들어봤는데 어려우면 걍 뒤엎을각오가 있습니다.
@@ -149,13 +152,15 @@ public class TabFragment3 extends Fragment {
                 new DataPoint(4, 6)
         });
         graph.addSeries(series);
+        */
         emgDataText = (TextView)view.findViewById(R.id.emgDataTextView);
         gestureText = (TextView)view.findViewById(R.id.gestureTextView);
 
         maxDataTextView=(TextView)view.findViewById(R.id.maxData);
         gesturenNumberPicker = (NumberPicker)view.findViewById(R.id.gestureNumberPicker);
-        btn_ready = (Button)view.findViewById(R.id.btnReady);
-        btn_cancle = (Button)view.findViewById(R.id.btnCancle);
+        remove_gesturenNumberPicker = (NumberPicker)view.findViewById(R.id.remove_gestureNumberPicker); //
+        //btn_ready = (Button)view.findViewById(R.id.btnReady);
+        btn_remove = (Button)view.findViewById(R.id.btnRemove);
         btn_sync = (Button)view.findViewById(R.id.btn_Sync);
         btn_save = (Button)view.findViewById(R.id.btn_Save);
         views[0] = (View)view.findViewById(R.id.view1);
@@ -178,6 +183,13 @@ public class TabFragment3 extends Fragment {
             gestureText.setText("Teach me \'Gesture"+(inds_num+1)+"\'");
         }
 
+        /////////
+        remove_gesturenNumberPicker.setMinValue(0);
+        remove_gesturenNumberPicker.setMaxValue(8);
+        remove_gesturenNumberPicker.setDisplayedValues(new String[]{"Model","All","All_Gesture","Gesture 1","Gesture 2","Gesture 3","Gesture 4","Gesture 5","Gesture 6"});
+        remove_gesturenNumberPicker.setWrapSelectorWheel(false);
+        ///////
+
         //현재 기본적으로 numberpicker는 0~5까지 하지만 번호변환으로 1~6으로 보이게 하였음
         //6까지 올리면 더이상올라가지 않게 함
         gesturenNumberPicker.setMinValue(0);
@@ -190,6 +202,15 @@ public class TabFragment3 extends Fragment {
                 return Integer.toString(value+1);
             }
         });
+
+        //////
+        remove_gesturenNumberPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+            @Override
+            public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+                inds_remove=newVal;
+            }
+        });
+        /////
 
         gesturenNumberPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
@@ -207,7 +228,7 @@ public class TabFragment3 extends Fragment {
                 }
             }
         });
-
+/*
         btn_ready.setOnClickListener(new Button.OnClickListener(){
             public void onClick(View v){            //이게 왜인지모르겠는데 xml쪽에서 함수시행 바로붙이면 안되는 경향이 있어서 이렇게 setonclicklistener 에서  붙이는 형식으로 했음
                 if (mBluetoothGatt == null || !mMyoCallback.setMyoControlCommand(commandList.sendEmgOnly())) {
@@ -222,8 +243,8 @@ public class TabFragment3 extends Fragment {
                 }
             }
         });
-
-        btn_cancle.setOnClickListener(new View.OnClickListener() {
+*/
+        btn_remove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
            /*     if (mBluetoothGatt == null
@@ -233,7 +254,7 @@ public class TabFragment3 extends Fragment {
                 }
                 */
                 MyoDataFileReader dataFileReader = new MyoDataFileReader(TAG,FileList_kmeans);
-                dataFileReader.removeFile();
+                dataFileReader.removeFile(inds_remove);
             }
         });
 
@@ -452,4 +473,7 @@ public class TabFragment3 extends Fragment {
         GestureDetectModelManager.setCurrentModel(new NopModel());
     }
     //  public int getIndex_num() { return inds_num;}
+   // public int getRemoveIndex() {
+      //  return inds_remove;
+  //  }  //
 }

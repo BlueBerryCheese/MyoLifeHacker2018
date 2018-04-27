@@ -97,7 +97,7 @@ public class MyoDataFileReader {
 
 
     ////////////////////////////////////////////////////
-    public void removeFile() {
+    public void removeFile(int index) {
        // File dir = getDirectory();
         String mPath = "/sdcard/"+TAG+"/";
         File dir = new File(mPath);
@@ -105,19 +105,86 @@ public class MyoDataFileReader {
         String[] d_file=dir.list();
        // Log.e(TAG,BASE_DIR);
      //   Log.e(TAG,dirname);
+
         Log.e(TAG,dirname);
         Log.e(TAG,"remove in :  "+d_file.length);
         //Log.e(TAG,);
         if(d_file !=null) {
             for(int i=0; i<d_file.length; i++) {
+                File f=null;
                 String d_filename = d_file[i];
-                Log.e(TAG,"remove file name : "+filename+ " 인식 성공");
-                File f = new File(mPath+d_filename);
+                Log.e(TAG,"remove file name : "+d_filename+ " 인식 성공");
 
-                if(f.exists()) {
-                    Log.e(TAG,"remove file name : "+filename+ " 삭제 성공");
+                switch (index) {
+                    case 0:         //Model
+                        //Log.e(TAG, "switch 0 : " + d_filename + " 들어옴");
+                        if (d_filename.equals("KMEANS_DATA.dat")) {
+                            f = new File(mPath + d_filename);
+                            Log.e(TAG, "switch 0 : " + d_filename + " 인식 성공");
+                        }
+                        break;
+                    case 1:         //All
+                        //Log.e(TAG, "switch 1 : " + d_filename + " 들어옴");
+
+                        f = new File(mPath + d_filename);
+                        Log.e(TAG, "switch 1 : " + d_filename + " 인식 성공");
+                        break;
+                    case 2:         //All_Geusture
+                        //Log.e(TAG, "switch 2 : " + d_filename + " 들어옴");
+                        if (!d_filename.equals("KMEANS_DATA.dat")) {
+                            f = new File(mPath + d_filename);
+                            Log.e(TAG, "switch 2 : " + d_filename + " 인식 성공");
+                        }
+                        break;
+                    case 3:         // 1
+                        //Log.e(TAG, "switch 3 : " + d_filename + " 들어옴");
+                        if (d_filename.equals("Gesture1_Raw.txt")) {
+                            f = new File(mPath + d_filename);
+                            Log.e(TAG, "switch 3 : " + d_filename + " 인식 성공");
+                        }
+                        break;
+                    case 4:         //2
+                       // Log.e(TAG, "switch 4 : " + d_filename + " 들어옴");
+                        if (d_filename.equals("Gesture2_Raw.txt")) {
+                            f = new File(mPath + d_filename);
+                            Log.e(TAG, "switch 4 : " + d_filename + " 인식 성공");
+                        }
+                        break;
+                    case 5:         //3
+                        //Log.e(TAG, "switch 5 : " + d_filename + " 들어옴");
+                        if (d_filename.equals("Gesture3_Raw.txt")) {
+                            f = new File(mPath + d_filename);
+                            Log.e(TAG, "switch 5 : " + d_filename + " 인식 성공");
+                        }
+                        break;
+                    case 6:         //4
+                       // Log.e(TAG, "switch 6 : " + d_filename + " 들어옴");
+                        if (d_filename.equals("Gesture4_Raw.txt")) {
+                            f = new File(mPath + d_filename);
+                            Log.e(TAG, "switch 6 : " + d_filename + " 인식 성공");
+                        }
+                        break;
+                    case 7:         //5
+                        //Log.e(TAG, "switch 7 : " + d_filename + " 들어옴");
+                        if (d_filename.equals("Gesture5_Raw.txt")) {
+                            f = new File(mPath + d_filename);
+                            Log.e(TAG, "switch 7 : " + d_filename + " 인식 성공");
+                        }
+                        break;
+                    case 8:         //6
+                        //Log.e(TAG, "switch 8 : " + d_filename + " 들어옴");
+                        if (d_filename.equals("Gesture6_Raw.txt")) {
+                            f = new File(mPath + d_filename);
+                            Log.e(TAG, "switch 8 : " + d_filename + " 인식 성공");
+                        }
+                }
+              //  Log.e(TAG, "1 : " + f.length() + " 인식 성공");
+               // Log.e(TAG, "2 : " + f.exists() + " 인식 성공");
+                if(f!=null) {
+                    Log.e(TAG,"remove file name : "+d_filename+ " 삭제 성공");
                     f.delete();
                 }
+
             }
         }
     }
