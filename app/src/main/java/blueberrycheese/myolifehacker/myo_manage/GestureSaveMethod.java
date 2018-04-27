@@ -263,7 +263,7 @@ public class GestureSaveMethod {
 
     private void gestureCount(int num) {
         gestureCounter++;
-        Log.e("GestureDetect", "CompareData Size : " + getCompareDataList().size());
+        Log.e("GestureDetect", "CompareData Size : " + compareGesture.size());
         if (gestureCounter == JUST_SAVE_DATA_LEN) {
             saveState = SaveState.Have_Saved;
             gestureCounter = 0;
