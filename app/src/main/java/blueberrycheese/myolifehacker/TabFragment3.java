@@ -194,7 +194,7 @@ public class TabFragment3 extends Fragment {
         //6까지 올리면 더이상올라가지 않게 함
         gesturenNumberPicker.setMinValue(0);
         gesturenNumberPicker.setMaxValue(5);
-        gesturenNumberPicker.setWrapSelectorWheel(false);
+        gesturenNumberPicker.setWrapSelectorWheel(false);;
 
         gesturenNumberPicker.setFormatter(new NumberPicker.Formatter() {
             @Override
