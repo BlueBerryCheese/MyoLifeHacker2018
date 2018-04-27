@@ -423,7 +423,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
             if (mBluetoothGatt == null || !mMyoCallback.setMyoControlCommand(commandList.sendEmgOnly())) {
                 Log.d(TAG,"False EMG");
             } else {
-                saveMethod  = new GestureSaveMethod(-1, this);
+                saveMethod  = new GestureSaveMethod(-1, this,1);
                 if (saveMethod.getSaveState() == GestureSaveMethod.SaveState.Have_Saved) {
                     gestureText.setText("DETECT Ready");
                 } else {

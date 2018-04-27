@@ -162,7 +162,7 @@ public class SystemControlActivity extends AppCompatActivity implements Bluetoot
         if (mBluetoothGatt == null || !mMyoCallback.setMyoControlCommand(commandList.sendEmgOnly())) {
             Log.d(TAG,"False EMG");
         } else {
-            saveMethod  = new GestureSaveMethod(-1, context);
+            saveMethod  = new GestureSaveMethod(-1, context,1);
             if (saveMethod.getSaveState() == GestureSaveMethod.SaveState.Have_Saved) {
                 gestureText.setText("DETECT Ready");
             } else {
