@@ -23,9 +23,9 @@ public class GestureSaveModel implements IGestureDetectModel {
     @Override
     public void event(long time, byte[] data) {
         synchronized (LOCK) {
-            if(num==-1)
-                saveMethod.addData(data);
-            else
+         //   if(num==-1)
+         //       saveMethod.addData(data);
+         //   else
                 saveMethod.addData(data,num);
             if (saveMethod.getSaveState() == GestureSaveMethod.SaveState.Not_Saved) {
                 action("SAVE");

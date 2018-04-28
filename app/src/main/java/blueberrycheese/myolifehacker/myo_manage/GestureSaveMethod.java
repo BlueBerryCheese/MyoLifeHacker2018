@@ -181,6 +181,7 @@ public class GestureSaveMethod {
     // 이부분 부터 이 아래 gesturecount()는 쓰진 않음.
     // 추후에 삭제할 수도
     ////////////////////////////////////////////////////////////////
+    /*
     public void addData(byte[] data) {
         rawDataList.add(new EmgCharacteristicData(data));
         dataCounter++;
@@ -225,6 +226,7 @@ public class GestureSaveMethod {
             dataFileReader.saveMAX(getCompareDataList());
         }
     }
+    */
 ///////////////////////////////////////////////////////////
 
     // 값들을 추가하는 메소드
