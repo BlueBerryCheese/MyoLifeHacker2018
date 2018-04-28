@@ -28,11 +28,11 @@ public class GestureSaveMethod {
     private final static String TAG = "Myo_KMEANS_compare";
     private final static String FileName = "compareData.dat";
 
-    private final static int COMPARE_NUM = 6;
-    private final static int SAVE_DATA_LENGTH = 5;
+    private final static int COMPARE_NUM = 6;       //제스처 갯수
+    private final static int SAVE_DATA_LENGTH = 5;      // 세이브 할 데이터 갯수
     private final static int AVERAGING_LENGTH = 10;
-    private final static int READING_LENGTH = 1000;  //
-    private final static int JUST_SAVE_DATA_LEN = 5;
+    private final static int READING_LENGTH = 1000;  // 안드로이드에 저장되있는 파일의 길이
+    private final static int JUST_SAVE_DATA_LEN = 5;    // 세이브 할 데이터 갯수
    // private final static int JUST_SAVE_DATA_LEN = 5;
 
     private ArrayList<EmgCharacteristicData> rawDataList = new ArrayList<>();
@@ -46,7 +46,7 @@ public class GestureSaveMethod {
     private int gestureCounter = 0;
     private int save_index = 0;     //
     private  int count_adap=0;
-    private final static int KMEANS_K = 128;
+    private final static int KMEANS_K = 128;       // K-means의 k값
     private final static String FileList_kmeans = "KMEANS_DATA.dat";
     private final static String FileList[] = {"Gesture1.txt", "Gesture2.txt", "Gesture3.txt", "Gesture4.txt", "Gesture5.txt", "Gesture6.txt"};
     private final static String FileList_Raw[] = {"Gesture1_Raw.txt", "Gesture2_Raw.txt", "Gesture3_Raw.txt", "Gesture4_Raw.txt", "Gesture5_Raw.txt", "Gesture6_Raw.txt"};
@@ -55,11 +55,13 @@ public class GestureSaveMethod {
     private Clusterer<DoublePoint> clusterer;       //apache commons math structure
     private List<DoublePoint> doublePointList;
 
+    // defalut 값. 보통 이 아래거 변수 넣는 거만씀
     public GestureSaveMethod() {
         saveState = SaveState.Ready;
         Log.d(TAG, "GestureSaveMethod None");
     }
 
+    // sync를 눌렀을 때 모델 만드는 부분. (i: 제스처 인덱스, context, percent: 어댑터 값)
     public GestureSaveMethod(int i, Context context,double percent) {
         Log.d(TAG, "GestureSaveMethod None2");
 
@@ -68,28 +70,20 @@ public class GestureSaveMethod {
         if (!dataFileReader.getMyoDataFile().exists()) {
             dataFileReader.getMyoDataFile().getParentFile().mkdirs();
         }
-        Log.e(TAG, "1");
         clusterer = new KMeansPlusPlusClusterer<DoublePoint>(KMEANS_K, -1, new EuclideanDistance());
-        if (dataFileReader.load().size() == KMEANS_K * COMPARE_NUM) {
+        if (dataFileReader.load().size() == KMEANS_K * COMPARE_NUM) {   // 사이즈가 (K-means k값 * 제스처 갯수) 와 같을 때
             compareGesture_k = dataFileReader.load();
             saveState = SaveState.Have_Saved;
         } else {
-            Log.e(TAG, "2");
             try {
                 saveState = SaveState.Now_Saving;
                 InputStream in;
                 PrintWriter writer = null;
                 writer = new PrintWriter(dataFileReader.getMyoDataFile());
-
-                //////////
                 FileReader fr = null; //
                 BufferedReader br = null;
-
-                //////////
-                Log.e(TAG, "3");
-                for (int j = 0; j < COMPARE_NUM; j++) {
+                for (int j = 0; j < COMPARE_NUM; j++) {     // 어댑터와 안드로이드 내 txt 파일을 불러오는 부분.
                     doublePointList = new ArrayList<>();
-                    Log.e(TAG, "4");
                     int resID = context.getResources().getIdentifier("gesture" + (j + 1), "raw", "blueberrycheese.myolifehacker");
                     in = context.getResources().openRawResource(resID);
                     InputStreamReader streamReader = new InputStreamReader(in, "UTF-8");
@@ -97,20 +91,14 @@ public class GestureSaveMethod {
                     String line;
                     StringTokenizer stringTokenizer;
 
-
-                    //////////////////////
-
-
-                    try {
+                    try {       // 어댑터 txt 불러오는 부분
                         MyoDataFileReader dataFileReader2 = new MyoDataFileReader(TAG, FileList_Raw[j]);  //
                         fr = new FileReader(dataFileReader2.getMyoDataFile()); //
                         br = new BufferedReader(fr);  //
-                        // Log.e(TAG, fr.ready());
                         // if (fr.ready()) {
 
-
                         int cnt_adapter = 0;
-                        while ((line = br.readLine()) != null) {
+                        while ((line = br.readLine()) != null) {    // 어댑터 txt 끝까지 불러옴.
                             //while(cnt_adapter++<READING_LENGTH&&((line = br.readLine())!=null)){
                             stringTokenizer = new StringTokenizer(line, ",");
                             double[] emgDat = new double[8];
@@ -127,9 +115,9 @@ public class GestureSaveMethod {
                         Log.e(TAG, e.getMessage());
                     }
                     ////////////////////////////////
-                    //int cntt = 1000;          //사실 지금 필요없는데 내 폰 상태가... ㅜㅜ 참고로 text파일 내전용임 내데이터만들가있음 실험할때 바꾸세요.
-                    count_adap=0;
-                    //Log.d(TAG, "Loading txt size is " + doublePointList.size());
+                    count_adap=0; // 안드로이드 파일쪽 count세는 변수
+                    // 안드로이드 파일내 txt 가져옴.
+                    // 가져올 때 (안드로이드 파일 길이 지정 값* 몇 %나 불러올건지) && 끝까지 불러옴
                     while (READING_LENGTH*percent>count_adap && ((line = bufferedReader.readLine()) != null)) {
                         stringTokenizer = new StringTokenizer(line, ",");
                         double[] emgDat = new double[8];
@@ -148,7 +136,6 @@ public class GestureSaveMethod {
                     List<? extends Cluster<DoublePoint>> res = clusterer.cluster(doublePointList);
 
                     try {
-
                         for (Cluster<DoublePoint> re : res) {
                             List<DoublePoint> list1 = re.getPoints();
                             //Log.e(TAG,list1.toString());
@@ -163,7 +150,7 @@ public class GestureSaveMethod {
 //                                avg_emg[aa] /= list1.size();
 //                            }
                             avg_emg = list1.get(0).getPoint(); //이것인가!
-                            writer.println("" + avg_emg[0] + "," + avg_emg[1] + "," + avg_emg[2] + "," + avg_emg[3] + "," + avg_emg[4] + "," + avg_emg[5] + "," + avg_emg[6] + "," + avg_emg[7] + ",");
+                            writer.println("" + avg_emg[0] + "," + avg_emg[1] + "," + avg_emg[2] + "," + avg_emg[3] + "," + avg_emg[4] + "," + avg_emg[5] + "," + avg_emg[6] + "," + avg_emg[7] + ","); //출력
                             Log.d(TAG, "" + avg_emg[0] + "," + avg_emg[1] + "," + avg_emg[2] + "," + avg_emg[3] + "," + avg_emg[4] + "," + avg_emg[5] + "," + avg_emg[6] + "," + avg_emg[7] + ",");
                         }
                     } catch (Exception e) {
@@ -183,6 +170,7 @@ public class GestureSaveMethod {
         }
     }
 
+    // 제스처 상태
     public enum SaveState {
         Ready,
         Not_Saved,
@@ -190,6 +178,9 @@ public class GestureSaveMethod {
         Have_Saved,
     }
 
+    // 이부분 부터 이 아래 gesturecount()는 쓰진 않음.
+    // 추후에 삭제할 수도
+    ////////////////////////////////////////////////////////////////
     public void addData(byte[] data) {
         rawDataList.add(new EmgCharacteristicData(data));
         dataCounter++;
@@ -234,7 +225,9 @@ public class GestureSaveMethod {
             dataFileReader.saveMAX(getCompareDataList());
         }
     }
+///////////////////////////////////////////////////////////
 
+    // 값들을 추가하는 메소드
     public void addData(byte[] data, int num) {
         rawDataList.add(new EmgCharacteristicData(data));
         dataCounter++;
@@ -262,34 +255,36 @@ public class GestureSaveMethod {
             maxDataList.add(dataMax);
             rawDataList = new ArrayList<>();
         }
-        if (dataCounter == SAVE_DATA_LENGTH * AVERAGING_LENGTH) {
+        if (dataCounter == SAVE_DATA_LENGTH * AVERAGING_LENGTH) {   //
             saveState = SaveState.Not_Saved;
-            makeCompareData();
+            makeCompareData();  // 모델 생성
             gestureCount(num);
             dataCounter = 0;
         }
     }
 
+    // 제스처를 count 함.
     private void gestureCount(int num) {
         gestureCounter++;
         Log.e("GestureDetect", "CompareData Size : " + compareGesture.size());
-        if (gestureCounter == JUST_SAVE_DATA_LEN) {
+        if (gestureCounter == JUST_SAVE_DATA_LEN) {     //제스처count가 (지정한 저장 길이) 와 같을 때
             saveState = SaveState.Have_Saved;
-            gestureCounter = 0;
-            MyoDataFileReader dataFileReader = new MyoDataFileReader(TAG, FileList[num]);
+            gestureCounter = 0;         // count 초기화
+            MyoDataFileReader dataFileReader = new MyoDataFileReader(TAG, FileList[num]);   // Gesture .txt 파일 저장
             dataFileReader.saveMAX(getCompareDataList());
-            MyoDataFileReader dataFileReader2 = new MyoDataFileReader(TAG, FileList_Raw[num]);
+            MyoDataFileReader dataFileReader2 = new MyoDataFileReader(TAG, FileList_Raw[num]);  // Gesture _Raw.txt 파일 저장
             dataFileReader2.saveRAW_max(getRawCompareDataList());
             compareGesture = new ArrayList<EmgData>();
             rawcompareGesture = new ArrayList<EmgData>();
             if (save_index == COMPARE_NUM - 1) {     //  6번 제스처 까지 저장 완료하면
-                save_index = 0;       //
+                save_index = 0;       //    다시 0번으로 돌아가기위해 변수값 변경
             } else {                 //
-                save_index++;       //
-            }                       //
+                save_index++;       //  다음 번호로 가기 위해 번호 ++
+            }                       // 제스처 세이브 NumberPicker 위해서
         }
     }
 
+    // 모델 만드는 메소드
     private void makeCompareData() {
         EmgData tempData = new EmgData();
 
@@ -341,11 +336,11 @@ public class GestureSaveMethod {
 
     public int getGestureCounter() {
         return gestureCounter;
-    }
+    }  // 지정한 제스처 세이브 길이값 리턴
 
     public int getSaveIndex() {
         return save_index;
-    }  //
+    }  // 현재 몇번 제스처인지 리턴
 
 
     public ArrayList<EmgData> getCompareDataList() {

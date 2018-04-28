@@ -97,23 +97,23 @@ public class MyoDataFileReader {
 
 
     ////////////////////////////////////////////////////
-    public void removeFile(int index) {
+    public void removeFile(int index) { //파일 삭제 메소드
        // File dir = getDirectory();
-        String mPath = "/sdcard/"+TAG+"/";
+        String mPath = "/sdcard/"+TAG+"/";      // Path 지정
         File dir = new File(mPath);
       //dir.getParentFile().mkdirs();
-        String[] d_file=dir.list();
+        String[] d_file=dir.list();     // Path내 파일 리스트 저장
        // Log.e(TAG,BASE_DIR);
      //   Log.e(TAG,dirname);
 
-        Log.e(TAG,dirname);
-        Log.e(TAG,"remove in :  "+d_file.length);
+        //Log.e(TAG,dirname);
+        //Log.e(TAG,"remove in :  "+d_file.length);
         //Log.e(TAG,);
         if(d_file !=null) {
-            for(int i=0; i<d_file.length; i++) {
+            for(int i=0; i<d_file.length; i++) {   // for문 돌리면서 Fragment3에서 선택한 numberPicker와 값이 일치하는 것 찾아서 삭제
                 File f=null;
                 String d_filename = d_file[i];
-                Log.e(TAG,"remove file name : "+d_filename+ " 인식 성공");
+               // Log.e(TAG,"remove file name : "+d_filename+ " 인식 성공");
 
                 switch (index) {
                     case 0:         //Model
