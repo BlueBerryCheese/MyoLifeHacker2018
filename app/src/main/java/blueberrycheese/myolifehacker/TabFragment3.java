@@ -187,12 +187,13 @@ public class TabFragment3 extends Fragment {
             gestureText.setText("Teach me \'Gesture"+(inds_num+1)+"\'");
         }
 
-        /////////
+        /////////  파일 삭제하는 numberPicker 설정.
         remove_gesturenNumberPicker.setMinValue(0);
         remove_gesturenNumberPicker.setMaxValue(8);
         remove_gesturenNumberPicker.setDisplayedValues(new String[]{"Model","All","All_Gesture","Gesture 1","Gesture 2","Gesture 3","Gesture 4","Gesture 5","Gesture 6"});
         remove_gesturenNumberPicker.setWrapSelectorWheel(false);
 
+        // 어댑터 설정하는 numberPicker 설정.
         adapter_gesturenNumberPicker.setMinValue(0);
         adapter_gesturenNumberPicker.setMaxValue(4);
         adapter_gesturenNumberPicker.setWrapSelectorWheel(false);
@@ -202,10 +203,10 @@ public class TabFragment3 extends Fragment {
 
         //현재 기본적으로 numberpicker는 0~5까지 하지만 번호변환으로 1~6으로 보이게 하였음
         //6까지 올리면 더이상올라가지 않게 함
+        // 제스처 세이브하는 numberpicker 설정.
         gesturenNumberPicker.setMinValue(0);
         gesturenNumberPicker.setMaxValue(5);
         gesturenNumberPicker.setWrapSelectorWheel(false);;
-
         gesturenNumberPicker.setFormatter(new NumberPicker.Formatter() {
             @Override
             public String format(int value) {
@@ -214,7 +215,7 @@ public class TabFragment3 extends Fragment {
         });
 
 
-        //////
+        ////// 파일삭제  numberPicker 값 변동되면 변동되는 값 저장
         remove_gesturenNumberPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
@@ -222,6 +223,7 @@ public class TabFragment3 extends Fragment {
             }
         });
 
+        ////// 어댑터  numberPicker 값 변동되면 변동되는 값 저장
         adapter_gesturenNumberPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
@@ -230,14 +232,15 @@ public class TabFragment3 extends Fragment {
         });
         /////
 
+        ////// 제스처 세이브 numberPicker 값 변동되면 변동되는 값 저장
         gesturenNumberPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
-                for(int i=0;i<views.length;i++){
+                for(int i=0;i<views.length;i++){        // 동그라미 5개 빈동그라미로 초기화
                     views[i].setBackgroundResource(R.drawable.imgbtn_default);
                 }
                 inds_num = newVal;
-                saveMethod = new GestureSaveMethod(inds_num,view.getContext(),1);
+                saveMethod = new GestureSaveMethod(inds_num,view.getContext(),1);   //세이브 실행
                 Log.d(TAG,"Value changes "+(oldVal+1)+" to "+(newVal+1));
                 if (saveMethod.getSaveState() == GestureSaveMethod.SaveState.Have_Saved) {
                     gestureText.setText("\'Gesture"+(newVal+1)+"\'"+"SAVE complete. Save more?");
@@ -262,6 +265,7 @@ public class TabFragment3 extends Fragment {
             }
         });
 */
+        //삭제 버튼
         btn_remove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -272,32 +276,31 @@ public class TabFragment3 extends Fragment {
                 }
                 */
                 MyoDataFileReader dataFileReader = new MyoDataFileReader(TAG,FileList_kmeans);
-                dataFileReader.removeFile(inds_remove);
+                dataFileReader.removeFile(inds_remove);     //removeFile 메소드 호출
             }
         });
 
 
-
+        // 세이브 버튼
         btn_save.setOnClickListener(new View.OnClickListener() {
             //TODO: 적응모델 적용하기
             @Override
             public void onClick(View v) {
                 //inds_num=0;
                 // for(inds_num=0; inds_num<6; inds_num++) {
-                inds_num=saveMethod.getSaveIndex();
-                saveModel = new GestureSaveModel(saveMethod, inds_num);
-                startSaveModel();
-                saveMethod.setState(GestureSaveMethod.SaveState.Now_Saving);
+                inds_num=saveMethod.getSaveIndex();  // 현재 몇번 제스처인지 값 가져옴.
+                saveModel = new GestureSaveModel(saveMethod, inds_num);  // (saveMethod, 몇번제스처 인지 값 넘겨줌)
+                startSaveModel();  // 세이브 시작
+                saveMethod.setState(GestureSaveMethod.SaveState.Now_Saving);        // SaveState 저장중으로 변경
+                // 제스처의 카운트가 0일 때
                 if(saveMethod.getGestureCounter()==0) {     //위에 setValue로는 setOnValueChangedListener가 인식을 못해서 따로 빼줌.
-                    gesturenNumberPicker.setValue(inds_num);
-                    for(int i=0;i<views.length;i++){
+                    gesturenNumberPicker.setValue(inds_num);        //제스처 세이브 numberPicker 값 설정.
+                    for(int i=0;i<views.length;i++){        //동그라미 빈칸으로 바꿔줌
                         views[i].setBackgroundResource(R.drawable.imgbtn_default);
                     }
                 }
-                gestureText.setText("Gesture" + (inds_num + 1) + "'s Saving Count : " + (saveMethod.getGestureCounter() + 1));
-                //  views[inds_num].setDrawingCacheBackgroundColor(Color.BLUE);
-                // views[inds_num].setBackground(imgbtn_passed);
-                views[saveMethod.getGestureCounter()].setBackgroundResource(R.drawable.imgbtn_pressed);
+                gestureText.setText("Gesture" + (inds_num + 1) + "'s Saving Count : " + (saveMethod.getGestureCounter() + 1)); // 아래쪽 텍스트 변경
+                views[saveMethod.getGestureCounter()].setBackgroundResource(R.drawable.imgbtn_pressed); // 동그라미 채워줌
                 //   }
             }
 
@@ -305,45 +308,44 @@ public class TabFragment3 extends Fragment {
 
         });
 
-
+        //sync 버튼 눌렀을 때
         btn_sync.setOnClickListener(new View.OnClickListener(){
 
             @Override
             public void onClick(View v){
                 switch (inds_adapter) {
-                    case 0:
+                    case 0:     // 100%
                         pass_adapter=1;
                         break;
-                    case 1:
+                    case 1:     // 80%
                         pass_adapter=0.8;
                         break;
-                    case 2:
+                    case 2:     // 60%
                         pass_adapter=0.6;
                         break;
-                    case 3:
+                    case 3:     // 40%
                         pass_adapter=0.4;
                         break;
-                    case 4:
+                    case 4:     // 20%
                         pass_adapter=0.2;
                         break;
                 }
 
 
                 Log.e(TAG,"pass_adapter: "+pass_adapter);
-//원래는 저장단계에서 저장과 저장과정이 분리되어있는 것이지만 우린 따로 저장부분을 추가하고, 지금 이 함수로 시행하는 부분은 sync이기때문에 if문의 구별이 없는 상태이다.
                 if (saveMethod.getSaveState() == GestureSaveMethod.SaveState.Ready ||
                         saveMethod.getSaveState() == GestureSaveMethod.SaveState.Have_Saved) {
 
                     saveMethod.setState(GestureSaveMethod.SaveState.Now_Saving);
                     dialog= new LoadingDialog().setProgress(mactivity);
-                    dialog.show();
+                    dialog.show();  // 로딩이미지 표현.
 
 
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
                             if(dialog.isShowing()) {
-                                saveMethod = new GestureSaveMethod(inds_num, mactivity,pass_adapter);
+                                saveMethod = new GestureSaveMethod(inds_num, mactivity,pass_adapter);   // GestureSaveMethod로 (제스처 인덱스값, 메인액티?, 어댑터 값)넘겨줌
                                 saveModel = new GestureSaveModel(saveMethod, inds_num);
                                 startSaveModel();
                             }
@@ -373,9 +375,6 @@ public class TabFragment3 extends Fragment {
                     GestureDetectModelManager.setCurrentModel(model);
                     startSaveModel();
                 }
-
-
-
             }
         });
 
@@ -388,7 +387,7 @@ public class TabFragment3 extends Fragment {
         this.mactivity = getActivity();
 
     }
-
+/*
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
@@ -404,19 +403,19 @@ public class TabFragment3 extends Fragment {
         mBluetoothGatt.close();
         mBluetoothGatt = null;
     }
-
+*/
     public void startSaveModel() {
         IGestureDetectModel model = saveModel;
         model.setAction(new GestureDetectSendResultAction(mactivity,TabFragment3.this));
         GestureDetectModelManager.setCurrentModel(model);
     }
-
+/*
     public void startDetectModel(View v) {
         IGestureDetectModel model = detectModel;
         model.setAction(new GestureDetectSendResultAction(getActivity()));
         GestureDetectModelManager.setCurrentModel(model);
     }
-
+*/
     public void setGestureText(final String message) {
         mHandler.post(new Runnable() {
             @Override
@@ -466,6 +465,7 @@ public class TabFragment3 extends Fragment {
         }catch (Exception e){}
     }
 
+    /*
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void testEvent(EventData event){
         Log.e("test_event", event.device.getName() + "connected !!");
@@ -493,7 +493,7 @@ public class TabFragment3 extends Fragment {
             }
         },500);
     }
-
+*/
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
