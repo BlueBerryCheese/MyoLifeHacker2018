@@ -288,9 +288,9 @@ public class TabFragment3 extends Fragment {
             public void onClick(View v) {
                 //inds_num=0;
                 // for(inds_num=0; inds_num<6; inds_num++) {
-                inds_num=saveMethod.getSaveIndex();
-                saveModel = new GestureSaveModel(saveMethod, inds_num);
-                startSaveModel();
+                inds_num=saveMethod.getSaveIndex();  // 현재 몇번 제스처인지 값 가져옴.
+                saveModel = new GestureSaveModel(saveMethod, inds_num);  // (saveMethod, 몇번제스처 인지 값 넘겨줌)
+                startSaveModel();  // 세이브 시작
                 saveMethod.setState(GestureSaveMethod.SaveState.Now_Saving);        // SaveState 저장중으로 변경
                 // 제스처의 카운트가 0일 때
                 if(saveMethod.getGestureCounter()==0) {     //위에 setValue로는 setOnValueChangedListener가 인식을 못해서 따로 빼줌.
@@ -299,9 +299,7 @@ public class TabFragment3 extends Fragment {
                         views[i].setBackgroundResource(R.drawable.imgbtn_default);
                     }
                 }
-                gestureText.setText("Gesture" + (inds_num + 1) + "'s Saving Count : " + (saveMethod.getGestureCounter() + 1));
-                //  views[inds_num].setDrawingCacheBackgroundColor(Color.BLUE);
-                // views[inds_num].setBackground(imgbtn_passed);
+                gestureText.setText("Gesture" + (inds_num + 1) + "'s Saving Count : " + (saveMethod.getGestureCounter() + 1)); // 아래쪽 텍스트 변경
                 views[saveMethod.getGestureCounter()].setBackgroundResource(R.drawable.imgbtn_pressed); // 동그라미 채워줌
                 //   }
             }
