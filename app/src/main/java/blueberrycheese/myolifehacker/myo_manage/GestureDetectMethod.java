@@ -7,8 +7,6 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import blueberrycheese.myolifehacker.SystemControl.SystemFeature;
-
 /**
  * Created by Seongho on 2017-12-01.
  * ver 1.1 Manhattan, Norm-3 distance, Weight Ratio, CorrelationEfficient detect Method
@@ -85,6 +83,9 @@ public class GestureDetectMethod {
         }
     }
 
+    int cnt = 0;
+    int cnt_thr = 0;
+    int old_gesture_num=-1;
     //getDetectGesture Use By K-MEANS
     public GestureState getDetectGesture(byte[] data) {
         EmgData streamData = new EmgData(new EmgCharacteristicData(data));
@@ -114,7 +115,24 @@ public class GestureDetectMethod {
         numberSmoother.addArray((Integer) (detect_Num));
         //streamCount = 0;
 
-        return getEnum(numberSmoother.getSmoothingNumber());
+        cnt++;
+        if(cnt%30==0){
+            cnt=0;
+            int result = numberSmoother.getSmoothingNumber();
+            if(old_gesture_num!=result){
+                old_gesture_num = result;
+                cnt_thr=0;
+            }else{
+                cnt_thr++;
+                if(cnt_thr>3){
+                    numberSmoother.clearArray();    // 같은게 계속 반복되면 클리어 한판!
+                    cnt_thr=0;
+                    old_gesture_num=-1;
+                }
+            }
+        }
+
+        return getEnum(old_gesture_num);
     }
 
     private double getThreshold() {

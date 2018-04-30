@@ -40,6 +40,7 @@ import blueberrycheese.myolifehacker.MenuControl.GestureDetectModel_Menu;
 import blueberrycheese.myolifehacker.MenuControl.GestureDetectSendResultAction_Menu;
 import blueberrycheese.myolifehacker.MenuControl.MenuEvent;
 import blueberrycheese.myolifehacker.SystemControl.SystemControlActivity;
+import blueberrycheese.myolifehacker.events.ServiceEvent;
 import blueberrycheese.myolifehacker.myo_manage.GestureDetectMethod;
 import blueberrycheese.myolifehacker.myo_manage.GestureDetectModel;
 import blueberrycheese.myolifehacker.myo_manage.GestureDetectModelManager;
@@ -309,9 +310,9 @@ public class TabFragment1 extends Fragment {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(MenuEvent event) {
-        gestureNum = event.gesture;
-        Log.d("MenuEvent","MenuEvent Gesture num : "+event.gesture);
+    public void onMessageEvent(ServiceEvent.GestureEvent event) {
+        gestureNum = event.gestureNumber;
+        Log.d("MenuEvent","MenuEvent Gesture num : "+event.gestureNumber);
 
         switch(gestureNum){
             case 0 :
