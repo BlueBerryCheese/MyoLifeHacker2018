@@ -33,6 +33,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.HashMap;
 
 import blueberrycheese.myolifehacker.commons.LoadingDialog;
+import blueberrycheese.myolifehacker.events.ServiceEvent;
 import blueberrycheese.myolifehacker.myo_manage.GestureDetectMethod;
 import blueberrycheese.myolifehacker.myo_manage.GestureDetectModel;
 import blueberrycheese.myolifehacker.myo_manage.GestureDetectModelManager;
@@ -444,6 +445,8 @@ public class TabFragment3 extends Fragment {
 
     @Override
     public void onDetach() {
+        // 뒤로가기로 앱 나간 경우 onDetach
+        startDetectModel_Event();
         super.onDetach();
         mListener = null;
 
@@ -451,18 +454,26 @@ public class TabFragment3 extends Fragment {
 
     @Override
     public void onStop() {
+        //Fragment1으로 가거나 HomeButton 눌러서 앱 나간경우 onStop.
         try{
+            startDetectModel_Event();
             EventBus.getDefault().unregister(this);         //이벤트버스는 시행되면 계속 그곳에서 이벤트가 발생하는데 문제가 일어날수있다 생각하여 멈추거나할때 이벤트를 꺼주는것을 해야함 아니면 베터리소모가 크답니다.
         }catch (Exception e){}
         super.onStop();
     }
 
+
     @Override
     public void onResume(){
+        //Fragment 2 선택했을때부터 onResume 됨 + Fragment3오거나, Home나갔었다가 다시 돌아오거나 등..
         super.onResume();
         try {
             EventBus.getDefault().register(this);           //이벤트 버스 다시 키는 역활
         }catch (Exception e){}
+    }
+
+    public void startDetectModel_Event(){
+        EventBus.getDefault().post(new ServiceEvent.setDetectModel_Event(1));
     }
 
     /*

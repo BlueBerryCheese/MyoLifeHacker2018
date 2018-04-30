@@ -11,6 +11,7 @@ import java.util.Queue;
 import blueberrycheese.myolifehacker.CameraView.CameraEvent;
 import blueberrycheese.myolifehacker.MenuControl.MenuEvent;
 import blueberrycheese.myolifehacker.SystemControl.SystemFeature;
+import blueberrycheese.myolifehacker.events.ServiceEvent;
 
 /**
  * Created by Seongho on 2017-12-01.
@@ -54,7 +55,7 @@ public class NumberSmoother {
         }
 
         Log.d("numbersmoother","["+numCounter[0]+","+numCounter[1]+","+numCounter[2]+","+numCounter[3]+","+numCounter[4]+","+numCounter[5]+"]");
-    }
+}
 
     public void clearArray(){
         gestureNumArray = new LinkedList<>();
@@ -66,8 +67,10 @@ public class NumberSmoother {
         for (int i_element = 0; i_element < MAX_SAVE_LENGTH; i_element++) {
             if (numCounter[i_element] >= THRESHOLD_LENGTH) {//50개중 20개이상 일치하지 않으면 불일치(인지되지 않은 제스처)
                 Log.d("number success","number success : "+(i_element+1));
-                gestureNumArray=new LinkedList<>();
-                numCounter =  new int[MAX_SAVE_LENGTH];
+//                gestureNumArray=new LinkedList<>();
+//                numCounter =  new int[MAX_SAVE_LENGTH];
+                Log.d("detect_gesture_cnt","-> "+numCounter[0]+","+numCounter[1]+","+numCounter[2]+","+numCounter[3]+","+numCounter[4]+","+numCounter[5]);
+                EventBus.getDefault().post(new ServiceEvent.GestureEvent(i_element));
                 return i_element;
             }
         }
