@@ -146,18 +146,24 @@ public class TabFragment1 extends Fragment {
                     case R.id.camera_button:
                         Log.d("cameracircle","cameraclicked");
                         Intent intent = new Intent(getActivity().getApplicationContext(), CameraActivity.class);
-                        intent.putExtra("bluetoothDevice", device);
+//                        intent.putExtra("bluetoothDevice", device);
                         startActivity(intent);
                         break;
                     case R.id.volume:
-                        if(device!=null) {
+//                        if(device!=null) {
+//                            Log.d("volumecircle", "volume_clicked");
+//                            Log.d("volumecircle", device.getName());
+//                            Intent intent2 = new Intent(getActivity().getApplicationContext(), SystemControlActivity.class);
+//                            intent2.putExtra("bluetoothDevice", device);
+//
+//                            startActivity(intent2);
+//                        }
                             Log.d("volumecircle", "volume_clicked");
-                            Log.d("volumecircle", device.getName());
+//                            Log.d("volumecircle", device.getName());
                             Intent intent2 = new Intent(getActivity().getApplicationContext(), SystemControlActivity.class);
-                            intent2.putExtra("bluetoothDevice", device);
+//                            intent2.putExtra("bluetoothDevice", device);
 
                             startActivity(intent2);
-                        }
                         break;
                     default:
                         break;

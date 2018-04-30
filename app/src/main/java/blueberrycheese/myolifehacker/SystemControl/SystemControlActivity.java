@@ -103,31 +103,33 @@ public class SystemControlActivity extends AppCompatActivity implements Bluetoot
         algorithm1 = (TextView)findViewById(R.id.algorithm1);
         maxDataTextView=(TextView)findViewById(R.id.maxData);
         mContext = this;
-        startNopModel();
 
-        Intent intent = getIntent();
-        if(intent!=null){
-
-            bluetoothDevice = intent.getExtras().getParcelable("bluetoothDevice");
-            deviceName = bluetoothDevice.getName();
-            HashMap<String,View> views = new HashMap<String,View>();
-            mMyoCallback = new MyoGattCallback(mHandler, emgDataText, views,maxDataTextView,-1);
-            mBluetoothGatt = bluetoothDevice.connectGatt(this, true, mMyoCallback);
-            mMyoCallback.setBluetoothGatt(mBluetoothGatt);
-            Log.d(TAG,"bluetoothDevice is "+deviceName);
-
-            BluetoothManager mBluetoothManager = (BluetoothManager) getSystemService(BLUETOOTH_SERVICE);
-            mBluetoothAdapter = mBluetoothManager.getAdapter();
-            //onClickEMG(this);
-            //onClickDetect();
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    onClickEMG(mContext);
-                    onClickDetect();
-                }
-            },SCAN_PERIOD);
-        }
+        //startNopModel() will setCurrentModel to another model so Service's gesture detect model won't work! - So I commented out
+//        startNopModel();
+//20180430 For service
+//        Intent intent = getIntent();
+//        if(intent!=null){
+//
+//            bluetoothDevice = intent.getExtras().getParcelable("bluetoothDevice");
+//            deviceName = bluetoothDevice.getName();
+//            HashMap<String,View> views = new HashMap<String,View>();
+//            mMyoCallback = new MyoGattCallback(mHandler, emgDataText, views,maxDataTextView,-1);
+//            mBluetoothGatt = bluetoothDevice.connectGatt(this, true, mMyoCallback);
+//            mMyoCallback.setBluetoothGatt(mBluetoothGatt);
+//            Log.d(TAG,"bluetoothDevice is "+deviceName);
+//
+//            BluetoothManager mBluetoothManager = (BluetoothManager) getSystemService(BLUETOOTH_SERVICE);
+//            mBluetoothAdapter = mBluetoothManager.getAdapter();
+//            //onClickEMG(this);
+//            //onClickDetect();
+//            new Handler().postDelayed(new Runnable() {
+//                @Override
+//                public void run() {
+//                    onClickEMG(mContext);
+//                    onClickDetect();
+//                }
+//            },SCAN_PERIOD);
+//        }
 
 
 

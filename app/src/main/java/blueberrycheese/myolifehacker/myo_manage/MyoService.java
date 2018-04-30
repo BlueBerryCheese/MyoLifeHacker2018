@@ -21,7 +21,7 @@ import blueberrycheese.myolifehacker.R;
 import blueberrycheese.myolifehacker.events.ServiceEvent;
 
 public class MyoService extends Service {
-    private static final String TAG = "Myo Service";
+    private static final String TAG = "Myo_Service";
     private static final long SCAN_PERIOD = 5000;
 
     NotificationManager manager;
@@ -93,7 +93,7 @@ public class MyoService extends Service {
         manager.notify(11, myNotication);
         //
 
-        return START_STICKY_COMPATIBILITY;
+        return START_STICKY;
     }
 
 
@@ -107,9 +107,9 @@ public class MyoService extends Service {
 
   @Subscribe(sticky = true)
   public void getMyoDevice(ServiceEvent.MyoDeviceEvent event){
-      Log.e("ServiceEvent", "subcribe getMyoDevice got event");
+      Log.e(TAG, "subcribe getMyoDevice got event");
       if(event.MyoDevice!=null){
-          Log.e("ServiceEvent", event.MyoDevice.getName() + " arrived at service !!");
+          Log.e(TAG, event.MyoDevice.getName() + " arrived at service !!");
         myoDevice = event.MyoDevice;
         mMyoCallback = new MyoGattCallback(mHandler);
         mBluetoothGatt = myoDevice.connectGatt(getApplicationContext(), false, mMyoCallback);
@@ -120,6 +120,7 @@ public class MyoService extends Service {
               public void run() {
                   if (mBluetoothGatt == null || !mMyoCallback.setMyoControlCommand(commandList.sendEmgOnly())) {
                       Log.d(TAG,"False EMG");
+                      Log.d(TAG,"mBluetoothGatt : " + mBluetoothGatt);
                   } else {
                       saveMethod  = new GestureSaveMethod(-1, getApplicationContext(),1);
                       Log.d(TAG,"True EMG");
@@ -145,13 +146,13 @@ public class MyoService extends Service {
     @Subscribe
     public void getGestureNumber(ServiceEvent.GestureEvent event){
         gestureNum = event.gestureNumber;
-        Log.d("ServiceEvent","Gesture num : "+event.gestureNumber);
+        Log.d(TAG,"Gesture num : "+event.gestureNumber);
     }
 
 
     @Subscribe(sticky = true)
     public void getMyoDevice(ServiceEvent.testEvent event){
-        Log.e("ServiceEvent", event.text + " arrived at service !!");
+        Log.e(TAG, event.text + " arrived at service !!");
     }
 
     public void startDetectModel() {

@@ -148,23 +148,26 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
 
         //Detect용
         gestureText = (TextView)findViewById(R.id.cameraActivityGesture);
-        startNopModel();
 
-        Intent intent = getIntent();
-        if(intent!=null){
-            bluetoothDevice = intent.getExtras().getParcelable("bluetoothDevice");
-            if(bluetoothDevice != null){
-                deviceName = bluetoothDevice.getName();
-                HashMap<String,View> views = new HashMap<String,View>();
-                mMyoCallback = new MyoGattCallback(mHandler);
-                mBluetoothGatt = bluetoothDevice.connectGatt(this, false, mMyoCallback);
-                mMyoCallback.setBluetoothGatt(mBluetoothGatt);
-                Log.d(TAG,"bluetoothDevice is "+deviceName);
-                BluetoothManager mBluetoothManager = (BluetoothManager) getSystemService(BLUETOOTH_SERVICE);
-                mBluetoothAdapter = mBluetoothManager.getAdapter();
-            }
+        //startNopModel() will setCurrentModel to another model so Service's gesture detect model won't work! - So I commented out
+//        startNopModel();
 
-        }
+        //Comment out for Service
+//        Intent intent = getIntent();
+//        if(intent!=null){
+//            bluetoothDevice = intent.getExtras().getParcelable("bluetoothDevice");
+//            if(bluetoothDevice != null){
+//                deviceName = bluetoothDevice.getName();
+//                HashMap<String,View> views = new HashMap<String,View>();
+//                mMyoCallback = new MyoGattCallback(mHandler);
+//                mBluetoothGatt = bluetoothDevice.connectGatt(this, false, mMyoCallback);
+//                mMyoCallback.setBluetoothGatt(mBluetoothGatt);
+//                Log.d(TAG,"bluetoothDevice is "+deviceName);
+//                BluetoothManager mBluetoothManager = (BluetoothManager) getSystemService(BLUETOOTH_SERVICE);
+//                mBluetoothAdapter = mBluetoothManager.getAdapter();
+//            }
+//
+//        }
         dttButton = (Button) findViewById(R.id.dttButton);
     }
 

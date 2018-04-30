@@ -297,9 +297,12 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onDestroy(){
-        super.onDestroy();
+        Log.d(TAG,"MainActivity onDestroy!");
         //Service Test
         stopService(new Intent(this, MyoService.class));
+
+        super.onDestroy();
+
     }
 
 }
