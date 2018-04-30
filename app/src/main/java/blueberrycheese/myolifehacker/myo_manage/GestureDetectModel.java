@@ -19,7 +19,7 @@ public class GestureDetectModel implements IGestureDetectModel {
     public void event(long time, byte[] data) {
         synchronized (LOCK) {
             GestureDetectMethod.GestureState gestureState = detectMethod.getDetectGesture(data);
-            action(gestureState.name());
+//            action(gestureState.name());
         }
     }
 

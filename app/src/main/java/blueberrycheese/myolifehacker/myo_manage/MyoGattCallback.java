@@ -281,36 +281,36 @@ public class MyoGattCallback extends BluetoothGattCallback {
                 emg_br_data[i] = emg_br.getByte();
             }
 
-
-            mHandler.post(new Runnable() {
-                @Override
-                public void run() {
-                    if(dataView!=null)
-                        dataView.setText(callback_msg);
-                    sb=new StringBuilder("emg   ");
-
-                    if(count<25) {
-                        for (int i = 0; i < 8; i++) {
-                            checking[i] = (emg_br_data[i]>emg_br_data[i+8])?emg_br_data[i]:emg_br_data[i+8];
-                            if(count==0){
-                                maxData[i] = checking[i];
-                            }
-                            if (maxData[i] < checking[i])
-                                maxData[i] = checking[i];
-                        }
-                        count++;
-                    }
-                    else {
-                        for (int k = 0; k < 8; k++) {
-                            sb.append(maxData[k] + ",  ");
-                        }
-                        Log.d("data",sb.toString());
-//                        maxDataTextView.setText(sb.toString());
-                        sb=new StringBuilder("emg ");
-                        count=0;
-                    }
-                }
-            });
+//20180430. - 주석안하고 그대로 두면 계속 exception 메시지 나다가 서비스 크래쉬 등 이상현상 발생함.
+//            mHandler.post(new Runnable() {
+//                @Override
+//                public void run() {
+//                    if(dataView!=null)
+//                        dataView.setText(callback_msg);
+//                    sb=new StringBuilder("emg   ");
+//
+//                    if(count<25) {
+//                        for (int i = 0; i < 8; i++) {
+//                            checking[i] = (emg_br_data[i]>emg_br_data[i+8])?emg_br_data[i]:emg_br_data[i+8];
+//                            if(count==0){
+//                                maxData[i] = checking[i];
+//                            }
+//                            if (maxData[i] < checking[i])
+//                                maxData[i] = checking[i];
+//                        }
+//                        count++;
+//                    }
+//                    else {
+//                        for (int k = 0; k < 8; k++) {
+//                            sb.append(maxData[k] + ",  ");
+//                        }
+//                        Log.d("data",sb.toString());
+////                        maxDataTextView.setText(sb.toString());
+//                        sb=new StringBuilder("emg ");
+//                        count=0;
+//                    }
+//                }
+//            });
 
             if (systemTime_ms > last_send_never_sleep_time_ms + NEVER_SLEEP_SEND_TIME) {
                 // set Myo [Never Sleep Mode]
