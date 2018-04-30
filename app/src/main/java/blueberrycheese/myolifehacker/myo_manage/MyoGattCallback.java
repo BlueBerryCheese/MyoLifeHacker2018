@@ -226,14 +226,14 @@ public class MyoGattCallback extends BluetoothGattCallback {
                             '\n' + String.format("Stream Type       : %d", byteReader.getByte());
 
 
-
-                    mHandler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            if(dataView!=null)
-                                dataView.setText(callback_msg);
-                        }
-                    });
+//20180430
+//                    mHandler.post(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            if(dataView!=null)
+//                                dataView.setText(callback_msg);
+//                        }
+//                    });
 
                 }
             }
@@ -331,6 +331,7 @@ public class MyoGattCallback extends BluetoothGattCallback {
             int i_prop = mCharacteristic_command.getProperties();
             if (i_prop == BluetoothGattCharacteristic.PROPERTY_WRITE) {
                 if (mBluetoothGatt.writeCharacteristic(mCharacteristic_command)) {
+                    Log.d("MyoGattCallback","setMyoControlCommand True");
                     return true;
                 }
             }
