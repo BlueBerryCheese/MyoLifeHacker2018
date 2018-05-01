@@ -63,7 +63,10 @@ public class MyoService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId){
         Log.e("ServiceEvent", "onStartCommand");
-        EventBus.getDefault().register(this);
+        if(!EventBus.getDefault().isRegistered(this)){
+            EventBus.getDefault().register(this);
+        }
+
 
         mHandler = new Handler();
         BluetoothManager mBluetoothManager = (BluetoothManager) getSystemService(BLUETOOTH_SERVICE);
