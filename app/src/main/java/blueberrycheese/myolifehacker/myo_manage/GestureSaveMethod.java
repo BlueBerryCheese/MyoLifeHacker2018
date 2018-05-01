@@ -265,9 +265,18 @@ public class GestureSaveMethod {
         }
     }
 
+    // 세이브 도중에 numberPicker 변경하였을 때 세이브 제스처 번호 초기화
+    public void change_save_index_numberPicker() {
+        gestureCounter=0;
+    }
+
+    // 세이브 numberPicker 변경하였을 때 세이브 번호 값 저장
+    public void change_save_numer_numberPicker(int i) {save_index=i; }
+
     // 제스처를 count 함.
     private void gestureCount(int num) {
         gestureCounter++;
+
         Log.e("GestureDetect", "CompareData Size : " + compareGesture.size());
         if (gestureCounter == JUST_SAVE_DATA_LEN) {     //제스처count가 (지정한 저장 길이) 와 같을 때
             saveState = SaveState.Have_Saved;

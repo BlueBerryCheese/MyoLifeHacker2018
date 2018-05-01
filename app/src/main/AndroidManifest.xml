@@ -45,6 +45,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".CameraView.CameraActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
+
         <activity android:name=".CameraView.PicturePreviewActivity" />
         <activity android:name=".CameraView.VideoPreviewActivity"></activity>
     </application>
