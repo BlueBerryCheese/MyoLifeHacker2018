@@ -269,7 +269,7 @@ public class MyoGattCallback extends BluetoothGattCallback {
                 GestureDetectModelManager.getCurrentModel().event(systemTime_ms,emg_data);
             }catch(NullPointerException e){
                 Log.e(TAG,"GestureDetectModelManager.getCurrentModel NULL! NullPointerException accrued.");
-                GestureDetectModelManager.setCurrentModel(new NopModel());
+//                GestureDetectModelManager.setCurrentModel(new NopModel());
             }
 
             
