@@ -262,8 +262,17 @@ public class MyoGattCallback extends BluetoothGattCallback {
         if (EMG_0_ID.equals(characteristic.getUuid().toString())) {
             long systemTime_ms = System.currentTimeMillis();
             byte[] emg_data = characteristic.getValue();
-            GestureDetectModelManager.getCurrentModel().event(systemTime_ms,emg_data);
+            //Original
+//            GestureDetectModelManager.getCurrentModel().event(systemTime_ms,emg_data);
+            Log.e(TAG,"GestureDetectModelManager.getCurrentMoel : " + GestureDetectModelManager.getCurrentModel());
+            try{
+                GestureDetectModelManager.getCurrentModel().event(systemTime_ms,emg_data);
+            }catch(NullPointerException e){
+                Log.e(TAG,"GestureDetectModelManager.getCurrentModel NULL! NullPointerException accrued.");
+                GestureDetectModelManager.setCurrentModel(new NopModel());
+            }
 
+            
             ByteReader emg_br = new ByteReader();
             emg_br.setByteData(emg_data);
 
