@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.util.EventLog;
 import android.util.Log;
 
 import org.greenrobot.eventbus.EventBus;
@@ -159,7 +160,9 @@ public class MyoService extends Service {
 //        IGestureDetectModel model = detectModel;
         model = detectModel;
 //        model.setAction(new GestureDetectSendResultAction(this));    //변경
+        Log.e(TAG,"In MyoService - model : " + model);
         GestureDetectModelManager.setCurrentModel(model);
+        EventBus.getDefault().post(new ServiceEvent.setDetectModel_Event(1));
     }
 
     @Subscribe
