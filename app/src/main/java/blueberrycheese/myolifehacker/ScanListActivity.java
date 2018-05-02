@@ -104,6 +104,7 @@ public class ScanListActivity extends AppCompatActivity implements BluetoothAdap
                         break;
                     }
                 }
+
                 startService(new Intent(getApplicationContext(), MyoService.class));
                 EventBus.getDefault().postSticky(new ServiceEvent.MyoDeviceEvent(bluetoothDevice_Selected));
 

@@ -15,14 +15,22 @@ import android.widget.TextView;
 import com.otaliastudios.cameraview.AspectRatio;
 import com.otaliastudios.cameraview.CameraUtils;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.lang.ref.WeakReference;
 
 import blueberrycheese.myolifehacker.R;
+import blueberrycheese.myolifehacker.events.ServiceEvent;
 
 
 public class PicturePreviewActivity extends AppCompatActivity {
+    private static final String TAG = "PicturePreviewActivity";
+    private int gestureNum = -1;
+    int[] smoothcount = new int[6];
 
     private static WeakReference<byte[]> image;
 
@@ -102,4 +110,46 @@ public class PicturePreviewActivity extends AppCompatActivity {
         }
     }
 
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onGestureEvent(ServiceEvent.GestureEvent event) {
+        gestureNum = event.gestureNumber;
+        Log.d(TAG,"Gesture num : "+event.gestureNumber);
+
+        switch(gestureNum){
+            case 0 :
+                if(smoothcount[gestureNum]>1) {
+                    finish();
+                    smoothcount[gestureNum]=-1;
+                    resetSmoothCount();
+                }
+                smoothcount[gestureNum]++;
+
+                break;
+            default :
+                break;
+
+        }
+    }
+
+    public void resetSmoothCount(){
+        for(int i : smoothcount){
+            i = -1;
+        }
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        if(!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
+    }
+
+    @Override
+    public void onStop(){
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+
+    }
 }
