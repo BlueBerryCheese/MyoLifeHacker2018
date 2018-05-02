@@ -12,6 +12,7 @@ import blueberrycheese.myolifehacker.CameraView.CameraEvent;
 import blueberrycheese.myolifehacker.MenuControl.MenuEvent;
 import blueberrycheese.myolifehacker.SystemControl.SystemFeature;
 import blueberrycheese.myolifehacker.events.ServiceEvent;
+import blueberrycheese.myolifehacker.myo_music.Gesture.MusicEvent;
 
 /**
  * Created by Seongho on 2017-12-01.
@@ -102,6 +103,21 @@ public class NumberSmoother {
                 //Log.d("detect_gesture","-> "+(int)(i_element+1));
                 Log.d("menu_gesture cnt","-> "+numCounter[0]+","+numCounter[1]+","+numCounter[2]+","+numCounter[3]+","+numCounter[4]+","+numCounter[5]);
                 EventBus.getDefault().post(new MenuEvent(i_element));
+                return i_element;
+            }
+        }
+        return -1;
+    }
+    public int getSmoothingNumber_music() {
+        for (int i_element = 0; i_element < MAX_SAVE_LENGTH; i_element++) {
+            if (numCounter[i_element] >= THRESHOLD_LENGTH) {//50개중 20개이상 일치하지 않으면 불일치(인지되지 않은 제스처)
+                Log.d("number success","number success : "+(i_element+1));
+                //gestureNumArray=new LinkedList<>();
+                //Log.d("detect_gesture","-> "+(int)(i_element+1));
+                Log.d("detect_gesture cnt","-> "+numCounter[0]+","+numCounter[1]+","+numCounter[2]+","+numCounter[3]+","+numCounter[4]+","+numCounter[5]);
+//                systemFeature.function(i_element);
+//                Log.d("smoothGesture","SmoothGesture(i_element+1) : "+(i_element+1));
+                EventBus.getDefault().post(new MusicEvent(i_element));
                 return i_element;
             }
         }

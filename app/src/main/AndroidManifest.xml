@@ -15,6 +15,7 @@
     <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
 
     <uses-feature
         android:name="android.hardware.bluetooth_le"
@@ -54,6 +55,147 @@
             android:name=".myo_manage.MyoService"
             android:enabled="true"
             android:exported="true"></service>
+
+        <activity
+            android:name=".myo_music.activities.activitys.SplashActivity"
+            android:theme="@style/SplashTheme">
+
+        </activity>
+
+        <activity
+            android:name=".myo_music.activities.activitys.MainActivity"
+            android:launchMode="singleTask">
+            <meta-data
+                android:name="android.app.default_searchable"
+                android:resource="@xml/searchable"/>
+
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH"/>
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+
+                <data android:scheme="content"/>
+                <data android:mimeType="audio/*"/>
+                <data android:mimeType="application/ogg"/>
+                <data android:mimeType="application/x-ogg"/>
+                <data android:mimeType="application/itunes"/>
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+
+                <data android:scheme="file"/>
+                <data android:mimeType="audio/*"/>
+                <data android:mimeType="application/ogg"/>
+                <data android:mimeType="application/x-ogg"/>
+                <data android:mimeType="application/itunes"/>
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".myo_music.activities.activitys.WidgetConfigureActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/MyWidgetConfigTheme">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name="com.simplemobiletools.commons.activities.AboutActivity"
+            android:label="@string/about"
+            android:parentActivityName=".myo_music.activities.activitys.MainActivity"/>
+
+        <activity
+            android:name="com.simplemobiletools.commons.activities.CustomizationActivity"
+            android:label="@string/customize_colors"
+            android:parentActivityName=".myo_music.activities.activitys.SettingsActivity"/>
+
+        <activity
+            android:name="com.simplemobiletools.commons.activities.LicenseActivity"
+            android:label="@string/third_party_licences"
+            android:parentActivityName="com.simplemobiletools.commons.activities.AboutActivity"/>
+
+        <activity
+            android:name="com.simplemobiletools.commons.activities.FAQActivity"
+            android:label="@string/frequently_asked_questions"
+            android:parentActivityName="com.simplemobiletools.commons.activities.AboutActivity"/>
+
+        <activity
+            android:name=".myo_music.activities.activitys.SettingsActivity"
+            android:label="@string/settings"
+            android:parentActivityName=".myo_music.activities.activitys.MainActivity"/>
+
+        <activity
+            android:name=".myo_music.activities.activitys.PlaylistsActivity"
+            android:label="@string/manage_playlists"
+            android:parentActivityName=".myo_music.activities.activitys.SettingsActivity"/>
+
+        <service
+            android:name=".myo_music.activities.services.MusicService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.simplemobiletools.musicplayer.action.INIT"/>
+                <action android:name="com.simplemobiletools.musicplayer.action.INIT_PATH"/>
+                <action android:name="com.simplemobiletools.musicplayer.action.SETUP"/>
+                <action android:name="com.simplemobiletools.musicplayer.action.FINISH"/>
+                <action android:name="com.simplemobiletools.musicplayer.action.PREVIOUS"/>
+                <action android:name="com.simplemobiletools.musicplayer.action.PAUSE"/>
+                <action android:name="com.simplemobiletools.musicplayer.action.PLAYPAUSE"/>
+                <action android:name="com.simplemobiletools.musicplayer.action.NEXT"/>
+                <action android:name="com.simplemobiletools.musicplayer.action.EDIT"/>
+                <action android:name="com.simplemobiletools.musicplayer.action.PLAYPOS"/>
+                <action android:name="com.simplemobiletools.musicplayer.action.REFRESH_LIST"/>
+                <action android:name="com.simplemobiletools.musicplayer.action.SET_PROGRESS"/>
+                <action android:name="com.simplemobiletools.musicplayer.action.SKIP_BACKWARD"/>
+                <action android:name="com.simplemobiletools.musicplayer.action.SKIP_FORWARD"/>
+            </intent-filter>
+        </service>
+
+        <receiver
+            android:name=".myo_music.activities.helpers.MyWidgetProvider"
+            android:icon="@drawable/img_widget_preview">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_info"/>
+        </receiver>
+
+        <receiver
+            android:name=".myo_music.activities.receivers.HeadsetPlugReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.ACTION_HEADSET_PLUG"/>
+            </intent-filter>
+        </receiver>
+
+        <receiver
+            android:name=".myo_music.activities.receivers.RemoteControlReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter android:priority="999">
+                <action android:name="android.intent.action.MEDIA_BUTTON"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </receiver>
+
+        <receiver android:name=".myo_music.activities.receivers.ControlActionsListener"/>
+
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths"/>
+        </provider>
+
     </application>
 
 </manifest>
