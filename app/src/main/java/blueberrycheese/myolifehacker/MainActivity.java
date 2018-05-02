@@ -41,8 +41,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import blueberrycheese.myolifehacker.events.ServiceEvent;
 import blueberrycheese.myolifehacker.myo_manage.MyoCommandList;
 import blueberrycheese.myolifehacker.myo_manage.MyoGattCallback;
+import blueberrycheese.myolifehacker.myo_manage.MyoService;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,BluetoothAdapter.LeScanCallback{
@@ -89,6 +91,8 @@ public class MainActivity extends AppCompatActivity
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
 
+        //서비스 위해 주석처리
+/*
         mHandler = new Handler();
         BluetoothManager mBluetoothManager = (BluetoothManager) getSystemService(BLUETOOTH_SERVICE);
         mBluetoothAdapter = mBluetoothManager.getAdapter();
@@ -117,6 +121,16 @@ public class MainActivity extends AppCompatActivity
 
 
         }
+*/
+
+//        //Service Test
+//        //TODO: ScanActivity쪽에서 itemclick시 바로 service 실행시키고 string 넘겨준 후 service에서 bluetoothdevice 선언까지 하는쪽으로..
+//        startService(new Intent(this, MyoService.class));
+//        EventBus.getDefault().postSticky(new ServiceEvent.testEvent("post to service test text"));
+//        if(bluetoothDevice != null){
+//            EventBus.getDefault().postSticky(new ServiceEvent.MyoDeviceEvent(bluetoothDevice));
+//        }
+
 
 
     }
@@ -168,7 +182,8 @@ public class MainActivity extends AppCompatActivity
         public void onPageSelected(int position) {
 //            Toast.makeText(getApplicationContext(), "Current position: "+position, Toast.LENGTH_SHORT).show();
 
-            EventBus.getDefault().post(new EventData(bluetoothDevice));     //다음부분에서 페이지가 변환이 발생되는 이벤트가 발생할때 이벤트버스를 발동시킴 다음 3페이지에서 이 이벤트에 의해서 디바이스데이터전송이 일어남을 알 수가 있다.
+//서비스 위해 주석처리
+//            EventBus.getDefault().post(new EventData(bluetoothDevice));     //다음부분에서 페이지가 변환이 발생되는 이벤트가 발생할때 이벤트버스를 발동시킴 다음 3페이지에서 이 이벤트에 의해서 디바이스데이터전송이 일어남을 알 수가 있다.
         }
 
         @Override
@@ -239,6 +254,7 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+    //서비스 위해 주석처리 예정 - 할때 implement도 함께 제거 요망
     /** Define of BLE Callback */
     @Override
     public void onLeScan(BluetoothDevice device, int rssi, byte[] scanRecord) { //현
@@ -276,9 +292,17 @@ public class MainActivity extends AppCompatActivity
             Log.d(TAG,resultCode+"");
 
         }
-
     }
 
 
+    @Override
+    public void onDestroy(){
+        Log.d(TAG,"MainActivity onDestroy!");
+        //Service Test
+        stopService(new Intent(this, MyoService.class));
+
+        super.onDestroy();
+
+    }
 
 }

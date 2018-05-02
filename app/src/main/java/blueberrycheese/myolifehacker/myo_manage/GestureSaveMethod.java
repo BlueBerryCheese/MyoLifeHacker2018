@@ -62,6 +62,8 @@ public class GestureSaveMethod {
     }
 
     // sync를 눌렀을 때 모델 만드는 부분. (i: 제스처 인덱스, context, percent: 어댑터 값)
+    // TODO: GestureSaveMethod 생성자에 int i (Gesture 넘버)넣어서 adaptive fragment 에서 numberpicker 계속 바꿀때마다...
+    // TODO: object를 다시 재생성 하게 하지말고 차라리 int 변수 하나 따로 선언하고 그것을 바꿀 수 있는 Method 하나 만들어서 이 i를 바꾸는게 효율적일듯 => 추가: int i 아예 쓸모 없는 부분인 듯
     public GestureSaveMethod(int i, Context context,double percent) {
         Log.d(TAG, "GestureSaveMethod None2");
 

@@ -138,7 +138,7 @@ public class GestureDetectMethod_Camera {
         cnt++;
         if(cnt%10==0){
             cnt=0;
-            int result = numberSmoother.getSmoothingNumber_camera();
+            int result = numberSmoother.getSmoothingNumber();
             if(old_gesture_num!=result)
                 old_gesture_num = result;
 

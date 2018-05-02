@@ -13,8 +13,8 @@
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
-    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
-    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <uses-feature
         android:name="android.hardware.bluetooth_le"
@@ -43,11 +43,17 @@
         <activity
             android:name=".SystemControl.SystemControlActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".CameraView.CameraActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
 
+        <activity
+            android:name=".CameraView.CameraActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".CameraView.PicturePreviewActivity" />
-        <activity android:name=".CameraView.VideoPreviewActivity"></activity>
+        <activity android:name=".CameraView.VideoPreviewActivity" />
+
+        <service
+            android:name=".myo_manage.MyoService"
+            android:enabled="true"
+            android:exported="true"></service>
     </application>
 
 </manifest>
