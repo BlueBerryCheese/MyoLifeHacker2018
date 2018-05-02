@@ -125,6 +125,7 @@ public class MyoService extends Service {
                   if (mBluetoothGatt == null || !mMyoCallback.setMyoControlCommand(commandList.sendEmgOnly())) {
                       Log.d(TAG,"False EMG");
                       Log.d(TAG,"mBluetoothGatt : " + mBluetoothGatt);
+                      stopSelf();
                   } else {
                       saveMethod  = new GestureSaveMethod(-1, getApplicationContext(),1);
                       Log.d(TAG,"True EMG");
@@ -172,6 +173,7 @@ public class MyoService extends Service {
     public void setDetectModel(ServiceEvent.setDetectModel_Event event){
         if(event.set == 1){
             GestureDetectModelManager.setCurrentModel(model);
+            Log.e(TAG,"setDetectModel executed");
         }
     }
 

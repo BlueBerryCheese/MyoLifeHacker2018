@@ -11,10 +11,14 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.UUID;
+
+import blueberrycheese.myolifehacker.events.ServiceEvent;
 
 /**
  * Created by Seongho on 2017-12-01.
@@ -270,6 +274,7 @@ public class MyoGattCallback extends BluetoothGattCallback {
             }catch(NullPointerException e){
                 Log.e(TAG,"GestureDetectModelManager.getCurrentModel NULL! NullPointerException accrued.");
 //                GestureDetectModelManager.setCurrentModel(new NopModel());
+                EventBus.getDefault().post(new ServiceEvent.setDetectModel_Event(1));
             }
 
             

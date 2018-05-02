@@ -8,6 +8,7 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -15,10 +16,18 @@ import android.widget.MediaController;
 import android.widget.TextView;
 import android.widget.VideoView;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import blueberrycheese.myolifehacker.R;
+import blueberrycheese.myolifehacker.events.ServiceEvent;
 
 
 public class VideoPreviewActivity extends AppCompatActivity {
+    private static final String TAG = "VideoPreviewActivity";
+    private int gestureNum = -1;
+    int[] smoothcount = new int[6];
 
     private VideoView videoView;
 
@@ -65,4 +74,45 @@ public class VideoPreviewActivity extends AppCompatActivity {
         videoView.start();
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onGestureEvent(ServiceEvent.GestureEvent event) {
+        gestureNum = event.gestureNumber;
+        Log.d(TAG,"Gesture num : "+event.gestureNumber);
+
+        switch(gestureNum){
+            case 0 :
+                if(smoothcount[gestureNum]>1) {
+                    finish();
+                    smoothcount[gestureNum]=-1;
+                    resetSmoothCount();
+                }
+                smoothcount[gestureNum]++;
+
+                break;
+            default :
+                break;
+
+        }
+    }
+
+    public void resetSmoothCount(){
+        for(int i : smoothcount){
+            i = -1;
+        }
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        if(!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
+    }
+
+    @Override
+    public void onStop(){
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+
+    }
 }
