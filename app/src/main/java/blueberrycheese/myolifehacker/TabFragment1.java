@@ -35,6 +35,7 @@ import java.util.HashMap;
 
 import blueberrycheese.myolifehacker.CameraView.CameraActivity;
 import blueberrycheese.myolifehacker.CameraView.CameraEvent;
+import blueberrycheese.myolifehacker.ImageViewer.GalleryActivity;
 import blueberrycheese.myolifehacker.MenuControl.GestureDetectMethod_Menu;
 import blueberrycheese.myolifehacker.MenuControl.GestureDetectModel_Menu;
 import blueberrycheese.myolifehacker.MenuControl.GestureDetectSendResultAction_Menu;
@@ -172,6 +173,12 @@ public class TabFragment1 extends Fragment {
                         Intent intent3 = new Intent(getActivity().getApplicationContext(), blueberrycheese.myolifehacker.myo_music.activities.activitys.MainActivity.class);
                         intent3.putExtra("bluetoothDevice", device);
                         startActivity(intent3);
+                        break;
+                    case R.id.gallery_button:
+                        Log.d("gallerycircle","galleryclicked");
+                        Intent intent4 = new Intent(getActivity().getApplicationContext(), GalleryActivity.class);
+                        intent4.putExtra("bluetoothDevice", device);
+                        startActivity(intent4);
                         break;
                     default:
                         break;
