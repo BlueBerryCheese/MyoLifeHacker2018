@@ -28,10 +28,17 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.util.HashMap;
 
+import blueberrycheese.myolifehacker.ImageViewer.CommentGalleryActivity;
+import blueberrycheese.myolifehacker.ImageViewer.GalleryActivity;
 import blueberrycheese.myolifehacker.R;
 
+import blueberrycheese.myolifehacker.events.ServiceEvent;
 import blueberrycheese.myolifehacker.myo_manage.GestureDetectModelManager;
 import blueberrycheese.myolifehacker.myo_manage.GestureSaveMethod;
 import blueberrycheese.myolifehacker.myo_manage.GestureSaveModel;
@@ -80,6 +87,9 @@ public class SystemControlActivity extends AppCompatActivity implements Bluetoot
     NotificationManager notificationManager;
     boolean retVal = true;
     private Context mContext;
+    int[] smoothcount = new int[6];
+    int gestureNum = -1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -135,14 +145,18 @@ public class SystemControlActivity extends AppCompatActivity implements Bluetoot
 
     }
 
-    public void onResume(){
+    @Override
+    protected void onResume() {
         super.onResume();
+        if(!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
     }
-
     @Override
     public void onStop(){
+        EventBus.getDefault().unregister(this);
         super.onStop();
-        this.closeBLEGatt();
+//        this.closeBLEGatt();
     }
 
     /** Define of BLE Callback */
@@ -231,5 +245,53 @@ public class SystemControlActivity extends AppCompatActivity implements Bluetoot
             mBluetoothAdapter.startLeScan(this);
         }
     }
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(ServiceEvent.GestureEvent event) {
+        gestureNum = event.gestureNumber;
+        Log.d("Event","SystemEvent Gesture num : "+event.gestureNumber);
+        systemFeature.function(gestureNum);
+//        switch(gestureNum){
+//            case 0 :
+//                if(smoothcount[gestureNum]>1) {
+//
+//                }
+//                smoothcount[gestureNum]++;
+//
+//                break;
+//
+//            case 1 :
+//                if(smoothcount[gestureNum]>1) {
+//
+//                }
+//                smoothcount[gestureNum]++;
+//
+//                break;
+//
+//            case 2 :
+//                if(smoothcount[gestureNum]>1) {
+//
+//                }
+//                smoothcount[gestureNum]++;
+//                break;
+//
+//            case 3 :
+//
+//                break;
+//            case 4 :
+//
+//                break;
+//            case 5 :
+//
+//                break;
+//            default :
+//                break;
+//
+//        }
+    }
 
+    public void resetSmoothCount(){
+        for(int i : smoothcount){
+            i = -1;
+        }
+    }
 }

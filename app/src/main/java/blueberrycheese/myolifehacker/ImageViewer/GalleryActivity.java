@@ -11,6 +11,7 @@ import android.view.WindowManager;
 import com.bosong.commentgallerylib.CommentGalleryContainer;
 import com.bosong.commentgallerylib.CommentImageGrid;
 
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
@@ -84,11 +85,29 @@ public class GalleryActivity extends AppCompatActivity {
         });
 
     }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
+    }
+    @Override
+    public void onStop(){
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+//        this.closeBLEGatt();
+    }
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(ServiceEvent.GestureEvent event) {
         gestureNum = event.gestureNumber;
         Log.d("MenuEvent","MenuEvent Gesture num : "+event.gestureNumber);
-
+        if (positionNum>=urls.size()){
+            positionNum=0;
+        }
+        if(positionNum<0){
+            positionNum = urls.size()-1;
+        }
         switch(gestureNum){
             case 0 :
                 if(smoothcount[gestureNum]>1) {
@@ -97,6 +116,7 @@ public class GalleryActivity extends AppCompatActivity {
                     it.putExtra(COMMENT_LIST, commentList);
                     it.setClass(GalleryActivity.this, CommentGalleryActivity.class);
                     startActivity(it);
+
                 }
                 smoothcount[gestureNum]++;
 
@@ -108,6 +128,7 @@ public class GalleryActivity extends AppCompatActivity {
                     mCommentGrid.getChildAt(post_postionNum).setBackground(getResources().getDrawable(R.drawable.transparent_button));
                     mCommentGrid.getChildAt(positionNum).setBackground(getResources().getDrawable(R.color.color_accent));
                     post_postionNum=positionNum;
+                    resetSmoothCount();
                 }
                 smoothcount[gestureNum]++;
 
@@ -119,6 +140,7 @@ public class GalleryActivity extends AppCompatActivity {
                     mCommentGrid.getChildAt(post_postionNum).setBackground(getResources().getDrawable(R.drawable.transparent_button));
                     mCommentGrid.getChildAt(positionNum).setBackground(getResources().getDrawable(R.color.color_accent));
                     post_postionNum=positionNum;
+                    resetSmoothCount();
                 }
                 smoothcount[gestureNum]++;
                 break;

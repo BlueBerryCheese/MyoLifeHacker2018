@@ -171,7 +171,7 @@ class MainActivity : SimpleActivity(), SongListListener, BluetoothAdapter.LeScan
 
         //Detect용
         //gestureText = findViewById(R.id.MusicActivityGesture) as TextView
-        startNopModel()
+        //startNopModel()       -->TODO: 에러 자꾸떠서 잠시 주석 확인 후 바꿔야함
 
         val intent = getIntent()
 

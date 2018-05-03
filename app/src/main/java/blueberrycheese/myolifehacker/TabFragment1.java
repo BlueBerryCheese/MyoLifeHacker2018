@@ -156,20 +156,12 @@ public class TabFragment1 extends Fragment {
                         startActivity(intent);
                         break;
                     case R.id.volume:
-//                        if(device!=null) {
-//                            Log.d("volumecircle", "volume_clicked");
-//                            Log.d("volumecircle", device.getName());
-//                            Intent intent2 = new Intent(getActivity().getApplicationContext(), SystemControlActivity.class);
-//                            intent2.putExtra("bluetoothDevice", device);
-//
-//                            startActivity(intent2);
-//                        }
-                            Log.d("volumecircle", "volume_clicked");
-//                            Log.d("volumecircle", device.getName());
-                            Intent intent2 = new Intent(getActivity().getApplicationContext(), SystemControlActivity.class);
-//                            intent2.putExtra("bluetoothDevice", device);
+                        Log.d("volumecircle", "volume_clicked");
 
-                            startActivity(intent2);
+                        Intent intent2 = new Intent(getActivity().getApplicationContext(), SystemControlActivity.class);
+                        intent2.putExtra("bluetoothDevice", device);
+                        startActivity(intent2);
+                        break;
                     case R.id.music:
                         Log.d("music_circle","music_clicked");
                         Intent intent3 = new Intent(getActivity().getApplicationContext(), blueberrycheese.myolifehacker.myo_music.activities.activitys.MainActivity.class);
@@ -375,8 +367,8 @@ public class TabFragment1 extends Fragment {
 
             case 3 :
                 if(smoothcount[gestureNum]>1) {
-                    circleMenu.onSelectAnimationStart(circleMenuButton_music);
-                    circleMenu.onSelectAnimationEnd(circleMenuButton_music);
+                    circleMenu.onSelectAnimationStart(circleMenuButton_gallery);
+                    circleMenu.onSelectAnimationEnd(circleMenuButton_gallery);
 
 
                     smoothcount[gestureNum]=-1;
@@ -386,13 +378,13 @@ public class TabFragment1 extends Fragment {
                 break;
             case 4 :
                 if(smoothcount[gestureNum]>1) {
-                    circleMenu.onSelectAnimationStart(circleMenuButton_gallery);
-                    circleMenu.onSelectAnimationEnd(circleMenuButton_gallery);
+                circleMenu.onSelectAnimationStart(circleMenuButton_music);
+                circleMenu.onSelectAnimationEnd(circleMenuButton_music);
 
 
-                    smoothcount[gestureNum]=-1;
-                    resetSmoothCount();
-                }
+                smoothcount[gestureNum]=-1;
+                resetSmoothCount();
+            }
                 smoothcount[gestureNum]++;
                 break;
             default :

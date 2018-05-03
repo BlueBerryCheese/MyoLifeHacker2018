@@ -9,6 +9,7 @@ import android.view.WindowManager;
 import com.bosong.commentgallerylib.CommentGallery;
 import com.bosong.commentgallerylib.CommentGalleryContainer;
 
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
@@ -34,6 +35,19 @@ public class CommentGalleryActivity extends AppCompatActivity {
         max_size = getIntent().getExtras().getInt(GalleryActivity.LIST_SIZE);
 
     }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
+    }
+    @Override
+    public void onStop(){
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+//        this.closeBLEGatt();
+    }
 
     @Override
     public void finish() {
@@ -56,24 +70,28 @@ public class CommentGalleryActivity extends AppCompatActivity {
                 break;
 
             case 1 :
-                numCounter++;
+
                 if(numCounter>=max_size){
                     numCounter=0;
                 }
                 if(smoothcount[gestureNum]>1) {
+                    numCounter++;
                     mGallery.setData((CommentGalleryContainer) getIntent().getSerializableExtra(GalleryActivity.COMMENT_LIST),numCounter);
+                    resetSmoothCount();
                 }
                 smoothcount[gestureNum]++;
 
                 break;
 
             case 2 :
-                numCounter--;
+
                 if(numCounter<0){
                     numCounter=max_size-1;
                 }
                 if(smoothcount[gestureNum]>1) {
+                    numCounter--;
                     mGallery.setData((CommentGalleryContainer) getIntent().getSerializableExtra(GalleryActivity.COMMENT_LIST),numCounter);
+                    resetSmoothCount();
                 }
                 smoothcount[gestureNum]++;
                 break;

@@ -84,7 +84,7 @@ public class MainActivity extends AppCompatActivity
         FragmentAdapter pagerAdapter = new FragmentAdapter(getSupportFragmentManager());
 
         pagerAdapter.addFragment(new TabFragment1(), "Main");
-        pagerAdapter.addFragment(new TabFragment2(), "2");
+        pagerAdapter.addFragment(new TabFragment2(), "Setting");
         pagerAdapter.addFragment(new TabFragment3(), "Adaptation");
         viewPager.setAdapter(pagerAdapter);
         viewPager.addOnPageChangeListener(listener);    //페이지 변할때마다 이벤트 발생하도록 이벤트 리스너 붙착
