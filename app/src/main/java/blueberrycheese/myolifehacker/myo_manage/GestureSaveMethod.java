@@ -86,7 +86,8 @@ public class GestureSaveMethod {
                 BufferedReader br = null;
                 for (int j = 0; j < COMPARE_NUM; j++) {     // 어댑터와 안드로이드 내 txt 파일을 불러오는 부분.
                     doublePointList = new ArrayList<>();
-                    int resID = context.getResources().getIdentifier("gesture" + (j + 1), "raw", "blueberrycheese.myolifehacker");
+                    int resID = context.getResources().getIdentifier("gesture" + (j + 1), "raw", context.getPackageName());
+                    Log.e(TAG,"resID is "+resID);
                     in = context.getResources().openRawResource(resID);
                     InputStreamReader streamReader = new InputStreamReader(in, "UTF-8");
                     BufferedReader bufferedReader = new BufferedReader(streamReader);
