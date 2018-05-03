@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main_holder"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+
+
+
+    <RelativeLayout
+        android:id="@+id/art_holder"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/top_art_height">
+
+        <ImageView
+            android:id="@+id/art_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+
+            android:src="@drawable/ic_headset"/>
+
+
+        <!--Gesture 안내 표시용 Layout-->
+        <LinearLayout
+            android:id="@+id/maingesturelinearlayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+
+            android:orientation="horizontal"
+            android:layout_below="@id/art_image"
+            android:weightSum="12">
+
+            <LinearLayout
+                android:id="@+id/gesturelinearlayout1"
+                android:layout_width="0dp"
+                android:layout_height="64dp"
+                android:layout_gravity="bottom"
+                android:layout_weight="3"
+                android:background="#ffffff"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:weightSum="10"
+                android:layout_marginLeft="50dp">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="7"
+                    android:src="@drawable/gesture_fist" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="3"
+                    android:gravity="center"
+                    android:textSize="9sp"
+                    android:text="play/pause" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/gesturelinearlayout2"
+                android:layout_width="0dp"
+                android:layout_height="64dp"
+                android:layout_gravity="bottom"
+                android:layout_weight="3"
+                android:background="#ffffff"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:weightSum="10"
+                android:layout_marginLeft="50dp">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="7"
+                    android:src="@drawable/gesture_spread" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="3"
+                    android:gravity="center"
+                    android:textSize="9sp"
+                    android:text="previous" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/gesturelinearlayout3"
+                android:layout_width="0dp"
+                android:layout_height="64dp"
+                android:layout_gravity="bottom"
+                android:layout_weight="3"
+                android:background="#ffffff"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:weightSum="10"
+                android:layout_marginLeft="50dp">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="7"
+                    android:src="@drawable/gesture_wavein" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="3"
+                    android:gravity="center"
+                    android:textSize="9sp"
+                    android:text="next" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+
+
+    </RelativeLayout>
+<!--
+    <Button
+        android:id="@+id/dttButton_music"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="onClickdtt_music"
+        android:layout_marginLeft="50dp"
+        android:textColor="@android:color/white"
+        android:layout_below="@id/maingesturelinearlayout"
+        android:text="off"
+        />
+
+    <TextView
+        android:id="@+id/MusicActivityGesture"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:textColor="@android:color/white"
+        android:layout_marginLeft="50dp"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@id/dttButton_music"
+        android:text="x" />
+-->
+
+    <View
+        android:id="@+id/song_list_background"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"/>
+
+    <com.simplemobiletools.commons.views.MyRecyclerView
+        android:id="@+id/songs_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        app:layoutManager="com.simplemobiletools.commons.views.MyLinearLayoutManager"/>
+
+    <LinearLayout
+        android:id="@+id/top_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:focusable="true"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <include layout="@layout/music_item_navigation"/>
+
+        <include layout="@layout/divider"/>
+    </LinearLayout>
+
+    <com.simplemobiletools.commons.views.FastScroller
+        android:id="@+id/songs_fastscroller"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:paddingLeft="@dimen/normal_margin"
+        android:paddingStart="@dimen/normal_margin">
+
+        <include layout="@layout/fastscroller_handle_vertical"/>
+
+    </com.simplemobiletools.commons.views.FastScroller>
+
+    <com.simplemobiletools.commons.views.MyTextView
+        android:id="@+id/songs_playlist_empty"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:paddingLeft="@dimen/big_margin"
+        android:paddingRight="@dimen/big_margin"
+        android:paddingTop="@dimen/big_margin"
+        android:text="@string/playlist_empty"
+        android:textSize="@dimen/bigger_text_size"/>
+
+    <com.simplemobiletools.commons.views.MyTextView
+        android:id="@+id/songs_playlist_empty_add_folder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/songs_playlist_empty"
+        android:layout_centerHorizontal="true"
+        android:background="?attr/selectableItemBackground"
+        android:gravity="center"
+        android:padding="@dimen/activity_margin"
+        android:text="@string/add_folder_to_playlist"
+        android:textSize="@dimen/bigger_text_size"/>
+
+
+
+</RelativeLayout>
