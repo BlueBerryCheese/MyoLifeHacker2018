@@ -8,7 +8,8 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/redpinkblurgradation"/>
+        android:background="@drawable/redpinkblurgradation"
+        android:alpha="0.5"/>
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"

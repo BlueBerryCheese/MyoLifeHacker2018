@@ -76,6 +76,7 @@ public class TabFragment1 extends Fragment {
     private CircleMenuButton circleMenuButton_volume ;
     private CircleMenuButton circleMenuButton_camera;
     private CircleMenuButton circleMenuButton_music ;
+    private CircleMenuButton circleMenuButton_gallery;
     private Handler mHandler;
     private BluetoothAdapter mBluetoothAdapter;
     private BluetoothGatt mBluetoothGatt;
@@ -142,6 +143,7 @@ public class TabFragment1 extends Fragment {
 
         circleMenuButton_volume = (CircleMenuButton)view.findViewById(R.id.volume);
         circleMenuButton_camera = (CircleMenuButton)view.findViewById(R.id.camera_button);
+        circleMenuButton_gallery = (CircleMenuButton)view.findViewById(R.id.gallery_button);
         circleMenu.setOnItemClickListener(new CircleMenu.OnItemClickListener() {
             @Override
             public void onItemClick(CircleMenuButton menuButton) {
@@ -382,7 +384,17 @@ public class TabFragment1 extends Fragment {
                 }
                 smoothcount[gestureNum]++;
                 break;
+            case 4 :
+                if(smoothcount[gestureNum]>1) {
+                    circleMenu.onSelectAnimationStart(circleMenuButton_gallery);
+                    circleMenu.onSelectAnimationEnd(circleMenuButton_gallery);
 
+
+                    smoothcount[gestureNum]=-1;
+                    resetSmoothCount();
+                }
+                smoothcount[gestureNum]++;
+                break;
             default :
                 break;
 

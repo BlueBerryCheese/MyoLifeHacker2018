@@ -1,6 +1,7 @@
 package blueberrycheese.myolifehacker.ImageViewer;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
@@ -25,7 +26,7 @@ public class GalleryActivity extends AppCompatActivity {
     public static final String CLICK_INDEX = "CLICK_INDEX";
     public static final String COMMENT_LIST = "COMMENT_LIST";
     public static final String LIST_SIZE = "LIST_SIZE";
-    private static final String SAMPLE_COMMENT = "Myo Sample Comment";
+    private static final String SAMPLE_COMMENT = "";
     private CommentImageGrid mCommentGrid;
     CommentGalleryContainer commentList;
     private static String basePath;
@@ -35,6 +36,7 @@ public class GalleryActivity extends AppCompatActivity {
     int[] smoothcount = new int[6];
     private int gestureNum = -1;
     private int positionNum = 0;
+    private int post_postionNum=-1;
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -60,8 +62,11 @@ public class GalleryActivity extends AppCompatActivity {
             Log.d("array",urls.get(i));
         }
         mCommentGrid.setData(urls);
-
-
+        for(int i=0;i<urls.size();i++){
+            mCommentGrid.getChildAt(i).setBackground(getResources().getDrawable(R.drawable.transparent_button));
+        }
+        mCommentGrid.getChildAt(positionNum).setBackground(getResources().getDrawable(R.color.color_accent));
+        post_postionNum=positionNum;
         mCommentGrid.setOnItemClickLisener(new CommentImageGrid.OnItemClickListener() {
             @Override
             public void OnItemClick(int position) {
@@ -71,6 +76,10 @@ public class GalleryActivity extends AppCompatActivity {
                 it.putExtra(LIST_SIZE,urls.size());
                 it.setClass(GalleryActivity.this, CommentGalleryActivity.class);
                 startActivity(it);
+                mCommentGrid.getChildAt(position).setBackground(getResources().getDrawable(R.color.color_accent));
+                mCommentGrid.getChildAt(positionNum).setBackground(getResources().getDrawable(R.drawable.transparent_button));
+                post_postionNum = position;
+
             }
         });
 
@@ -96,6 +105,9 @@ public class GalleryActivity extends AppCompatActivity {
             case 1 :
                 if(smoothcount[gestureNum]>1) {
                     positionNum ++;
+                    mCommentGrid.getChildAt(post_postionNum).setBackground(getResources().getDrawable(R.drawable.transparent_button));
+                    mCommentGrid.getChildAt(positionNum).setBackground(getResources().getDrawable(R.color.color_accent));
+                    post_postionNum=positionNum;
                 }
                 smoothcount[gestureNum]++;
 
@@ -104,6 +116,9 @@ public class GalleryActivity extends AppCompatActivity {
             case 2 :
                 if(smoothcount[gestureNum]>1) {
                     positionNum --;
+                    mCommentGrid.getChildAt(post_postionNum).setBackground(getResources().getDrawable(R.drawable.transparent_button));
+                    mCommentGrid.getChildAt(positionNum).setBackground(getResources().getDrawable(R.color.color_accent));
+                    post_postionNum=positionNum;
                 }
                 smoothcount[gestureNum]++;
                 break;

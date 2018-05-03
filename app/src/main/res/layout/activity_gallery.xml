@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/redpinkblurgradation"
+        android:alpha="0.5"/>
+
+    <com.bosong.commentgallerylib.CommentImageGrid
+        android:layout_marginTop="100dp"
+        android:id="@+id/comment_grid"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:placeholder_image="@drawable/placeholder"
+        app:fallback_image="@drawable/placeholder"
+        app:vertical_space="7.5dp"
+        app:horizontal_space="7.5dp"/>
+</RelativeLayout>
