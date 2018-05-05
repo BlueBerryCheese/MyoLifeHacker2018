@@ -264,45 +264,45 @@ public class TabFragment1 extends Fragment {
 
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void testEvent(EventData event){
-        if(event.device!=null){
-            Log.e("test_event", event.device.getName() + "connected !! Tab1");
-            HashMap<String,View> views = new HashMap<String,View>();
+//    @Subscribe(threadMode = ThreadMode.MAIN)
+//    public void testEvent(EventData event){
+//        if(event.device!=null){
+//            Log.e("test_event", event.device.getName() + "connected !! Tab1");
+//            HashMap<String,View> views = new HashMap<String,View>();
+//
+//            device = event.device;
+////            android.support.v4.app.FragmentTransaction ft = getFragmentManager().beginTransaction();
+////            ft.detach(this).attach(this).commit();  //처음에 보내졌을당시에 refresh 한번시킴.
+//            mMyoCallback = new MyoGattCallback(mHandler);
+//            mBluetoothGatt = device.connectGatt(view.getContext(), false, mMyoCallback);
+//            mMyoCallback.setBluetoothGatt(mBluetoothGatt);
+//
+//            new Handler().postDelayed(new Runnable() {
+//                @Override
+//                public void run() {
+//                    if (mBluetoothGatt == null || !mMyoCallback.setMyoControlCommand(commandList.sendEmgOnly())) {
+//                        Log.d(TAG,"False EMG");
+//                    } else {
+//                        saveMethod  = new GestureSaveMethod(-1, view.getContext(),1);
+//                        Log.d(TAG,"True EMG");
+//                        if (saveMethod.getSaveState() == GestureSaveMethod.SaveState.Have_Saved) {
+//                            detectMethod = new GestureDetectMethod_Menu(mHandler, saveMethod.getCompareDataList());    //아예 새롭게 각각의 detectMethod를 구현하는것이 빠를것으로 예상된다.
+//                            detectModel = new GestureDetectModel_Menu(detectMethod);
+//                            startDetectModel();
+//                        }
+//
+//                        if (saveMethod.getSaveState() == GestureSaveMethod.SaveState.Have_Saved) {
+//                            //gestureText.setText("DETECT Ready");
+//                        } else {
+//                            //gestureText.setText("Teach me \'Gesture\'");
+//                        }
+//                    }
+//                }
+//            },SCAN_PERIOD);
+//
+//        }
+//    }
 
-            device = event.device;
-//            android.support.v4.app.FragmentTransaction ft = getFragmentManager().beginTransaction();
-//            ft.detach(this).attach(this).commit();  //처음에 보내졌을당시에 refresh 한번시킴.
-            mMyoCallback = new MyoGattCallback(mHandler);
-            mBluetoothGatt = device.connectGatt(view.getContext(), false, mMyoCallback);
-            mMyoCallback.setBluetoothGatt(mBluetoothGatt);
-
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    if (mBluetoothGatt == null || !mMyoCallback.setMyoControlCommand(commandList.sendEmgOnly())) {
-                        Log.d(TAG,"False EMG");
-                    } else {
-                        saveMethod  = new GestureSaveMethod(-1, view.getContext(),1);
-                        Log.d(TAG,"True EMG");
-                        if (saveMethod.getSaveState() == GestureSaveMethod.SaveState.Have_Saved) {
-                            detectMethod = new GestureDetectMethod_Menu(mHandler, saveMethod.getCompareDataList());    //아예 새롭게 각각의 detectMethod를 구현하는것이 빠를것으로 예상된다.
-                            detectModel = new GestureDetectModel_Menu(detectMethod);
-                            startDetectModel();
-                        }
-
-                        if (saveMethod.getSaveState() == GestureSaveMethod.SaveState.Have_Saved) {
-                            //gestureText.setText("DETECT Ready");
-                        } else {
-                            //gestureText.setText("Teach me \'Gesture\'");
-                        }
-                    }
-                }
-            },SCAN_PERIOD);
-
-        }
-
-    }
     public void startDetectModel() {
         IGestureDetectModel model = detectModel;
         model.setAction(new GestureDetectSendResultAction_Menu(this));    //변경
@@ -392,7 +392,7 @@ public class TabFragment1 extends Fragment {
 
         }
     }
-
+//TODO: smoothCount 처음엔 0으로 초기화될텐데 reset할땐 -1로 하면 초반 첫 제스처의 경우는 0에서 2가면 동작하고 나머지는 -1에서 2가면 동작하는 차이가 발생.
     public void resetSmoothCount(){
         for(int i : smoothcount){
             i = -1;
