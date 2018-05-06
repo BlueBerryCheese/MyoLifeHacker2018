@@ -4,12 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/redpinkblurgradation"
-        android:alpha="0.5"/>
+    tools:context=".MainActivity"
+    android:background="#F2F2F2">
+
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -42,11 +39,12 @@
             android:layout_height="wrap_content"
             app:tabMode="fixed"
             app:tabGravity="fill"
-            app:tabTextColor="#FFF"
+            app:tabTextColor="@color/FontColor"
             android:background="@android:color/transparent"
-            app:tabIndicatorColor="#FFFFFF"
+            app:tabIndicatorColor="@color/IndicatorColor"
             app:tabIndicatorHeight="3dp"
             app:tabSelectedTextColor="@color/colorAccent"
+            android:scaleY="-1"
             android:layout_alignParentBottom="true"
             />
 

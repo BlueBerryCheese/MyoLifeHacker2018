@@ -144,6 +144,8 @@ public class TabFragment1 extends Fragment {
         circleMenuButton_volume = (CircleMenuButton)view.findViewById(R.id.volume);
         circleMenuButton_camera = (CircleMenuButton)view.findViewById(R.id.camera_button);
         circleMenuButton_gallery = (CircleMenuButton)view.findViewById(R.id.gallery_button);
+//        circleMenu.setBackgroundColor(getResources().getColor(R.color.FontColor));
+
         circleMenu.setOnItemClickListener(new CircleMenu.OnItemClickListener() {
             @Override
             public void onItemClick(CircleMenuButton menuButton) {

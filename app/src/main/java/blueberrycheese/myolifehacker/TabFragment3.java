@@ -169,7 +169,7 @@ public class TabFragment3 extends Fragment {
         emgDataText = (TextView)view.findViewById(R.id.emgDataTextView);
         gestureText = (TextView)view.findViewById(R.id.gestureTextView);
 
-        maxDataTextView=(TextView)view.findViewById(R.id.maxData);
+        //maxDataTextView=(TextView)view.findViewById(R.id.maxData);
         gesturenNumberPicker = (NumberPicker)view.findViewById(R.id.gestureNumberPicker);
         remove_gesturenNumberPicker = (NumberPicker)view.findViewById(R.id.remove_gestureNumberPicker); //
         adapter_gesturenNumberPicker = (NumberPicker)view.findViewById(R.id.AdapterNumberPicker); //
