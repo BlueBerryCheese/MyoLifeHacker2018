@@ -164,6 +164,7 @@ public class MyoGattCallback extends BluetoothGattCallback {
                 // Get CommandCharacteristic
                 mCharacteristic_command = service.getCharacteristic(UUID.fromString(COMMAND_ID));
                 if (mCharacteristic_command == null) {
+                    Log.d(TAG, "mCharacteristic_command is null");
                 } else {
                     Log.d(TAG, "Find command Characteristic !!");
                 }
