@@ -25,4 +25,5 @@ public class GalleryApplication extends Application {
                 .build();
         Fresco.initialize(this, config);
     }
+
 }

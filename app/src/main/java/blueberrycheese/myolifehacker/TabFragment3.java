@@ -539,19 +539,27 @@ private void DialogProgress() {
     public void gestureSaveImageChange(int i) {
         switch (i) {
             case 0:     // fist
-                saveGesture_Image.setImageResource(R.drawable.gesture_fist);
+                //saveGesture_Image.setImageResource(R.drawable.gesture_fist);
+                saveGesture_Image.setImageResource(R.drawable.gesture_1_nb);
                 break;
             case 1:     // wavein
-                saveGesture_Image.setImageResource(R.drawable.gesture_wavein);
+                //saveGesture_Image.setImageResource(R.drawable.gesture_wavein);
+                saveGesture_Image.setImageResource(R.drawable.gesture_2_nb);
                 break;
             case 2:     // waveout
-                saveGesture_Image.setImageResource(R.drawable.gesture_waveout);
+                //saveGesture_Image.setImageResource(R.drawable.gesture_waveout);
+                saveGesture_Image.setImageResource(R.drawable.gesture_3_nb);
                 break;
             case 3:     // spread
-                saveGesture_Image.setImageResource(R.drawable.gesture_spread);
+                //saveGesture_Image.setImageResource(R.drawable.gesture_spread);
+                saveGesture_Image.setImageResource(R.drawable.gesture_4_nb);
                 break;
             case 4:     // 새끼손가락
+                saveGesture_Image.setImageResource(R.drawable.gesture_5_nb);
+                break;
             case 5:     // 가위
+                saveGesture_Image.setImageResource(R.drawable.gesture_6_nb);
+                break;
         }
 
     }

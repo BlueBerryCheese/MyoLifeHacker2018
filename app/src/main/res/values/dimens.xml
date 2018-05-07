@@ -15,4 +15,5 @@
     <dimen name="normal_margin">12dp</dimen>
     <dimen name="bigger_margin">20dp</dimen>
     <dimen name="circle_menu_button_size">80dp</dimen>
+
 </resources>
