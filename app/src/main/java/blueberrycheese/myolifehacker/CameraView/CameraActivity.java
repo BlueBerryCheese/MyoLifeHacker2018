@@ -44,6 +44,7 @@ import java.io.FileOutputStream;
 import java.util.HashMap;
 
 import blueberrycheese.myolifehacker.R;
+import blueberrycheese.myolifehacker.events.ServiceEvent;
 import blueberrycheese.myolifehacker.myo_manage.GestureSaveMethod;
 import blueberrycheese.myolifehacker.myo_manage.GestureSaveModel;
 import blueberrycheese.myolifehacker.myo_manage.MyoGattCallback;
@@ -52,7 +53,7 @@ import blueberrycheese.myolifehacker.myo_manage.IGestureDetectModel;
 import blueberrycheese.myolifehacker.myo_manage.MyoCommandList;
 import blueberrycheese.myolifehacker.myo_manage.NopModel;
 
-public class CameraActivity extends AppCompatActivity implements View.OnClickListener, ControlView.Callback, BluetoothAdapter.LeScanCallback{
+public class CameraActivity extends AppCompatActivity implements View.OnClickListener, ControlView.Callback {
 
 //    @Override
 //    protected void onCreate(Bundle savedInstanceState) {
@@ -77,24 +78,21 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
     /** Device Scanning Time (ms) */
     private static final long SCAN_PERIOD = 5000;
 
-    /** Intent code for requesting Bluetooth enable */
-    private static final int REQUEST_ENABLE_BT = 1;
-
-    private static final String TAG = "BLE_Myo";
-    private BluetoothDevice bluetoothDevice;
-    private Handler mHandler;
-    private BluetoothAdapter mBluetoothAdapter;
-    private BluetoothGatt mBluetoothGatt;
+    private static final String TAG = "CameraActivity";
+//    private BluetoothDevice bluetoothDevice;
+//    private Handler mHandler;
+//    private BluetoothAdapter mBluetoothAdapter;
+//    private BluetoothGatt mBluetoothGatt;
     private TextView gestureText;
-    private MyoGattCallback mMyoCallback;
-    private MyoCommandList commandList = new MyoCommandList();
-    private String deviceName;
+//    private MyoGattCallback mMyoCallback;
+//    private MyoCommandList commandList = new MyoCommandList();
+//    private String deviceName;
     String[] gestureString = {"WiFi On, Off", "Sound Mode Chnage ", "Volume Up", "Volume Down", "Brightness Up", "Brightness Down"};
 
-    private GestureSaveModel saveModel;
-    private GestureSaveMethod saveMethod;
-    private GestureDetectModel_Camera detectModel;
-    private GestureDetectMethod_Camera detectMethod;
+//    private GestureSaveModel saveModel;
+//    private GestureSaveMethod saveMethod;
+//    private GestureDetectModel_Camera detectModel;
+//    private GestureDetectMethod_Camera detectMethod;
 
     private int gestureNum = -1;
     private Flash currentCameraFlash = Flash.OFF;
@@ -305,8 +303,10 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
 
     @Override
     protected void onResume() {
-        EventBus.getDefault().register(this);
         super.onResume();
+        if(!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
         camera.start();
 
     }
@@ -315,16 +315,16 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
     protected void onPause() {
         super.onPause();
         camera.stop();
-        emgOff();
-        detectOn = false;
+//        emgOff();
+//        detectOn = false;
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         camera.destroy();
-        emgOff();
-        detectOn = false;
+//        emgOff();
+//        detectOn = false;
     }
 
 
@@ -344,125 +344,125 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
 
     //Detect용 추가
 
-    /** Define of BLE Callback */
-    @Override
-    public void onLeScan(BluetoothDevice device, int rssi, byte[] scanRecord) {
-        Log.d(TAG,"Hello onLeSacn");
-        device = bluetoothDevice;
-        if (deviceName.equals(device.getName())) {
-            mBluetoothAdapter.stopLeScan(this);
-            // Trying to connect GATT
-            HashMap<String,View> views = new HashMap<String,View>();
-
-            mMyoCallback = new MyoGattCallback(mHandler);
-            mBluetoothGatt = device.connectGatt(this, false, mMyoCallback);
-            mMyoCallback.setBluetoothGatt(mBluetoothGatt);
-        }
-    }
+//    /** Define of BLE Callback */
+//    @Override
+//    public void onLeScan(BluetoothDevice device, int rssi, byte[] scanRecord) {
+//        Log.d(TAG,"Hello onLeSacn");
+//        device = bluetoothDevice;
+//        if (deviceName.equals(device.getName())) {
+//            mBluetoothAdapter.stopLeScan(this);
+//            // Trying to connect GATT
+//            HashMap<String,View> views = new HashMap<String,View>();
+//
+//            mMyoCallback = new MyoGattCallback(mHandler);
+//            mBluetoothGatt = device.connectGatt(this, false, mMyoCallback);
+//            mMyoCallback.setBluetoothGatt(mBluetoothGatt);
+//        }
+//    }
 
 
     @Override
     public void onStop(){
         EventBus.getDefault().unregister(this);
         super.onStop();
-        this.closeBLEGatt();
+//        this.closeBLEGatt();
 
     }
 
-    public void closeBLEGatt() {
-        if (mBluetoothGatt == null) {
-            return;
-        }
-        mMyoCallback.stopCallback();
-        mBluetoothGatt.close();
-        mBluetoothGatt = null;
-    }
+//    public void closeBLEGatt() {
+//        if (mBluetoothGatt == null) {
+//            return;
+//        }
+//        mMyoCallback.stopCallback();
+//        mBluetoothGatt.close();
+//        mBluetoothGatt = null;
+//    }
 
-    public void startSaveModel() {
-        IGestureDetectModel model = saveModel;
-        model.setAction(new GestureDetectSendResultAction_Camera(this)); //변경
-        GestureDetectModelManager.setCurrentModel(model);
-    }
+//    public void startSaveModel() {
+//        IGestureDetectModel model = saveModel;
+//        model.setAction(new GestureDetectSendResultAction_Camera(this)); //변경
+//        GestureDetectModelManager.setCurrentModel(model);
+//    }
+//
+//    public void startDetectModel() {
+//        IGestureDetectModel model = detectModel;
+//        model.setAction(new GestureDetectSendResultAction_Camera(this));    //변경
+//        GestureDetectModelManager.setCurrentModel(model);
+//    }
+//
+//    public void startNopModel() {
+//        GestureDetectModelManager.setCurrentModel(new NopModel());
+//    }
+//
+//    public void setGestureText(final String message) {
+//        mHandler.post(new Runnable() {
+//            @Override
+//            public void run() {
+//                gestureText.setText(message);
+//            }
+//        });
+//    }
 
-    public void startDetectModel() {
-        IGestureDetectModel model = detectModel;
-        model.setAction(new GestureDetectSendResultAction_Camera(this));    //변경
-        GestureDetectModelManager.setCurrentModel(model);
-    }
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        if (requestCode == REQUEST_ENABLE_BT && resultCode == RESULT_OK){
+//            mHandler.postDelayed(new Runnable() {
+//                @Override
+//                public void run() {
+//                    mBluetoothAdapter.stopLeScan(CameraActivity.this);
+//                }
+//            }, SCAN_PERIOD);
+//            mBluetoothAdapter.startLeScan(this);
+//        }
+//
+//    }
 
-    public void startNopModel() {
-        GestureDetectModelManager.setCurrentModel(new NopModel());
-    }
+//    boolean detectOn = false;
+//
+//
+//    public void onClickdtt(View v) {
+//        if(detectOn == false){
+//            if (mBluetoothGatt == null || !mMyoCallback.setMyoControlCommand(commandList.sendEmgOnly())) {
+//                Log.d(TAG,"False EMG");
+//            } else {
+//                saveMethod  = new GestureSaveMethod(-1, this,1);
+//                if (saveMethod.getSaveState() == GestureSaveMethod.SaveState.Have_Saved) {
+//                    gestureText.setText("DETECT Ready");
+//                } else {
+//                    gestureText.setText("Teach me \'Gesture\'");
+//                }
+//                if (saveMethod.getSaveState() == GestureSaveMethod.SaveState.Have_Saved) {
+//                    gestureText.setText("Let's Go !!");
+//                    /*detectMethod = new GestureDetectMethod(saveMethod.getCompareDataList());*/
+//                    detectMethod = new GestureDetectMethod_Camera(mHandler,saveMethod.getCompareDataList());    //아예 새롭게 각각의 detectMethod를 구현하는것이 빠를것으로 예상된다.
+//                    //detectMethod = new GestureDetectMethod(saveMethod.getCompareDataList(),algorithm1);
+//                    detectModel = new GestureDetectModel_Camera(detectMethod);
+//                    startDetectModel();
+//                }
+//                detectOn = true;
+//                dttButton.setText("On");
+//
+//            }
+//        } else if(detectOn == true){
+//            if (mBluetoothGatt == null
+//                    || !mMyoCallback.setMyoControlCommand(commandList.sendUnsetData())
+//                    || !mMyoCallback.setMyoControlCommand(commandList.sendNormalSleep())) {
+//                Log.d(TAG,"False Data Stop");
+//            }
+//            detectOn = false;
+//            dttButton.setText("Off");
+//        }
+//    }
 
-    public void setGestureText(final String message) {
-        mHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                gestureText.setText(message);
-            }
-        });
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_ENABLE_BT && resultCode == RESULT_OK){
-            mHandler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    mBluetoothAdapter.stopLeScan(CameraActivity.this);
-                }
-            }, SCAN_PERIOD);
-            mBluetoothAdapter.startLeScan(this);
-        }
-
-    }
-
-    boolean detectOn = false;
-
-
-    public void onClickdtt(View v) {
-        if(detectOn == false){
-            if (mBluetoothGatt == null || !mMyoCallback.setMyoControlCommand(commandList.sendEmgOnly())) {
-                Log.d(TAG,"False EMG");
-            } else {
-                saveMethod  = new GestureSaveMethod(-1, this,1);
-                if (saveMethod.getSaveState() == GestureSaveMethod.SaveState.Have_Saved) {
-                    gestureText.setText("DETECT Ready");
-                } else {
-                    gestureText.setText("Teach me \'Gesture\'");
-                }
-                if (saveMethod.getSaveState() == GestureSaveMethod.SaveState.Have_Saved) {
-                    gestureText.setText("Let's Go !!");
-                    /*detectMethod = new GestureDetectMethod(saveMethod.getCompareDataList());*/
-                    detectMethod = new GestureDetectMethod_Camera(mHandler,saveMethod.getCompareDataList());    //아예 새롭게 각각의 detectMethod를 구현하는것이 빠를것으로 예상된다.
-                    //detectMethod = new GestureDetectMethod(saveMethod.getCompareDataList(),algorithm1);
-                    detectModel = new GestureDetectModel_Camera(detectMethod);
-                    startDetectModel();
-                }
-                detectOn = true;
-                dttButton.setText("On");
-
-            }
-        } else if(detectOn == true){
-            if (mBluetoothGatt == null
-                    || !mMyoCallback.setMyoControlCommand(commandList.sendUnsetData())
-                    || !mMyoCallback.setMyoControlCommand(commandList.sendNormalSleep())) {
-                Log.d(TAG,"False Data Stop");
-            }
-            detectOn = false;
-            dttButton.setText("Off");
-        }
-    }
-
-    public void emgOff(){
-        if (mBluetoothGatt == null
-                || !mMyoCallback.setMyoControlCommand(commandList.sendUnsetData())
-                || !mMyoCallback.setMyoControlCommand(commandList.sendNormalSleep())){
-            Log.d(TAG,"Data Stop");
-
-        }
-    }
+//    public void emgOff(){
+//        if (mBluetoothGatt == null
+//                || !mMyoCallback.setMyoControlCommand(commandList.sendUnsetData())
+//                || !mMyoCallback.setMyoControlCommand(commandList.sendNormalSleep())){
+//            Log.d(TAG,"Data Stop");
+//
+//        }
+//    }
 
     public void saveVideo(Uri videoUri){
         String root = Environment.getExternalStorageDirectory().toString();
@@ -505,13 +505,13 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(CameraEvent event) {
-        gestureNum = event.gesture;
-        Log.d("CameraEvent","CameraEvent Gesture num : "+event.gesture);
+    public void onGestureEvent(ServiceEvent.GestureEvent event) {
+        gestureNum = event.gestureNumber;
+        Log.d(TAG,"CameraEvent Gesture num : "+event.gestureNumber);
 
         switch(gestureNum){
             case 0 :
-                if(smoothcount[gestureNum]>15) {
+                if(smoothcount[gestureNum]>1) {
                     capturePhoto();
                     smoothcount[gestureNum]=-1;
                     resetSmoothCount();
@@ -521,7 +521,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
                 break;
 
             case 1 :
-                if(smoothcount[gestureNum]>15) {
+                if(smoothcount[gestureNum]>1) {
                     switch(currentCameraFlash){
                         case OFF:
                             camera.setFlash(Flash.OFF);
@@ -546,7 +546,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
                 break;
 
             case 2 :
-                if(smoothcount[gestureNum]>15) {
+                if(smoothcount[gestureNum]>1) {
                     switch(currentGrid){
                         case OFF:
                             camera.setGrid(Grid.DRAW_3X3);
@@ -566,7 +566,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
                 break;
 
             case 3 :
-                if(smoothcount[gestureNum]>15) {
+                if(smoothcount[gestureNum]>1) {
                     camera.setSessionType(SessionType.VIDEO);
                     if(videoRecording == false){
                         videoRecording = true;

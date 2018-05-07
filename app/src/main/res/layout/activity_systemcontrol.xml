@@ -112,7 +112,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:layout_weight="7"
-                    android:src="@drawable/gesture_fist" />
+                    android:src="@drawable/gesture_1_nb" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -138,7 +138,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:layout_weight="7"
-                    android:src="@drawable/gesture_wavein" />
+                    android:src="@drawable/gesture_2_nb" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -164,7 +164,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:layout_weight="7"
-                    android:src="@drawable/gesture_waveout" />
+                    android:src="@drawable/gesture_3_nb" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -209,7 +209,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:layout_weight="7"
-                    android:src="@drawable/gesture_spread" />
+                    android:src="@drawable/gesture_4_nb" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -235,7 +235,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:layout_weight="7"
-                    android:src="@drawable/gesture_wavein" />
+                    android:src="@drawable/gesture_5_nb" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -261,7 +261,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:layout_weight="7"
-                    android:src="@drawable/gesture_waveout" />
+                    android:src="@drawable/gesture_6_nb" />
 
                 <TextView
                     android:layout_width="wrap_content"

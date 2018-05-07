@@ -7,4 +7,11 @@
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="title_margin">38dp</dimen>
     <dimen name="cnt_margin">10dp</dimen>
+    <dimen name="controls_row_height">60dp</dimen>
+    <dimen name="button_size">48dp</dimen>
+    <dimen name="top_art_height">220dp</dimen>
+    <dimen name="medium_margin">8dp</dimen>
+    <dimen name="activity_margin">16dp</dimen>
+    <dimen name="normal_margin">12dp</dimen>
+    <dimen name="bigger_margin">20dp</dimen>
 </resources>

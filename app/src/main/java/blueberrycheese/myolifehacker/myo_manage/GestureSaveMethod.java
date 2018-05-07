@@ -86,7 +86,8 @@ public class GestureSaveMethod {
                 BufferedReader br = null;
                 for (int j = 0; j < COMPARE_NUM; j++) {     // 어댑터와 안드로이드 내 txt 파일을 불러오는 부분.
                     doublePointList = new ArrayList<>();
-                    int resID = context.getResources().getIdentifier("gesture" + (j + 1), "raw", "blueberrycheese.myolifehacker");
+                    int resID = context.getResources().getIdentifier("gesture" + (j + 1), "raw", context.getPackageName());
+                    Log.e(TAG,"resID is "+resID);
                     in = context.getResources().openRawResource(resID);
                     InputStreamReader streamReader = new InputStreamReader(in, "UTF-8");
                     BufferedReader bufferedReader = new BufferedReader(streamReader);
@@ -267,9 +268,18 @@ public class GestureSaveMethod {
         }
     }
 
+    // 세이브 도중에 numberPicker 변경하였을 때 세이브 제스처 번호 초기화
+    public void change_save_index_numberPicker() {
+        gestureCounter=0;
+    }
+
+    // 세이브 numberPicker 변경하였을 때 세이브 번호 값 저장
+    public void change_save_numer_numberPicker(int i) {save_index=i; }
+
     // 제스처를 count 함.
     private void gestureCount(int num) {
         gestureCounter++;
+
         Log.e("GestureDetect", "CompareData Size : " + compareGesture.size());
         if (gestureCounter == JUST_SAVE_DATA_LEN) {     //제스처count가 (지정한 저장 길이) 와 같을 때
             saveState = SaveState.Have_Saved;

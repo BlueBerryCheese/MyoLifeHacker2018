@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <SwitchPreference
+        android:defaultValue="true"
+        android:summary="진동을 설정합니다."
+        android:title="진동"
+        android:key="vibrate"/>
+
+
+
+
+</PreferenceScreen>
