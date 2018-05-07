@@ -72,7 +72,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
     private long mCaptureTime;
 
     boolean videoRecording = false;
-    Button dttButton;
+//    Button dttButton;
 
     //Detect용 가져옴
     /** Device Scanning Time (ms) */
@@ -145,7 +145,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         });
 
         //Detect용
-        gestureText = (TextView)findViewById(R.id.cameraActivityGesture);
+//        gestureText = (TextView)findViewById(R.id.cameraActivityGesture);
 
         //startNopModel() will setCurrentModel to another model so Service's gesture detect model won't work! - So I commented out
 //        startNopModel();
@@ -166,7 +166,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
 //            }
 //
 //        }
-        dttButton = (Button) findViewById(R.id.dttButton);
+//        dttButton = (Button) findViewById(R.id.dttButton);
     }
 
     private void message(String content, boolean important) {
