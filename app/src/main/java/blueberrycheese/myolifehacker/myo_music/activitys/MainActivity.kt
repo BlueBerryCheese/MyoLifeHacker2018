@@ -46,6 +46,7 @@ import com.simplemobiletools.commons.models.Release
 import com.simplemobiletools.commons.views.MyLinearLayoutManager
 import blueberrycheese.myolifehacker.BuildConfig
 import blueberrycheese.myolifehacker.R
+import blueberrycheese.myolifehacker.R.string.playpause
 import blueberrycheese.myolifehacker.SystemControl.GestureDetectMethod_System
 import blueberrycheese.myolifehacker.SystemControl.GestureDetectModel_System
 import blueberrycheese.myolifehacker.myo_manage.*
@@ -121,7 +122,8 @@ class MainActivity : SimpleActivity(), SongListListener{
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.music_activity_main)
-        appLaunched()
+        //왠지 여기가 그 거지같은 fake어플 설치하라는 거 같음(확실치 않음)
+        //appLaunched()
         isThirdPartyIntent = intent.action == Intent.ACTION_VIEW
 
         bus = BusProvider.instance
@@ -151,7 +153,8 @@ class MainActivity : SimpleActivity(), SongListListener{
 
         songs_playlist_empty_add_folder.setOnClickListener { addFolderToPlaylist() }
         volumeControlStream = AudioManager.STREAM_MUSIC
-        checkWhatsNewDialog()
+        //뮤직 플레이어 실행하고 메시지 뜨는 곳
+        //checkWhatsNewDialog()
         storeStateVariables()
 
         songs_list.recyclerScrollCallback = object : RecyclerScrollCallback {
@@ -706,16 +709,16 @@ class MainActivity : SimpleActivity(), SongListListener{
     override fun listToggleSongRepetition() {
         toggleSongRepetition()
     }
-
-    private fun checkWhatsNewDialog() {
-        arrayListOf<Release>().apply {
-            add(Release(25, R.string.release_25))
-            add(Release(27, R.string.release_27))
-            add(Release(28, R.string.release_28))
-            add(Release(37, R.string.release_37))
-            checkWhatsNew(this, BuildConfig.VERSION_CODE)
-        }
-    }
+//처음나오는 메시지
+//    private fun checkWhatsNewDialog() {
+//        arrayListOf<Release>().apply {
+//            add(Release(25, R.string.release_25))
+//            add(Release(27, R.string.release_27))
+//            add(Release(28, R.string.release_28))
+//            add(Release(37, R.string.release_37))
+//            checkWhatsNew(this, BuildConfig.VERSION_CODE)
+//        }
+//    }
 
     //Detect용 추가
 
@@ -846,12 +849,14 @@ class MainActivity : SimpleActivity(), SongListListener{
 
                 if (smoothcount[gestureNum] > 15) {
                     //intent로 Musicservice에 가서 기능 가져오기
-                    Intent(this, MusicService::class.java).apply {
+                    // 멈춤,재생
+//                    Intent(this, MusicService::class.java).apply {
+//
+//                        action = PLAYPAUSE
+//                        startService(this)
+//                    }
+                        sendIntent(PLAYPAUSE)
 
-                        action = PLAYPAUSE
-                        startService(this)
-                    }
-                    //멈춤,재생
                     smoothcount[gestureNum] = -1
                     resetSmoothCount()
                 }
@@ -861,13 +866,13 @@ class MainActivity : SimpleActivity(), SongListListener{
             1 -> {
 
                 if (smoothcount[gestureNum] > 15){
-                    //재생
-                    Intent(this, MusicService::class.java).apply {
-
-                        action = PREVIOUS
-                        startService(this)
-                    }
-
+                    //이전
+//                    Intent(this, MusicService::class.java).apply {
+//
+//                        action = PREVIOUS
+//                        startService(this)
+//                    }
+                    sendIntent(PREVIOUS)
                     smoothcount[gestureNum] = -1
                     resetSmoothCount()
                 }
@@ -876,13 +881,13 @@ class MainActivity : SimpleActivity(), SongListListener{
 
             2 -> {
                 if (smoothcount[gestureNum] > 15) {
-                    Intent(this, MusicService::class.java).apply {
-
-                        action = NEXT
-                        startService(this)
-                    }
+//                    Intent(this, MusicService::class.java).apply {
+//
+//                        action = NEXT
+//                        startService(this)
+//                    }
                     //앞으로
-
+                    sendIntent(NEXT)
                     smoothcount[gestureNum] = -1
                     resetSmoothCount()
                 }
@@ -891,7 +896,7 @@ class MainActivity : SimpleActivity(), SongListListener{
 
             3 -> {
                 if (smoothcount[gestureNum] > 15) {
-                    //뒤로
+
 
 
                     smoothcount[gestureNum] = -1

@@ -84,7 +84,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="2dp"
                     android:layout_weight="7"
-                    android:src="@drawable/gesture_spread" />
+                    android:src="@drawable/gesture_wavein" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -112,7 +112,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:layout_weight="7"
-                    android:src="@drawable/gesture_wavein" />
+                    android:src="@drawable/gesture_waveout" />
 
                 <TextView
                     android:layout_width="wrap_content"
