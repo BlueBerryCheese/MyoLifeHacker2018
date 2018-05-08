@@ -25,6 +25,10 @@ import android.widget.ImageView;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.style.StyleSpan;
+import blueberrycheese.myolifehacker.Toasty;
 
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.DataPoint;
@@ -108,6 +112,7 @@ public class TabFragment3 extends Fragment {
     private int inds_num=0;
     private int inds_remove=0;
     private int inds_adapter=0;
+    private int inds_gesture_num=0;
     private double pass_adapter=0;
 
     private  Dialog dialog;
@@ -257,9 +262,11 @@ public class TabFragment3 extends Fragment {
                 for(int i=0;i<views.length;i++){        // 동그라미 5개 빈동그라미로 초기화
                     views[i].setBackgroundResource(R.drawable.imgbtn_default);
                 }
+                inds_gesture_num=0;
                 inds_num = newVal;
                 gestureSaveImageChange(inds_num);      //이미지 변경
                 saveMethod.change_save_numer_numberPicker(inds_num);  // 제스처 넘버 값 저장
+                saveMethod.gestureNumberPickerChanged();
                 saveModel = new GestureSaveModel(saveMethod, inds_num);
                 saveMethod.change_save_index_numberPicker();
                 //saveMethod = new GestureSaveMethod(inds_num,view.getContext(),1);   //세이브 실행
@@ -299,7 +306,8 @@ public class TabFragment3 extends Fragment {
                 */
            //Bundle args  = new Bundle();
              AlertDialog.Builder alertBuiler = new AlertDialog.Builder(v.getContext());
-
+             final Context ncontext = v.getContext();
+             int check_remove=0;
                // AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 alertBuiler.setTitle("파일을 삭제하시겠습니까?");
                 alertBuiler.setPositiveButton("네", new DialogInterface.OnClickListener() {
@@ -308,8 +316,11 @@ public class TabFragment3 extends Fragment {
                         MyoDataFileReader dataFileReader = new MyoDataFileReader(TAG,FileList_kmeans);
                         dataFileReader.removeFile(inds_remove);     //removeFile 메소드 호출
                         saveMethod.setState(GestureSaveMethod.SaveState.Not_Saved);
+                        Toasty.success(ncontext, "Delete succes", Toast.LENGTH_SHORT, false).show();
                     }
+
                 }
+
                 );
                 alertBuiler.setNegativeButton("아니요", new DialogInterface.OnClickListener() {
                     @Override
@@ -378,20 +389,32 @@ public class TabFragment3 extends Fragment {
             //TODO: 적응모델 적용하기
             @Override
             public void onClick(View v) {
-                //inds_num=0;
                 // for(inds_num=0; inds_num<6; inds_num++) {
+                final Context ncontext = v.getContext();
                 inds_num=saveMethod.getSaveIndex();  // 현재 몇번 제스처인지 값 가져옴.
                 saveModel = new GestureSaveModel(saveMethod, inds_num);  // (saveMethod, 몇번제스처 인지 값 넘겨줌)
                 startSaveModel();  // 세이브 시작
                 saveMethod.setState(GestureSaveMethod.SaveState.Now_Saving);        // SaveState 저장중으로 변경
                 // 제스처의 카운트가 0일 때
-                if(saveMethod.getGestureCounter()==5)
-                    gesturenNumberPicker.setValue(inds_num);        //제스처 세이브 numberPicker 값 설정.
+                if(saveMethod.getGestureCounter()==4) {// 동그라미 5개일때 제스처이미지 변경
+                    if(inds_num==5) {
+                        gestureSaveImageChange(0);
+                        inds_gesture_num=6;
+                    }
+                    else {
+                        gestureSaveImageChange(inds_num + 1);
+                        inds_gesture_num=inds_num+1;
+                    }
+                }
+                //    gesturenNumberPicker.setValue(inds_num);        //제스처 세이브 numberPicker 값 설정.
                 if(saveMethod.getGestureCounter()==0) {     //위에 setValue로는 setOnValueChangedListener가 인식을 못해서 따로 빼줌.
+                    gesturenNumberPicker.setValue(inds_num);        //제스처 세이브 numberPicker 값 설정.
                     for(int i=0;i<views.length;i++){        //동그라미 빈칸으로 바꿔줌
                         views[i].setBackgroundResource(R.drawable.imgbtn_default);
                     }
-                    gestureSaveImageChange(inds_num);
+                    if(inds_gesture_num!=0)
+                        Toasty.info(ncontext, "Gesture "+inds_gesture_num+" save complete", Toast.LENGTH_SHORT, true).show();
+                  //  gestureSaveImageChange(inds_num);
                 }
                 gestureText.setText("Gesture" + (inds_num + 1) + "'s Saving Count : " + (saveMethod.getGestureCounter() + 1)); // 아래쪽 텍스트 변경
                 views[saveMethod.getGestureCounter()].setBackgroundResource(R.drawable.imgbtn_pressed); // 동그라미 채워줌
@@ -449,7 +472,7 @@ public class TabFragment3 extends Fragment {
                         break;
                 }
 
-
+                final Context ncontext = v.getContext();
                 Log.e(TAG,"pass_adapter: "+pass_adapter);
                 if (saveMethod.getSaveState() == GestureSaveMethod.SaveState.Ready ||
                         saveMethod.getSaveState() == GestureSaveMethod.SaveState.Have_Saved) {
@@ -472,6 +495,8 @@ public class TabFragment3 extends Fragment {
                             dialog.dismiss();
                         }
                     },1000);
+
+                    Toasty.error(ncontext, "Please delete model first", Toast.LENGTH_SHORT,true).show();
                 } else if (saveMethod.getSaveState() == GestureSaveMethod.SaveState.Not_Saved) {
                     saveMethod.setState(GestureSaveMethod.SaveState.Now_Saving);
                    // dialog= new LoadingDialog().setProgress(mactivity);
@@ -495,6 +520,7 @@ public class TabFragment3 extends Fragment {
                     model.setAction(new GestureDetectSendResultAction(mactivity,TabFragment3.this));
                     GestureDetectModelManager.setCurrentModel(model);
                     startSaveModel();
+                    Toasty.info(ncontext,  "Model creation complete", Toast.LENGTH_SHORT, true).show();
                 }
             }
         });
