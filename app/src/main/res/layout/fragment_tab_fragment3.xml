@@ -25,11 +25,9 @@
             <TextView
                 android:id="@+id/Text_tutorial"
                 android:layout_width="match_parent"
-
-                android:layout_height="80dp"
+                android:layout_height="wrap_content"
                 android:layout_marginBottom="20dp"
-                android:textSize="16dp"
-                android:text="환영합니다. 이곳은 myo의 인식률을 높이기 위한 Adapter를 하는 장소입니다.\n수행하고자 하는 항목의 타이틀을 클릭해서 설명을 보세요" />
+                android:text="환영합니다. 이곳은 myo의 인식률을 높이기 위한 Adapter를 하는 장소입니다." />
 
 
             <TextView

@@ -5,21 +5,30 @@
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white">
+    android:background="@color/BackgroundColor">
 
-    <View
+    <TextView
+        android:id="@+id/img_pager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/redpinkblurgradation"
-        android:alpha="0.5"/>
+        android:layout_height="50dp"
+        android:layout_alignParentTop="true"
+        android:background="@color/FontColor"
+        android:textColor="@color/BackgroundColor"
+        android:textAlignment="center"
 
-    <com.bosong.commentgallerylib.CommentImageGrid
-        android:layout_marginTop="100dp"
-        android:id="@+id/comment_grid"
+        android:text="Hello?"
+        android:textSize="20dp"/>
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:placeholder_image="@drawable/placeholder"
-        app:fallback_image="@drawable/placeholder"
-        app:vertical_space="7.5dp"
-        app:horizontal_space="7.5dp"/>
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/img_pager">
+        <com.bosong.commentgallerylib.CommentImageGrid
+            android:id="@+id/comment_grid"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:placeholder_image="@drawable/placeholder"
+            app:fallback_image="@drawable/placeholder"
+
+            />
+    </ScrollView>
 </RelativeLayout>

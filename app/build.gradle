@@ -58,6 +58,7 @@ dependencies {
     debugImplementation "com.squareup.leakcanary:leakcanary-android:$leakCanaryVersion"
     releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanaryVersion"
 
+
     implementation "com.android.support:appcompat-v7:27.1.+"
     implementation 'com.android.support:support-v4:27.1.0'
     implementation 'com.android.support:design:27.1.0'
@@ -77,10 +78,12 @@ dependencies {
     implementation "com.android.support:exifinterface:$supportLibraryVersion"
 
     implementation 'com.facebook.fresco:fresco:1.9.0'
+
     implementation 'com.github.stfalcon:frescoimageviewer:0.5.0'
     implementation 'com.github.ibosong.CommentGallery:frescozoomablelib:1.0.1'
     implementation 'com.github.ibosong.CommentGallery:largeimagegallerylib:1.0.1'
     implementation 'com.github.ibosong.CommentGallery:commentgallerylib:1.0.1'
+
 }
 
 Properties props = new Properties()
