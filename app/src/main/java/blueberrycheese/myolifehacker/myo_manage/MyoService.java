@@ -12,7 +12,6 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
-import android.util.EventLog;
 import android.util.Log;
 
 import org.greenrobot.eventbus.EventBus;
@@ -23,7 +22,9 @@ import blueberrycheese.myolifehacker.events.ServiceEvent;
 
 public class MyoService extends Service {
     private static final String TAG = "Myo_Service";
+    //Previous SCAN_PERIOD was 5000.
     private static final long SCAN_PERIOD = 5000;
+
 
     NotificationManager manager;
     Notification myNotication;
@@ -42,6 +43,7 @@ public class MyoService extends Service {
     private IGestureDetectModel model;
 
     private int gestureNum = -1;
+    private int falseCount = 0;
 
     public MyoService() {
     }
@@ -111,7 +113,7 @@ public class MyoService extends Service {
 
   @Subscribe(sticky = true)
   public void getMyoDevice(ServiceEvent.MyoDeviceEvent event){
-      Log.e(TAG, "subcribe getMyoDevice got event");
+      Log.e(TAG, "@Subcribe getMyoDevice got an event");
       if(event.MyoDevice!=null){
           Log.e(TAG, event.MyoDevice.getName() + " arrived at service !!");
         myoDevice = event.MyoDevice;
@@ -119,33 +121,79 @@ public class MyoService extends Service {
         mBluetoothGatt = myoDevice.connectGatt(getApplicationContext(), false, mMyoCallback);
         mMyoCallback.setBluetoothGatt(mBluetoothGatt);
 
-        new Handler().postDelayed(new Runnable() {
-              @Override
-              public void run() {
-                  if (mBluetoothGatt == null || !mMyoCallback.setMyoControlCommand(commandList.sendEmgOnly())) {
-                      Log.d(TAG,"False EMG");
-                      Log.d(TAG,"mBluetoothGatt : " + mBluetoothGatt);
-                      stopSelf();
-                  } else {
-                      saveMethod  = new GestureSaveMethod(-1, getApplicationContext(),1);
-                      Log.d(TAG,"True EMG");
-                      if (saveMethod.getSaveState() == GestureSaveMethod.SaveState.Have_Saved) {
-                          detectMethod = new GestureDetectMethod(mHandler, saveMethod.getCompareDataList());    //아예 새롭게 각각의 detectMethod를 구현하는것이 빠를것으로 예상된다.
-                          detectModel = new GestureDetectModel(detectMethod);
-                          startDetectModel();
-                      }
+//  Made separated runnable()... Look down below
+//
+//        new Handler().postDelayed(new Runnable() {
+//              @Override
+//              public void run() {
+//                  if (mBluetoothGatt == null || !mMyoCallback.setMyoControlCommand(commandList.sendEmgOnly())) {
+//                      Log.d(TAG,"False EMG");
+//                      Log.d("EMGFALSETest","mBluetoothGatt : " + mBluetoothGatt);//
+////call stopSelf() for killing service
+////                      stopSelf();
+//                  } else {
+//                      saveMethod  = new GestureSaveMethod(-1, getApplicationContext(),1);
+//                      Log.d(TAG,"True EMG");
+//                      if (saveMethod.getSaveState() == GestureSaveMethod.SaveState.Have_Saved) {
+//                          detectMethod = new GestureDetectMethod(mHandler, saveMethod.getCompareDataList());    //아예 새롭게 각각의 detectMethod를 구현하는것이 빠를것으로 예상된다.
+//                          detectModel = new GestureDetectModel(detectMethod);
+//                          startDetectModel();
+//                      }
+//
+//                      if (saveMethod.getSaveState() == GestureSaveMethod.SaveState.Have_Saved) {
+//                          //gestureText.setText("DETECT Ready");
+//                      } else {
+//                          //gestureText.setText("Teach me \'Gesture\'");
+//                      }
+//                  }
+//              }
+//          },SCAN_PERIOD);
+          new Handler().postDelayed(runMethodModel, SCAN_PERIOD);
 
-                      if (saveMethod.getSaveState() == GestureSaveMethod.SaveState.Have_Saved) {
-                          //gestureText.setText("DETECT Ready");
-                      } else {
-                          //gestureText.setText("Teach me \'Gesture\'");
-                      }
-                  }
-              }
-          },SCAN_PERIOD);
       }
-
   }
+
+    private final Runnable runMethodModel = new Runnable(){
+        public void run(){
+
+//            Log.d("EMGFALSETest","mMyoCallbaack.setMyoControlCommand-before if clause: " + mMyoCallback.setMyoControlCommand(commandList.sendEmgOnly()));
+            if (mBluetoothGatt == null || !mMyoCallback.setMyoControlCommand(commandList.sendEmgOnly())) {
+                falseCount++;
+                if(falseCount > 3){
+                    Log.d(TAG,"postDelayed already executed enough! Something's wrong now.");
+                    stopSelf();
+                    return;
+                }
+                Log.d(TAG,"False EMG");
+                Log.d(TAG,"mBluetoothGatt : " + mBluetoothGatt);
+//                Log.d("EMGFALSETest","mMyoCallbaack.setMyoControlCommand-sendEmgOnlyFirst: " + mMyoCallback.setMyoControlCommand(commandList.sendEmgOnly()));
+                new Handler().postDelayed(new Runnable(){
+                    @Override
+                    public void run(){
+                        Log.d(TAG,"mMyoCallbaack.setMyoControlCommand - PostDelayed running again");
+                        new Handler().post(runMethodModel);
+                    }
+                },1900);
+//                Log.d("EMGFALSETest","mMyoCallbaack.setMyoControlCommand-sendEmgOnlyLast: " + mMyoCallback.setMyoControlCommand(commandList.sendEmgOnly()));
+//call stopSelf() for killing service
+//                      stopSelf();
+            } else {
+                saveMethod  = new GestureSaveMethod(-1, getApplicationContext(),1);
+                Log.d(TAG,"True EMG");
+                if (saveMethod.getSaveState() == GestureSaveMethod.SaveState.Have_Saved) {
+                    detectMethod = new GestureDetectMethod(mHandler, saveMethod.getCompareDataList());    //아예 새롭게 각각의 detectMethod를 구현하는것이 빠를것으로 예상된다.
+                    detectModel = new GestureDetectModel(detectMethod);
+                    startDetectModel();
+                }
+
+                if (saveMethod.getSaveState() == GestureSaveMethod.SaveState.Have_Saved) {
+                    //gestureText.setText("DETECT Ready");
+                } else {
+                    //gestureText.setText("Teach me \'Gesture\'");
+                }
+            }
+        }
+    };
 
     //아래에서 NumberSmoother에서 post한 gestureNumber(i_element)를 받음.
     @Subscribe
@@ -173,7 +221,7 @@ public class MyoService extends Service {
     public void setDetectModel(ServiceEvent.setDetectModel_Event event){
         if(event.set == 1){
             GestureDetectModelManager.setCurrentModel(model);
-            Log.e(TAG,"setDetectModel executed");
+            Log.e(TAG,"setDetectModel called");
         }
     }
 

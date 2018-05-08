@@ -35,6 +35,7 @@ import java.util.HashMap;
 
 import blueberrycheese.myolifehacker.CameraView.CameraActivity;
 import blueberrycheese.myolifehacker.CameraView.CameraEvent;
+import blueberrycheese.myolifehacker.ImageViewer.GalleryActivity;
 import blueberrycheese.myolifehacker.MenuControl.GestureDetectMethod_Menu;
 import blueberrycheese.myolifehacker.MenuControl.GestureDetectModel_Menu;
 import blueberrycheese.myolifehacker.MenuControl.GestureDetectSendResultAction_Menu;
@@ -75,6 +76,7 @@ public class TabFragment1 extends Fragment {
     private CircleMenuButton circleMenuButton_volume ;
     private CircleMenuButton circleMenuButton_camera;
     private CircleMenuButton circleMenuButton_music ;
+    private CircleMenuButton circleMenuButton_gallery;
     private Handler mHandler;
     private BluetoothAdapter mBluetoothAdapter;
     private BluetoothGatt mBluetoothGatt;
@@ -141,6 +143,11 @@ public class TabFragment1 extends Fragment {
 
         circleMenuButton_volume = (CircleMenuButton)view.findViewById(R.id.volume);
         circleMenuButton_camera = (CircleMenuButton)view.findViewById(R.id.camera_button);
+        circleMenuButton_gallery = (CircleMenuButton)view.findViewById(R.id.gallery_button);
+
+//        circleMenu.setBackgroundColor(getResources().getColor(R.color.FontColor));
+
+
         circleMenu.setOnItemClickListener(new CircleMenu.OnItemClickListener() {
             @Override
             public void onItemClick(CircleMenuButton menuButton) {
@@ -153,25 +160,23 @@ public class TabFragment1 extends Fragment {
                         startActivity(intent);
                         break;
                     case R.id.volume:
-//                        if(device!=null) {
-//                            Log.d("volumecircle", "volume_clicked");
-//                            Log.d("volumecircle", device.getName());
-//                            Intent intent2 = new Intent(getActivity().getApplicationContext(), SystemControlActivity.class);
-//                            intent2.putExtra("bluetoothDevice", device);
-//
-//                            startActivity(intent2);
-//                        }
-                            Log.d("volumecircle", "volume_clicked");
-//                            Log.d("volumecircle", device.getName());
-                            Intent intent2 = new Intent(getActivity().getApplicationContext(), SystemControlActivity.class);
-//                            intent2.putExtra("bluetoothDevice", device);
+                        Log.d("volumecircle", "volume_clicked");
 
-                            startActivity(intent2);
+                        Intent intent2 = new Intent(getActivity().getApplicationContext(), SystemControlActivity.class);
+                        intent2.putExtra("bluetoothDevice", device);
+                        startActivity(intent2);
+                        break;
                     case R.id.music:
                         Log.d("music_circle","music_clicked");
                         Intent intent3 = new Intent(getActivity().getApplicationContext(), blueberrycheese.myolifehacker.myo_music.activities.activitys.MainActivity.class);
                         intent3.putExtra("bluetoothDevice", device);
                         startActivity(intent3);
+                        break;
+                    case R.id.gallery_button:
+                        Log.d("gallerycircle","galleryclicked");
+                        Intent intent4 = new Intent(getActivity().getApplicationContext(), GalleryActivity.class);
+                        intent4.putExtra("bluetoothDevice", device);
+                        startActivity(intent4);
                         break;
                     default:
                         break;
@@ -263,45 +268,45 @@ public class TabFragment1 extends Fragment {
 
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void testEvent(EventData event){
-        if(event.device!=null){
-            Log.e("test_event", event.device.getName() + "connected !! Tab1");
-            HashMap<String,View> views = new HashMap<String,View>();
+//    @Subscribe(threadMode = ThreadMode.MAIN)
+//    public void testEvent(EventData event){
+//        if(event.device!=null){
+//            Log.e("test_event", event.device.getName() + "connected !! Tab1");
+//            HashMap<String,View> views = new HashMap<String,View>();
+//
+//            device = event.device;
+////            android.support.v4.app.FragmentTransaction ft = getFragmentManager().beginTransaction();
+////            ft.detach(this).attach(this).commit();  //처음에 보내졌을당시에 refresh 한번시킴.
+//            mMyoCallback = new MyoGattCallback(mHandler);
+//            mBluetoothGatt = device.connectGatt(view.getContext(), false, mMyoCallback);
+//            mMyoCallback.setBluetoothGatt(mBluetoothGatt);
+//
+//            new Handler().postDelayed(new Runnable() {
+//                @Override
+//                public void run() {
+//                    if (mBluetoothGatt == null || !mMyoCallback.setMyoControlCommand(commandList.sendEmgOnly())) {
+//                        Log.d(TAG,"False EMG");
+//                    } else {
+//                        saveMethod  = new GestureSaveMethod(-1, view.getContext(),1);
+//                        Log.d(TAG,"True EMG");
+//                        if (saveMethod.getSaveState() == GestureSaveMethod.SaveState.Have_Saved) {
+//                            detectMethod = new GestureDetectMethod_Menu(mHandler, saveMethod.getCompareDataList());    //아예 새롭게 각각의 detectMethod를 구현하는것이 빠를것으로 예상된다.
+//                            detectModel = new GestureDetectModel_Menu(detectMethod);
+//                            startDetectModel();
+//                        }
+//
+//                        if (saveMethod.getSaveState() == GestureSaveMethod.SaveState.Have_Saved) {
+//                            //gestureText.setText("DETECT Ready");
+//                        } else {
+//                            //gestureText.setText("Teach me \'Gesture\'");
+//                        }
+//                    }
+//                }
+//            },SCAN_PERIOD);
+//
+//        }
+//    }
 
-            device = event.device;
-//            android.support.v4.app.FragmentTransaction ft = getFragmentManager().beginTransaction();
-//            ft.detach(this).attach(this).commit();  //처음에 보내졌을당시에 refresh 한번시킴.
-            mMyoCallback = new MyoGattCallback(mHandler);
-            mBluetoothGatt = device.connectGatt(view.getContext(), false, mMyoCallback);
-            mMyoCallback.setBluetoothGatt(mBluetoothGatt);
-
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    if (mBluetoothGatt == null || !mMyoCallback.setMyoControlCommand(commandList.sendEmgOnly())) {
-                        Log.d(TAG,"False EMG");
-                    } else {
-                        saveMethod  = new GestureSaveMethod(-1, view.getContext(),1);
-                        Log.d(TAG,"True EMG");
-                        if (saveMethod.getSaveState() == GestureSaveMethod.SaveState.Have_Saved) {
-                            detectMethod = new GestureDetectMethod_Menu(mHandler, saveMethod.getCompareDataList());    //아예 새롭게 각각의 detectMethod를 구현하는것이 빠를것으로 예상된다.
-                            detectModel = new GestureDetectModel_Menu(detectMethod);
-                            startDetectModel();
-                        }
-
-                        if (saveMethod.getSaveState() == GestureSaveMethod.SaveState.Have_Saved) {
-                            //gestureText.setText("DETECT Ready");
-                        } else {
-                            //gestureText.setText("Teach me \'Gesture\'");
-                        }
-                    }
-                }
-            },SCAN_PERIOD);
-
-        }
-
-    }
     public void startDetectModel() {
         IGestureDetectModel model = detectModel;
         model.setAction(new GestureDetectSendResultAction_Menu(this));    //변경
@@ -366,8 +371,8 @@ public class TabFragment1 extends Fragment {
 
             case 3 :
                 if(smoothcount[gestureNum]>1) {
-                    circleMenu.onSelectAnimationStart(circleMenuButton_music);
-                    circleMenu.onSelectAnimationEnd(circleMenuButton_music);
+                    circleMenu.onSelectAnimationStart(circleMenuButton_gallery);
+                    circleMenu.onSelectAnimationEnd(circleMenuButton_gallery);
 
 
                     smoothcount[gestureNum]=-1;
@@ -375,13 +380,23 @@ public class TabFragment1 extends Fragment {
                 }
                 smoothcount[gestureNum]++;
                 break;
+            case 4 :
+                if(smoothcount[gestureNum]>1) {
+                circleMenu.onSelectAnimationStart(circleMenuButton_music);
+                circleMenu.onSelectAnimationEnd(circleMenuButton_music);
 
+
+                smoothcount[gestureNum]=-1;
+                resetSmoothCount();
+            }
+                smoothcount[gestureNum]++;
+                break;
             default :
                 break;
 
         }
     }
-
+//TODO: smoothCount 처음엔 0으로 초기화될텐데 reset할땐 -1로 하면 초반 첫 제스처의 경우는 0에서 2가면 동작하고 나머지는 -1에서 2가면 동작하는 차이가 발생.
     public void resetSmoothCount(){
         for(int i : smoothcount){
             i = -1;

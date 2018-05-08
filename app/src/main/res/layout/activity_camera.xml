@@ -34,17 +34,17 @@ android:layout_height="match_parent"
         app:cameraVideoMaxDuration="0"
         app:cameraVideoQuality="max720p" />
 
-    <TextView
-        android:id="@+id/cameraActivityGesture"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:text="x"
-        android:textAlignment="center"
-        android:textColor="@color/colorPrimary"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        app:layout_anchor="@+id/camera"
-        app:layout_anchorGravity="right|top" />
+    <!--<TextView-->
+        <!--android:id="@+id/cameraActivityGesture"-->
+        <!--android:layout_width="50dp"-->
+        <!--android:layout_height="50dp"-->
+        <!--android:text="x"-->
+        <!--android:textAlignment="center"-->
+        <!--android:textColor="@color/colorPrimary"-->
+        <!--android:textSize="18sp"-->
+        <!--android:textStyle="bold"-->
+        <!--app:layout_anchor="@+id/camera"-->
+        <!--app:layout_anchorGravity="right|top" />-->
 
     <LinearLayout
         android:id="@+id/linearlayout1"
@@ -113,14 +113,6 @@ android:layout_height="match_parent"
                 android:layout_height="1dp"
                 android:layout_weight="1" />
 
-            <Button
-                android:id="@+id/dttButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/color_button"
-                android:onClick="onClickdtt"
-                android:text="off"
-                android:textAlignment="center" />
         </LinearLayout>
 
         <!--Gesture 안내 표시용 Layout-->

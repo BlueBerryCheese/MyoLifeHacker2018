@@ -164,6 +164,7 @@ public class MyoGattCallback extends BluetoothGattCallback {
                 // Get CommandCharacteristic
                 mCharacteristic_command = service.getCharacteristic(UUID.fromString(COMMAND_ID));
                 if (mCharacteristic_command == null) {
+                    Log.d(TAG, "mCharacteristic_command is null");
                 } else {
                     Log.d(TAG, "Find command Characteristic !!");
                 }
@@ -261,6 +262,8 @@ public class MyoGattCallback extends BluetoothGattCallback {
 
     long last_send_never_sleep_time_ms = System.currentTimeMillis();
     final static long NEVER_SLEEP_SEND_TIME = 10000;  // Milli Second
+    String currentModelForLog = "";
+
     @Override
     public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
         if (EMG_0_ID.equals(characteristic.getUuid().toString())) {
@@ -268,7 +271,11 @@ public class MyoGattCallback extends BluetoothGattCallback {
             byte[] emg_data = characteristic.getValue();
             //Original
 //            GestureDetectModelManager.getCurrentModel().event(systemTime_ms,emg_data);
-            Log.e(TAG,"GestureDetectModelManager.getCurrentMoel : " + GestureDetectModelManager.getCurrentModel());
+//            currentModelForLog = GestureDetectModelManager.getCurrentModel().toString();
+            if(!currentModelForLog.equals(GestureDetectModelManager.getCurrentModel().toString())){
+                Log.e(TAG,"GestureDetectModelManager.getCurrentMoel : " + GestureDetectModelManager.getCurrentModel());
+                currentModelForLog = GestureDetectModelManager.getCurrentModel().toString();
+            }
             try{
                 GestureDetectModelManager.getCurrentModel().event(systemTime_ms,emg_data);
             }catch(NullPointerException e){

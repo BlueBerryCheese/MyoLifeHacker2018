@@ -30,6 +30,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.greenrobot.eventbus.EventBus;
@@ -84,13 +86,18 @@ public class MainActivity extends AppCompatActivity
         FragmentAdapter pagerAdapter = new FragmentAdapter(getSupportFragmentManager());
 
         pagerAdapter.addFragment(new TabFragment1(), "Main");
-        pagerAdapter.addFragment(new TabFragment2(), "2");
+        pagerAdapter.addFragment(new TabFragment2(), "Setting");
         pagerAdapter.addFragment(new TabFragment3(), "Adaptation");
         viewPager.setAdapter(pagerAdapter);
         viewPager.addOnPageChangeListener(listener);    //페이지 변할때마다 이벤트 발생하도록 이벤트 리스너 붙착
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
-
+        TextView tv1 = (TextView)(((LinearLayout)((LinearLayout)tabLayout.getChildAt(0)).getChildAt(0)).getChildAt(1));
+        tv1.setScaleY(-1);
+        TextView tv2 = (TextView)(((LinearLayout)((LinearLayout)tabLayout.getChildAt(0)).getChildAt(1)).getChildAt(1));
+        tv2.setScaleY(-1);
+        TextView tv3 = (TextView)(((LinearLayout)((LinearLayout)tabLayout.getChildAt(0)).getChildAt(2)).getChildAt(1));
+        tv3.setScaleY(-1);
         //서비스 위해 주석처리
 /*
         mHandler = new Handler();

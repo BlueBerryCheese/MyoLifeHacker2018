@@ -174,6 +174,7 @@ class MainActivity : SimpleActivity(), SongListListener{
 
         //Detect용
         //gestureText = findViewById(R.id.MusicActivityGesture) as TextView
+
 //        startNopModel()
 //
 //        val intent = getIntent()
@@ -196,7 +197,7 @@ class MainActivity : SimpleActivity(), SongListListener{
 //            }
 //
 //        }
-//        //dttButton = findViewById(R.id.dttButton_music) as Button
+//        //dttButton = findViewById(R.id.dttButton_music) as Butto
     }
 
     override fun onResume() {
