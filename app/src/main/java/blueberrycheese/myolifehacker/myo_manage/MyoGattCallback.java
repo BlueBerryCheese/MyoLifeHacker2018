@@ -272,7 +272,7 @@ public class MyoGattCallback extends BluetoothGattCallback {
             //Original
 //            GestureDetectModelManager.getCurrentModel().event(systemTime_ms,emg_data);
 //            currentModelForLog = GestureDetectModelManager.getCurrentModel().toString();
-            if(!currentModelForLog.equals(GestureDetectModelManager.getCurrentModel().toString())){
+            if(GestureDetectModelManager.getCurrentModel() != null && !currentModelForLog.equals(GestureDetectModelManager.getCurrentModel().toString())){
                 Log.e(TAG,"GestureDetectModelManager.getCurrentMoel : " + GestureDetectModelManager.getCurrentModel());
                 currentModelForLog = GestureDetectModelManager.getCurrentModel().toString();
             }
