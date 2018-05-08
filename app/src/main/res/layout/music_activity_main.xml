@@ -19,8 +19,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:adjustViewBounds="true"
-
-
             android:src="@drawable/ic_headset" />
 
     </RelativeLayout>
@@ -28,7 +26,9 @@
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="@dimen/top_art_height"
-        android:layout_toRightOf="@id/art_holder">
+        android:layout_toRightOf="@+id/art_holder"
+        android:layout_marginLeft="30dp"
+        >
         <!--Gesture 안내 표시용 Layout-->
         <LinearLayout
             android:id="@+id/maingesturelinearlayout"
