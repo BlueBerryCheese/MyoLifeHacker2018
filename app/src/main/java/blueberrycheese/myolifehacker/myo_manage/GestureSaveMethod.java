@@ -340,6 +340,9 @@ public class GestureSaveMethod {
         maxDataList = new ArrayList<>();
     }
 
+    public void gestureNumberPickerChanged()  { gestureCounter=0;
+        compareGesture = new ArrayList<EmgData>();}
+
     public SaveState getSaveState() {
         return saveState;
     }
