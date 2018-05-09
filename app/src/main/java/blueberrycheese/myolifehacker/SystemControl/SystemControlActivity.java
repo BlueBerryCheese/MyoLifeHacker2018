@@ -28,10 +28,17 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.util.HashMap;
 
+import blueberrycheese.myolifehacker.ImageViewer.CommentGalleryActivity;
+import blueberrycheese.myolifehacker.ImageViewer.GalleryActivity;
 import blueberrycheese.myolifehacker.R;
 
+import blueberrycheese.myolifehacker.events.ServiceEvent;
 import blueberrycheese.myolifehacker.myo_manage.GestureDetectModelManager;
 import blueberrycheese.myolifehacker.myo_manage.GestureSaveMethod;
 import blueberrycheese.myolifehacker.myo_manage.GestureSaveModel;
@@ -40,7 +47,7 @@ import blueberrycheese.myolifehacker.myo_manage.MyoCommandList;
 import blueberrycheese.myolifehacker.myo_manage.MyoGattCallback;
 import blueberrycheese.myolifehacker.myo_manage.NopModel;
 
-public class SystemControlActivity extends AppCompatActivity implements BluetoothAdapter.LeScanCallback {
+public class SystemControlActivity extends AppCompatActivity {
     public static final int MENU_LIST = 0;
     public static final int MENU_BYE = 1;
 
@@ -57,8 +64,6 @@ public class SystemControlActivity extends AppCompatActivity implements Bluetoot
     private BluetoothGatt mBluetoothGatt;
     private TextView emgDataText;
     private TextView gestureText;
-    private TextView maxDataTextView;
-    private TextView algorithm1;
     private MyoGattCallback mMyoCallback;
     private MyoCommandList commandList = new MyoCommandList();
 
@@ -80,6 +85,9 @@ public class SystemControlActivity extends AppCompatActivity implements Bluetoot
     NotificationManager notificationManager;
     boolean retVal = true;
     private Context mContext;
+    int[] smoothcount = new int[6];
+    int gestureNum = -1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -100,8 +108,6 @@ public class SystemControlActivity extends AppCompatActivity implements Bluetoot
         emgDataText = (TextView)findViewById(R.id.emgDataTextView);
         gestureText = (TextView)findViewById(R.id.gestureTextView);
         mHandler = new Handler();
-        algorithm1 = (TextView)findViewById(R.id.algorithm1);
-        maxDataTextView=(TextView)findViewById(R.id.maxData);
         mContext = this;
 
         //startNopModel() will setCurrentModel to another model so Service's gesture detect model won't work! - So I commented out
@@ -135,31 +141,35 @@ public class SystemControlActivity extends AppCompatActivity implements Bluetoot
 
     }
 
-    public void onResume(){
+    @Override
+    protected void onResume() {
         super.onResume();
+        if(!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
     }
-
     @Override
     public void onStop(){
+        EventBus.getDefault().unregister(this);
         super.onStop();
-        this.closeBLEGatt();
+//        this.closeBLEGatt();
     }
 
     /** Define of BLE Callback */
-    @Override
-    public void onLeScan(BluetoothDevice device, int rssi, byte[] scanRecord) {
-        Log.d(TAG,"Hello onLeSacn");
-        device = bluetoothDevice;
-        if (deviceName.equals(device.getName())) {
-            mBluetoothAdapter.stopLeScan(this);
-            // Trying to connect GATT
-            HashMap<String,View> views = new HashMap<String,View>();
-
-            mMyoCallback = new MyoGattCallback(mHandler, emgDataText, views,maxDataTextView,-1);
-            mBluetoothGatt = device.connectGatt(this, true, mMyoCallback);
-            mMyoCallback.setBluetoothGatt(mBluetoothGatt);
-        }
-    }
+//    @Override
+//    public void onLeScan(BluetoothDevice device, int rssi, byte[] scanRecord) {
+//        Log.d(TAG,"Hello onLeSacn");
+//        device = bluetoothDevice;
+//        if (deviceName.equals(device.getName())) {
+//            mBluetoothAdapter.stopLeScan(this);
+//            // Trying to connect GATT
+//            HashMap<String,View> views = new HashMap<String,View>();
+//
+//            mMyoCallback = new MyoGattCallback(mHandler, emgDataText, views,maxDataTextView,-1);
+//            mBluetoothGatt = device.connectGatt(this, true, mMyoCallback);
+//            mMyoCallback.setBluetoothGatt(mBluetoothGatt);
+//        }
+//    }
     public void onClickEMG(Context context) {
         if (mBluetoothGatt == null || !mMyoCallback.setMyoControlCommand(commandList.sendEmgOnly())) {
             Log.d(TAG,"False EMG");
@@ -174,16 +184,16 @@ public class SystemControlActivity extends AppCompatActivity implements Bluetoot
     }
 
 
-    public void onClickDetect() {
-        if (saveMethod.getSaveState() == GestureSaveMethod.SaveState.Have_Saved) {
-            gestureText.setText("Let's Go !!");
-            /*detectMethod = new GestureDetectMethod(saveMethod.getCompareDataList());*/
-            detectMethod = new GestureDetectMethod_System(mHandler,saveMethod.getCompareDataList(),algorithm1,systemFeature);    //아예 새롭게 각각의 detectMethod를 구현하는것이 빠를것으로 예상된다.
-            //detectMethod = new GestureDetectMethod(saveMethod.getCompareDataList(),algorithm1);
-            detectModel = new GestureDetectModel_System(detectMethod);
-            startDetectModel();
-        }
-    }
+//    public void onClickDetect() {
+//        if (saveMethod.getSaveState() == GestureSaveMethod.SaveState.Have_Saved) {
+//            gestureText.setText("Let's Go !!");
+//            /*detectMethod = new GestureDetectMethod(saveMethod.getCompareDataList());*/
+//            detectMethod = new GestureDetectMethod_System(mHandler,saveMethod.getCompareDataList(),algorithm1,systemFeature);    //아예 새롭게 각각의 detectMethod를 구현하는것이 빠를것으로 예상된다.
+//            //detectMethod = new GestureDetectMethod(saveMethod.getCompareDataList(),algorithm1);
+//            detectModel = new GestureDetectModel_System(detectMethod);
+//            startDetectModel();
+//        }
+//    }
 
     public void closeBLEGatt() {
         if (mBluetoothGatt == null) {
@@ -221,15 +231,90 @@ public class SystemControlActivity extends AppCompatActivity implements Bluetoot
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_ENABLE_BT && resultCode == RESULT_OK){
-            mHandler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    mBluetoothAdapter.stopLeScan(SystemControlActivity.this);
+//        if (requestCode == REQUEST_ENABLE_BT && resultCode == RESULT_OK){
+//            mHandler.postDelayed(new Runnable() {
+//                @Override
+//                public void run() {
+//                    mBluetoothAdapter.stopLeScan(SystemControlActivity.this);
+//                }
+//            }, SCAN_PERIOD);
+//            mBluetoothAdapter.startLeScan(this);
+//        }
+    }
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(ServiceEvent.GestureEvent event) {
+        gestureNum = event.gestureNumber;
+        Log.d("Event","SystemEvent Gesture num : "+event.gestureNumber);
+        systemFeature.function(gestureNum);
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                switch (gestureNum){
+                    case 0:
+                        emgDataText.setText("Wifi ON/OFF");
+                        break;
+                    case 1:
+                        emgDataText.setText("Volume UP");
+                        break;
+                    case 2:
+                        emgDataText.setText("Volume Down");
+                        break;
+                    default:
+                        break;
                 }
-            }, SCAN_PERIOD);
-            mBluetoothAdapter.startLeScan(this);
+                gestureText.setText(gestureNum+" detect!!");
+            }
+        });
+    }
+    /*
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(ServiceEvent.GestureEvent event) {
+        gestureNum = event.gestureNumber;
+        Log.d("Event","SystemEvent Gesture num : "+event.gestureNumber);
+        systemFeature.function(gestureNum);
+        */
+//        switch(gestureNum){
+//            case 0 :
+//                if(smoothcount[gestureNum]>1) {
+//
+//                }
+//                smoothcount[gestureNum]++;
+//
+//                break;
+//
+//            case 1 :
+//                if(smoothcount[gestureNum]>1) {
+//
+//                }
+//                smoothcount[gestureNum]++;
+//
+//                break;
+//
+//            case 2 :
+//                if(smoothcount[gestureNum]>1) {
+//
+//                }
+//                smoothcount[gestureNum]++;
+//                break;
+//
+//            case 3 :
+//
+//                break;
+//            case 4 :
+//
+//                break;
+//            case 5 :
+//
+//                break;
+//            default :
+//                break;
+//
+//        }
+//    }
+
+    public void resetSmoothCount(){
+        for(int i : smoothcount){
+            i = -1;
         }
     }
-
 }

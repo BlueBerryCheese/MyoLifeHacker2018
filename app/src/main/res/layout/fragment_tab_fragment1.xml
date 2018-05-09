@@ -14,18 +14,18 @@
         app:hintsEnabled="true">
 
         <com.imangazaliev.circlemenu.CircleMenuButton
-            android:id="@+id/favorite"
+            android:id="@+id/gallery_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:colorNormal="#2196F3"
             app:colorPressed="#1E88E5"
             app:hintText="Favorite"
-            app:icon="@drawable/ic_favorite" />
+            app:icon="@drawable/ic_menu_gallery" />
 
         <com.imangazaliev.circlemenu.CircleMenuButton
             android:id="@+id/camera_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="76dp"
+            android:layout_height="75dp"
             app:colorNormal="#4CAF50"
             app:colorPressed="#43A047"
             app:hintText="Camera"
