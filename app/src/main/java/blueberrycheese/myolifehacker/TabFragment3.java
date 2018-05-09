@@ -315,7 +315,7 @@ public class TabFragment3 extends Fragment {
                     public void onClick(DialogInterface dialog, int which) {
                         MyoDataFileReader dataFileReader = new MyoDataFileReader(TAG,FileList_kmeans);
                         dataFileReader.removeFile(inds_remove);     //removeFile 메소드 호출
-                        saveMethod.setState(GestureSaveMethod.SaveState.Not_Saved);
+                        saveMethod.setState(GestureSaveMethod.SaveState.Now_Saving);
                         Toasty.success(ncontext, "Delete succes", Toast.LENGTH_SHORT, false).show();
                     }
 
@@ -413,7 +413,7 @@ public class TabFragment3 extends Fragment {
                         views[i].setBackgroundResource(R.drawable.imgbtn_default);
                     }
                     if(inds_gesture_num!=0)
-                        Toasty.info(ncontext, "Gesture "+inds_gesture_num+" save complete", Toast.LENGTH_SHORT, true).show();
+                        Toasty.info(ncontext, "Gesture "+inds_gesture_num+" save complete", Toast.LENGTH_SHORT, false).show();
                   //  gestureSaveImageChange(inds_num);
                 }
                 gestureText.setText("Gesture" + (inds_num + 1) + "'s Saving Count : " + (saveMethod.getGestureCounter() + 1)); // 아래쪽 텍스트 변경
@@ -477,7 +477,7 @@ public class TabFragment3 extends Fragment {
                 if (saveMethod.getSaveState() == GestureSaveMethod.SaveState.Ready ||
                         saveMethod.getSaveState() == GestureSaveMethod.SaveState.Have_Saved) {
 
-                    saveMethod.setState(GestureSaveMethod.SaveState.Now_Saving);
+                    //saveMethod.setState(GestureSaveMethod.SaveState.Now_Saving);
                     //dialog= new LoadingDialog().setProgress(mactivity);
                     //ProgressDialog dialog = ProgressDialog.show(DialogSam)
                     dialog=ProgressDialog.show(getContext(), "","Loading, Please Wait..",true,true);
@@ -490,36 +490,41 @@ public class TabFragment3 extends Fragment {
                             if(dialog.isShowing()) {
                                 saveMethod = new GestureSaveMethod(inds_num, mactivity,pass_adapter);   // GestureSaveMethod로 (제스처 인덱스값, 메인액티?, 어댑터 값)넘겨줌
                                 saveModel = new GestureSaveModel(saveMethod, inds_num);
-                                startSaveModel();
+                                //startSaveModel();
                             }
                             dialog.dismiss();
                         }
                     },1000);
 
-                    Toasty.error(ncontext, "Please delete model first", Toast.LENGTH_SHORT,true).show();
-                } else if (saveMethod.getSaveState() == GestureSaveMethod.SaveState.Not_Saved) {
+                    Toasty.error(ncontext, "Please delete model first", Toast.LENGTH_LONG,false).show();
+                } else if (saveMethod.getSaveState() == GestureSaveMethod.SaveState.Not_Saved || saveMethod.getSaveState() == GestureSaveMethod.SaveState.Now_Saving) {
                     saveMethod.setState(GestureSaveMethod.SaveState.Now_Saving);
                    // dialog= new LoadingDialog().setProgress(mactivity);
                     dialog=ProgressDialog.show(getContext(), "","Loading, Please Wait..",true,true);
                     dialog.show();
 
-
+                 //   Log.e(TAG,"---------------------------------------------   1");
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
                             if(dialog.isShowing()) {
                                 saveMethod = new GestureSaveMethod(inds_num, mactivity,pass_adapter);
                                 saveModel = new GestureSaveModel(saveMethod, inds_num);
-                                startSaveModel();
+                                //startSaveModel();
                             }
                             dialog.dismiss();
                         }
-                    },1000);
-
+                    },2000);
+                    saveMethod.setState(GestureSaveMethod.SaveState.Have_Saved);
+                //    Log.e(TAG,"---------------------------------------------   2");
                     IGestureDetectModel model = saveModel;
-                    model.setAction(new GestureDetectSendResultAction(mactivity,TabFragment3.this));
+                //    Log.e(TAG,"---------------------------------------------   3");
+                  //  model.setAction(new GestureDetectSendResultAction(mactivity,TabFragment3.this));
+                //    Log.e(TAG,"---------------------------------------------   4");
                     GestureDetectModelManager.setCurrentModel(model);
-                    startSaveModel();
+                 //   Log.e(TAG,"---------------------------------------------   5");
+                 //   startSaveModel();
+                 //   Log.e(TAG,"---------------------------------------------   6");
                     Toasty.info(ncontext,  "Model creation complete", Toast.LENGTH_SHORT, true).show();
                 }
             }
