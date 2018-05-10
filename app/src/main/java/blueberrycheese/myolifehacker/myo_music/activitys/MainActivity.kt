@@ -49,6 +49,7 @@ import blueberrycheese.myolifehacker.R
 import blueberrycheese.myolifehacker.R.string.playpause
 import blueberrycheese.myolifehacker.SystemControl.GestureDetectMethod_System
 import blueberrycheese.myolifehacker.SystemControl.GestureDetectModel_System
+import blueberrycheese.myolifehacker.events.ServiceEvent
 import blueberrycheese.myolifehacker.myo_manage.*
 import blueberrycheese.myolifehacker.myo_music.Gesture.GestureDetectMethod_Music
 import blueberrycheese.myolifehacker.myo_music.Gesture.GestureDetectModel_Music
@@ -122,8 +123,8 @@ class MainActivity : SimpleActivity(), SongListListener{
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.music_activity_main)
-        //왠지 여기가 그 거지같은 fake어플 설치하라는 거 같음(확실치 않음)
-        //appLaunched()
+
+        appLaunched()
         isThirdPartyIntent = intent.action == Intent.ACTION_VIEW
 
         bus = BusProvider.instance
@@ -202,6 +203,9 @@ class MainActivity : SimpleActivity(), SongListListener{
 
     override fun onResume() {
         super.onResume()
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this)
+        }
         if (storedTextColor != config.textColor) {
             updateAlbumCover()
         }
@@ -840,15 +844,15 @@ class MainActivity : SimpleActivity(), SongListListener{
 //제스처에 따라 기능 얻어오는 곳
 
     @org.greenrobot.eventbus.Subscribe(threadMode = ThreadMode.MAIN)
-    fun onMessageEvent(event: MusicEvent) {
+    fun onMessageEvent(event: ServiceEvent.GestureEvent) {
 
-        gestureNum = event.gesture
-        Log.d("CameraEvent", "CameraEvent Gesture num : " + event.gesture)
+        gestureNum = event.gestureNumber
+        Log.d("MusicEvent", "MusicEvent Gesture num : " + event.gestureNumber)
 
         when (gestureNum) {
             0 -> {
 
-                if (smoothcount[gestureNum] > 15) {
+                if (smoothcount[gestureNum] > 1) {
                     //intent로 Musicservice에 가서 기능 가져오기
                     // 멈춤,재생
 //                    Intent(this, MusicService::class.java).apply {
@@ -856,7 +860,7 @@ class MainActivity : SimpleActivity(), SongListListener{
 //                        action = PLAYPAUSE
 //                        startService(this)
 //                    }
-                        sendIntent(PLAYPAUSE)
+                    sendIntent(PLAYPAUSE)
 
                     smoothcount[gestureNum] = -1
                     resetSmoothCount()
@@ -866,7 +870,7 @@ class MainActivity : SimpleActivity(), SongListListener{
 
             1 -> {
 
-                if (smoothcount[gestureNum] > 15){
+                if (smoothcount[gestureNum] > 1){
                     //이전
 //                    Intent(this, MusicService::class.java).apply {
 //
@@ -881,7 +885,7 @@ class MainActivity : SimpleActivity(), SongListListener{
             }
 
             2 -> {
-                if (smoothcount[gestureNum] > 15) {
+                if (smoothcount[gestureNum] > 1) {
 //                    Intent(this, MusicService::class.java).apply {
 //
 //                        action = NEXT
@@ -896,7 +900,7 @@ class MainActivity : SimpleActivity(), SongListListener{
             }
 
             3 -> {
-                if (smoothcount[gestureNum] > 15) {
+                if (smoothcount[gestureNum] > 1) {
 
 
 
@@ -914,7 +918,7 @@ class MainActivity : SimpleActivity(), SongListListener{
     fun resetSmoothCount() {
 
         for ( i in smoothcount) {
-           val i = -1
+            val i = -1
         }
     }
 }
