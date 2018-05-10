@@ -22,6 +22,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.TranslateAnimation;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.NumberPicker;
@@ -171,11 +172,29 @@ public class TabFragment3 extends Fragment {
 
         // 어댑터 설정하는 numberPicker 설정.
         adapter_gesturenNumberPicker.setMinValue(0);
-        adapter_gesturenNumberPicker.setMaxValue(4);
+        adapter_gesturenNumberPicker.setMaxValue(5);
         adapter_gesturenNumberPicker.setWrapSelectorWheel(false);
-        adapter_gesturenNumberPicker.setDisplayedValues(new String[]{"100%","80%","60%","40%","20%"});
+        adapter_gesturenNumberPicker.setDisplayedValues(new String[]{"100%","80%","60%","40%","20%","0%"});
 
         ///////
+
+        //첫화면 안내문(다시보지 않기)
+        /////////////////
+/*
+        LayoutInflater first_tuto = LayoutInflater.from(mactivity);
+        View notshowaginLayout = first_tuto.inflate(R.layout.fragment3_noshow, null);
+        final CheckBox dontShowAgain = (CheckBox)eulaLayout.findViewById(R.id.noshow);
+        new AlertDialog.Builder(mactivity)
+                .setMessage("환영합니다")
+                .setView(notshowaginLayout)
+                .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                }).show();
+
+*/
 
         //현재 기본적으로 numberpicker는 0~5까지 하지만 번호변환으로 1~6으로 보이게 하였음
         //6까지 올리면 더이상올라가지 않게 함
@@ -338,6 +357,9 @@ public class TabFragment3 extends Fragment {
                         break;
                     case 4:     // 20%
                         pass_adapter=0.2;
+                        break;
+                    case 5:
+                        pass_adapter=0;
                         break;
                 }
 
