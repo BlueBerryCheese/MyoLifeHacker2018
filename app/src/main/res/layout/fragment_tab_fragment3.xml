@@ -18,13 +18,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="5.5">
+
             <TextView
                 android:id="@+id/textView_tutorial"
                 android:layout_width="match_parent"
-                android:layout_height="80dp"
-
-                android:textSize="16dp"
-                android:text="환영합니다. 이곳은 myo의 인식률을 높이기 위한 Adapter를 하는 장소입니다.\n수행하고자 하는 항목의 타이틀을 클릭해서 설명을 보세요" />
+                android:layout_height="120dp"
+                android:layout_marginTop="4dp"
+                android:text="제스처 인식률을 높이기 위한 작업을 수행할 수 있습니다.\n자신의 제스처 데이터를 저장하여 더 나은 인식을 위한 새로운 기준을 만들어보세요. :) \n각 항목을 클릭하여 자세한 설명과 함께 기능을 수행할 수 있습니다."
+                android:textSize="16dp" />
             <LinearLayout
                 android:id="@+id/topLinearLayout"
                 android:layout_width="match_parent"
@@ -200,20 +201,21 @@
 
         <Button
             android:id="@+id/btn_saveScroll"
-            android:text="Data Save"
-            android:textColor="@color/BackgroundColor"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1.5"
-            android:background="@color/FontColor"/>
+            android:background="@color/FontColor"
+            android:text="Save Data"
+            android:textColor="@color/BackgroundColor" />
+
         <Button
             android:id="@+id/btn_syncScroll"
-            android:text="Data Sync"
-            android:textColor="@color/BackgroundColor"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1.5"
-            android:background="#9F9B9A"/>
+            android:background="#9F9B9A"
+            android:text="Sync Data"
+            android:textColor="@color/BackgroundColor" />
         <Button
             android:id="@+id/btn_removeScroll"
             android:text="Remove Data"
