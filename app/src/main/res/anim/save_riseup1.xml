@@ -1,4 +1,3 @@
-
 <?xml version="1.0" encoding="utf-8"?>
 <set xmlns:android="http://schemas.android.com/apk/res/android"
     android:interpolator="@android:anim/accelerate_interpolator"
@@ -9,4 +8,5 @@
         android:toYDelta="-55%p"
         android:duration="1000"
         />
+
 </set>

@@ -6,9 +6,6 @@ import android.content.Context;
 import android.media.AudioManager;
 import android.net.wifi.WifiManager;
 import android.provider.Settings;
-import android.widget.Toast;
-
-import blueberrycheese.myolifehacker.Toasty;
 
 /**
  * Created by User on 2017-12-01.
@@ -69,7 +66,6 @@ public class SystemFeature {
                     resetSmoothCount();
                     //smoothcount[poseNum]=-1;
                 }
-                Toasty.success(mContext,"Wifi!", Toast.LENGTH_SHORT,false).show();
                 smoothcount[poseNum]++;
             break;
             case 1:
@@ -79,7 +75,6 @@ public class SystemFeature {
                     //smoothcount[poseNum]=-1;
                     resetSmoothCount();
                 }
-                Toasty.success(mContext,"Volume down!", Toast.LENGTH_SHORT,false).show();
                 smoothcount[poseNum]++;
                 break;
             case 2:
@@ -89,7 +84,6 @@ public class SystemFeature {
                     //smoothcount[poseNum]=-1;
                     resetSmoothCount();
                 }
-                Toasty.success(mContext,"Volume up!", Toast.LENGTH_SHORT,false).show();
                 smoothcount[poseNum]++;
                 break;
             case 3:
@@ -115,7 +109,6 @@ public class SystemFeature {
                     }
                     resetSmoothCount();
                 }
-                Toasty.success(mContext,"sound on off!", Toast.LENGTH_SHORT,false).show();
                 smoothcount[poseNum]++;
                 break;
             case 4:
@@ -128,7 +121,6 @@ public class SystemFeature {
                     resetSmoothCount();
                     //smoothcount[poseNum]=-1;
                 }
-                Toasty.success(mContext,"Brightness up!", Toast.LENGTH_SHORT,false).show();
                 smoothcount[poseNum]++;
                 break;
             case 5:
@@ -140,7 +132,6 @@ public class SystemFeature {
                     Settings.System.putInt(cResolver, Settings.System.SCREEN_BRIGHTNESS, ((currentBrightness - BrightnessDiff)<20)?currentBrightness:currentBrightness - BrightnessDiff);
                     resetSmoothCount();
                 }
-                Toasty.success(mContext,"Brightness down!", Toast.LENGTH_SHORT,false).show();
                 smoothcount[poseNum]++;
                 break;
             default :
