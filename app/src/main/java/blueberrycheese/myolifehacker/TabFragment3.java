@@ -163,7 +163,15 @@ public class TabFragment3 extends Fragment {
         //saveMethod = new GestureSaveMethod(0,view.getContext());
         saveMethod = new GestureSaveMethod();
         mHandler = new Handler();
-        /////////  파일 삭제하는 numberPicker 설정.
+
+        // Below 4 lines are for preventing IndexOutOfBoundsException Error
+        remove_gesturenNumberPicker.setSaveFromParentEnabled(false);
+        remove_gesturenNumberPicker.setSaveEnabled(true);
+        adapter_gesturenNumberPicker.setSaveFromParentEnabled(false);
+        adapter_gesturenNumberPicker.setSaveEnabled(true);
+
+
+        // 파일 삭제하는 numberPicker 설정.
         remove_gesturenNumberPicker.setMinValue(0);
         remove_gesturenNumberPicker.setMaxValue(8);
         remove_gesturenNumberPicker.setDisplayedValues(new String[]{"Model","All","All_Gesture","Gesture 1","Gesture 2","Gesture 3","Gesture 4","Gesture 5","Gesture 6"});
