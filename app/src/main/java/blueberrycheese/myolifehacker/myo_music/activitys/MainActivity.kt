@@ -861,10 +861,10 @@ class MainActivity : SimpleActivity(), SongListListener{
 //                        startService(this)
 //                    }
                     sendIntent(PLAYPAUSE)
-
                     smoothcount[gestureNum] = -1
                     resetSmoothCount()
                 }
+
                 smoothcount[gestureNum]++
             }
 

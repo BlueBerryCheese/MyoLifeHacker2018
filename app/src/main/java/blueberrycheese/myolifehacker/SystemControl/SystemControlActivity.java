@@ -28,6 +28,8 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.airbnb.lottie.LottieAnimationView;
+
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -66,10 +68,9 @@ public class SystemControlActivity extends AppCompatActivity {
     private TextView gestureText;
     private MyoGattCallback mMyoCallback;
     private MyoCommandList commandList = new MyoCommandList();
-
     private String deviceName;
     String[] gestureString = {"WiFi On, Off", "Sound Mode Chnage ", "Volume Up", "Volume Down", "Brightness Up", "Brightness Down"};
-
+    LottieAnimationView animationView_system;
     private GestureSaveModel saveModel;
     private GestureSaveMethod saveMethod;
     private GestureDetectModel_System detectModel;
@@ -110,6 +111,10 @@ public class SystemControlActivity extends AppCompatActivity {
         mHandler = new Handler();
         mContext = this;
 
+        final LottieAnimationView animationView_system = (LottieAnimationView) findViewById(R.id.lottie_system);
+        animationView_system.setVisibility(View.INVISIBLE);
+      //  final LottieAnimationView animationView_system = (LottieAnimationView) findViewById(R.id.lottie);
+      //  animationView_system
         //startNopModel() will setCurrentModel to another model so Service's gesture detect model won't work! - So I commented out
 //        startNopModel();
 //20180430 For service
@@ -246,6 +251,9 @@ public class SystemControlActivity extends AppCompatActivity {
         gestureNum = event.gestureNumber;
         Log.d("Event","SystemEvent Gesture num : "+event.gestureNumber);
         systemFeature.function(gestureNum);
+        animationView_system.playAnimation();
+        animationView_system.loop(true);
+        animationView_system.setVisibility(View.VISIBLE);
         mHandler.post(new Runnable() {
             @Override
             public void run() {

@@ -1,5 +1,6 @@
 package blueberrycheese.myolifehacker;
 
+import android.animation.Animator;
 import android.app.Activity;
 import android.app.FragmentTransaction;
 import android.bluetooth.BluetoothAdapter;
@@ -18,7 +19,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.content.Intent;
+import android.view.animation.Animation;
 import android.widget.Button;
+import android.widget.Toast;
 
 
 import com.imangazaliev.circlemenu.CircleMenu;
@@ -50,7 +53,7 @@ import blueberrycheese.myolifehacker.myo_manage.GestureSaveModel;
 import blueberrycheese.myolifehacker.myo_manage.IGestureDetectModel;
 import blueberrycheese.myolifehacker.myo_manage.MyoCommandList;
 import blueberrycheese.myolifehacker.myo_manage.MyoGattCallback;
-
+import com.airbnb.lottie.LottieAnimationView;
 import static android.content.Context.BLUETOOTH_SERVICE;
 
 /**
@@ -77,6 +80,7 @@ public class TabFragment1 extends Fragment {
     private CircleMenuButton circleMenuButton_camera;
     private CircleMenuButton circleMenuButton_music ;
     private CircleMenuButton circleMenuButton_gallery;
+    private Button next_;
     private Handler mHandler;
     private BluetoothAdapter mBluetoothAdapter;
     private BluetoothGatt mBluetoothGatt;
@@ -86,11 +90,14 @@ public class TabFragment1 extends Fragment {
     private BluetoothDevice device;
     private OnFragmentInteractionListener mListener;
     String deviceName;
+    private Button btn_im,btn_im2,btn_im3;
 
     private GestureSaveModel saveModel;
     private GestureSaveMethod   saveMethod;
     private GestureDetectModel_Menu detectModel;
     private GestureDetectMethod_Menu detectMethod;
+
+
 
     int[] smoothcount = new int[6];
     private int gestureNum = -1;
@@ -140,24 +147,90 @@ public class TabFragment1 extends Fragment {
         //Main CirecleMenu 관련
         circleMenu = (CircleMenu) view.findViewById(R.id.circleMenu);
         circleMenuButton_music = (CircleMenuButton)view.findViewById(R.id.music);
-
         circleMenuButton_volume = (CircleMenuButton)view.findViewById(R.id.volume);
         circleMenuButton_camera = (CircleMenuButton)view.findViewById(R.id.camera_button);
         circleMenuButton_gallery = (CircleMenuButton)view.findViewById(R.id.gallery_button);
-
 //        circleMenu.setBackgroundColor(getResources().getColor(R.color.FontColor));
+        btn_im = (Button)view.findViewById(R.id.btnin);
+        btn_im2 = (Button)view.findViewById(R.id.btnin_2);
+        btn_im3 = (Button)view.findViewById(R.id.btnin_3);
 
+
+        final LottieAnimationView animationView = (LottieAnimationView) view.findViewById(R.id.lottie);
+        animationView.addAnimatorListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+               //animationView.playAnimation();
+                animationView.loop(true);
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+               // animationView.setVisibility(view.GONE);
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+        });
+
+        btn_im.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //animationView.setAnimation("timer.json");
+
+                animationView.cancelAnimation();
+            }    });
+
+
+        btn_im2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                animationView.setVisibility(View.VISIBLE);
+                animationView.playAnimation();
+            }    });
+        btn_im3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                animationView.setVisibility(View.GONE);
+            }    });
+        animationView.playAnimation();
+        //animationView.setAnimation(View.INVISIBLE);
+       // animationView.setVisibility(view.GONE);
+       // animationView.setAnimation("timer.json");
+       // animationView.loop(true);
+        //animationView.setAnimation("cup_game_loader_2.json");
+
+       // animationView.cancelAnimation();
+
+        animationView.setVisibility(View.VISIBLE);
+        animationView.playAnimation();
 
         circleMenu.setOnItemClickListener(new CircleMenu.OnItemClickListener() {
             @Override
             public void onItemClick(CircleMenuButton menuButton) {
                 int viewId = menuButton.getId(); // 클릭한 메뉴 id를 가져온 후 switch 문 으로
+               // animationView.setVisibility(view.INVISIBLE);
+                //animationView.setAnimation("cup_game_loader_2.json");
+                //animationView.playAnimation();
+               // animationView.loop(true);
+               // animationView.cancelAnimation();
+
                 switch(viewId){
                     case R.id.camera_button:
                         Log.d("cameracircle","cameraclicked");
                         Intent intent = new Intent(getActivity().getApplicationContext(), CameraActivity.class);
 //                        intent.putExtra("bluetoothDevice", device);
                         startActivity(intent);
+                        Toasty.success(getContext(), "Open camera", Toast.LENGTH_SHORT, false).show();
+                       // animationView.cancelAnimation();
+                       // animationView.setVisibility(View.GONE);
                         break;
                     case R.id.volume:
                         Log.d("volumecircle", "volume_clicked");
@@ -165,18 +238,27 @@ public class TabFragment1 extends Fragment {
                         Intent intent2 = new Intent(getActivity().getApplicationContext(), SystemControlActivity.class);
                         intent2.putExtra("bluetoothDevice", device);
                         startActivity(intent2);
+                        Toasty.success(getContext(), "Open interior function", Toast.LENGTH_SHORT, false).show();
+                        //animationView.cancelAnimation();
+                       // animationView.setVisibility(View.GONE);
                         break;
                     case R.id.music:
                         Log.d("music_circle","music_clicked");
                         Intent intent3 = new Intent(getActivity().getApplicationContext(), blueberrycheese.myolifehacker.myo_music.activities.activitys.MainActivity.class);
                         intent3.putExtra("bluetoothDevice", device);
                         startActivity(intent3);
+                        Toasty.success(getContext(), "Open music", Toast.LENGTH_SHORT, false).show();
+                       // animationView.cancelAnimation();
+                       // animationView.setVisibility(View.GONE);
                         break;
                     case R.id.gallery_button:
                         Log.d("gallerycircle","galleryclicked");
                         Intent intent4 = new Intent(getActivity().getApplicationContext(), GalleryActivity.class);
                         intent4.putExtra("bluetoothDevice", device);
                         startActivity(intent4);
+                        Toasty.success(getContext(), "Open gallery", Toast.LENGTH_SHORT, false).show();
+                        //animationView.cancelAnimation();
+                        //animationView.setVisibility(View.GONE);
                         break;
                     default:
                         break;
@@ -339,9 +421,9 @@ public class TabFragment1 extends Fragment {
                     circleMenu.onOpenAnimationStart();
                     circleMenu.toggle();
                     circleMenu.onOpenAnimationEnd();
-
                     smoothcount[gestureNum]=-1;
                     resetSmoothCount();
+                    Toasty.success(getContext(), "Open menu", Toast.LENGTH_SHORT, false).show();
                 }
                 smoothcount[gestureNum]++;
 
@@ -353,6 +435,7 @@ public class TabFragment1 extends Fragment {
                     circleMenu.onSelectAnimationEnd(circleMenuButton_volume);
                     smoothcount[gestureNum]=-1;
                     resetSmoothCount();
+                    Toasty.success(getContext(), "Open interior function", Toast.LENGTH_SHORT, false).show();
                 }
                 smoothcount[gestureNum]++;
                 break;
@@ -361,22 +444,20 @@ public class TabFragment1 extends Fragment {
                 if(smoothcount[gestureNum]>1) {
                     circleMenu.onSelectAnimationStart(circleMenuButton_camera);
                     circleMenu.onSelectAnimationEnd(circleMenuButton_camera);
-
                     smoothcount[gestureNum]=-1;
                     resetSmoothCount();
+                    Toasty.success(getContext(), "Open camera", Toast.LENGTH_SHORT, false).show();
                 }
                 smoothcount[gestureNum]++;
-
                 break;
 
             case 3 :
                 if(smoothcount[gestureNum]>1) {
                     circleMenu.onSelectAnimationStart(circleMenuButton_gallery);
                     circleMenu.onSelectAnimationEnd(circleMenuButton_gallery);
-
-
                     smoothcount[gestureNum]=-1;
                     resetSmoothCount();
+                    Toasty.success(getContext(), "Open gallery", Toast.LENGTH_SHORT, false).show();
                 }
                 smoothcount[gestureNum]++;
                 break;
@@ -384,10 +465,9 @@ public class TabFragment1 extends Fragment {
                 if(smoothcount[gestureNum]>1) {
                 circleMenu.onSelectAnimationStart(circleMenuButton_music);
                 circleMenu.onSelectAnimationEnd(circleMenuButton_music);
-
-
                 smoothcount[gestureNum]=-1;
                 resetSmoothCount();
+                Toasty.success(getContext(), "Open music", Toast.LENGTH_SHORT, false).show();
             }
                 smoothcount[gestureNum]++;
                 break;

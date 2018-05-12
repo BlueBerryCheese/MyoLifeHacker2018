@@ -7,6 +7,7 @@ import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import com.bosong.commentgallerylib.CommentGalleryContainer;
 import com.bosong.commentgallerylib.CommentImageGrid;
@@ -21,6 +22,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import blueberrycheese.myolifehacker.R;
+import blueberrycheese.myolifehacker.Toasty;
 import blueberrycheese.myolifehacker.events.ServiceEvent;
 
 public class GalleryActivity extends AppCompatActivity {
@@ -116,7 +118,7 @@ public class GalleryActivity extends AppCompatActivity {
                     it.putExtra(COMMENT_LIST, commentList);
                     it.setClass(GalleryActivity.this, CommentGalleryActivity.class);
                     startActivity(it);
-
+                    Toasty.success(getBaseContext(), "open picture succes", Toast.LENGTH_SHORT, false).show();
                 }
                 smoothcount[gestureNum]++;
 
@@ -129,7 +131,9 @@ public class GalleryActivity extends AppCompatActivity {
                     mCommentGrid.getChildAt(positionNum).setBackground(getResources().getDrawable(R.color.color_accent));
                     post_postionNum=positionNum;
                     resetSmoothCount();
+                    Toasty.success(getBaseContext(), "next picture", Toast.LENGTH_SHORT, false).show();
                 }
+
                 smoothcount[gestureNum]++;
 
                 break;
@@ -141,6 +145,7 @@ public class GalleryActivity extends AppCompatActivity {
                     mCommentGrid.getChildAt(positionNum).setBackground(getResources().getDrawable(R.color.color_accent));
                     post_postionNum=positionNum;
                     resetSmoothCount();
+                    Toasty.success(getBaseContext(), "previous picture", Toast.LENGTH_SHORT, false).show();
                 }
                 smoothcount[gestureNum]++;
                 break;

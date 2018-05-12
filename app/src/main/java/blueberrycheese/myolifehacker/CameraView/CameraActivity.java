@@ -25,6 +25,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.otaliastudios.cameraview.CameraListener;
 import com.otaliastudios.cameraview.CameraLogger;
 import com.otaliastudios.cameraview.CameraOptions;
@@ -44,6 +45,7 @@ import java.io.FileOutputStream;
 import java.util.HashMap;
 
 import blueberrycheese.myolifehacker.R;
+import blueberrycheese.myolifehacker.Toasty;
 import blueberrycheese.myolifehacker.events.ServiceEvent;
 import blueberrycheese.myolifehacker.myo_manage.GestureSaveMethod;
 import blueberrycheese.myolifehacker.myo_manage.GestureSaveModel;
@@ -70,7 +72,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
     // To show stuff in the callback
     private Size mCaptureNativeSize;
     private long mCaptureTime;
-
+    LottieAnimationView animationView_camera;
     boolean videoRecording = false;
 //    Button dttButton;
 
@@ -126,7 +128,8 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         findViewById(R.id.capturePhoto).setOnClickListener(this);
         findViewById(R.id.captureVideo).setOnClickListener(this);
         findViewById(R.id.toggleCamera).setOnClickListener(this);
-
+        final LottieAnimationView animationView_camera = (LottieAnimationView) findViewById(R.id.lottie_camera);
+        animationView_camera.setVisibility(View.INVISIBLE);
         controlPanel = findViewById(R.id.controls);
         ViewGroup group = (ViewGroup) controlPanel.getChildAt(0);
         Control[] controls = Control.values();
@@ -508,13 +511,16 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
     public void onGestureEvent(ServiceEvent.GestureEvent event) {
         gestureNum = event.gestureNumber;
         Log.d(TAG,"CameraEvent Gesture num : "+event.gestureNumber);
-
+        animationView_camera.playAnimation();
+        animationView_camera.loop(true);
+        animationView_camera.setVisibility(View.VISIBLE);
         switch(gestureNum){
             case 0 :
                 if(smoothcount[gestureNum]>1) {
                     capturePhoto();
                     smoothcount[gestureNum]=-1;
                     resetSmoothCount();
+                    Toasty.success(getBaseContext(), "capture Photo", Toast.LENGTH_SHORT, false).show();
                 }
                 smoothcount[gestureNum]++;
 
@@ -525,15 +531,19 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
                     switch(currentCameraFlash){
                         case OFF:
                             camera.setFlash(Flash.OFF);
+                            Toasty.success(getBaseContext(), "Flash mode off", Toast.LENGTH_SHORT, false).show();
                             break;
                         case ON:
                             camera.setFlash(Flash.AUTO);
+                            Toasty.success(getBaseContext(), "Flash mode Auto", Toast.LENGTH_SHORT, false).show();
                             break;
                         case AUTO:
                             camera.setFlash(Flash.TORCH);
+                            Toasty.success(getBaseContext(), "Flash mode Touch", Toast.LENGTH_SHORT, false).show();
                             break;
                         case TORCH:
                             camera.setFlash(Flash.OFF);
+                            Toasty.success(getBaseContext(), "Flash mode off", Toast.LENGTH_SHORT, false).show();
                             break;
                         default:
                             break;
@@ -550,9 +560,11 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
                     switch(currentGrid){
                         case OFF:
                             camera.setGrid(Grid.DRAW_3X3);
+                            Toasty.success(getBaseContext(), "Grid mode  Draw", Toast.LENGTH_SHORT, false).show();
                             break;
                         case DRAW_3X3:
                             camera.setGrid(Grid.OFF);
+                            Toasty.success(getBaseContext(), "Grid mode off", Toast.LENGTH_SHORT, false).show();
                             break;
                         default:
                             break;
@@ -571,9 +583,11 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
                     if(videoRecording == false){
                         videoRecording = true;
                         captureVideo();
+                        Toasty.success(getBaseContext(), "Video record start", Toast.LENGTH_SHORT, false).show();
                     } else if(videoRecording == true){
                         videoRecording = false;
                         camera.stopCapturingVideo();
+                        Toasty.success(getBaseContext(), "Video record stop", Toast.LENGTH_SHORT, false).show();
                     }
 
                     smoothcount[gestureNum]=-1;

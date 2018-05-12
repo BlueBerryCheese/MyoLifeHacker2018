@@ -8,6 +8,9 @@ import android.net.wifi.WifiManager;
 import android.provider.Settings;
 import android.widget.Toast;
 
+import com.airbnb.lottie.LottieAnimationView;
+
+import blueberrycheese.myolifehacker.R;
 import blueberrycheese.myolifehacker.Toasty;
 
 /**
@@ -51,7 +54,6 @@ public class SystemFeature {
             i = 0;
         }
     }
-
     public void function(int poseNum){
 // 테스트용으로 기능 수행 안되게 주석처리함
 

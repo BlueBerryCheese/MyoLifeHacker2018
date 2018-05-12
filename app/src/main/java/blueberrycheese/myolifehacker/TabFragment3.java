@@ -29,6 +29,7 @@ import android.widget.NumberPicker;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.airbnb.lottie.LottieAnimationView;
 
 import org.greenrobot.eventbus.EventBus;
 import org.w3c.dom.Text;
@@ -175,6 +176,10 @@ public class TabFragment3 extends Fragment {
         adapter_gesturenNumberPicker.setMaxValue(5);
         adapter_gesturenNumberPicker.setWrapSelectorWheel(false);
         adapter_gesturenNumberPicker.setDisplayedValues(new String[]{"100%","80%","60%","40%","20%","0%"});
+
+        //애니메이션
+        ////////////////
+
 
         ///////
 

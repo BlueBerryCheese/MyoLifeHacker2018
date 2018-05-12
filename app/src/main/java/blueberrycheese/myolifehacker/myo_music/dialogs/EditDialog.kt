@@ -14,7 +14,8 @@ import blueberrycheese.myolifehacker.R
 import kotlinx.android.synthetic.main.music_dialog_rename_song.view.*
 import java.io.File
 
-class EditDialog(val activity: BaseSimpleActivity, val song: Song, val callback: (Song) -> Unit) {
+class
+EditDialog(val activity: BaseSimpleActivity, val song: Song, val callback: (Song) -> Unit) {
     init {
         val view = activity.layoutInflater.inflate(R.layout.music_dialog_rename_song, null).apply {
             title.setText(song.title)
