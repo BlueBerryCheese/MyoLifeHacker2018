@@ -340,6 +340,9 @@ public class TabFragment1 extends Fragment {
                     circleMenu.toggle();
                     circleMenu.onOpenAnimationEnd();
 
+                    //Send Vibration Event
+                    EventBus.getDefault().post(new ServiceEvent.VibrateEvent());
+
                     smoothcount[gestureNum]=-1;
                     resetSmoothCount();
                 }
@@ -351,6 +354,8 @@ public class TabFragment1 extends Fragment {
                 if(smoothcount[gestureNum]>1) {
                     circleMenu.onSelectAnimationStart(circleMenuButton_volume);
                     circleMenu.onSelectAnimationEnd(circleMenuButton_volume);
+                    //Send Vibration Event
+                    EventBus.getDefault().post(new ServiceEvent.VibrateEvent());
                     smoothcount[gestureNum]=-1;
                     resetSmoothCount();
                 }
@@ -361,6 +366,8 @@ public class TabFragment1 extends Fragment {
                 if(smoothcount[gestureNum]>1) {
                     circleMenu.onSelectAnimationStart(circleMenuButton_camera);
                     circleMenu.onSelectAnimationEnd(circleMenuButton_camera);
+                    //Send Vibration Event
+                    EventBus.getDefault().post(new ServiceEvent.VibrateEvent());
 
                     smoothcount[gestureNum]=-1;
                     resetSmoothCount();
@@ -374,6 +381,8 @@ public class TabFragment1 extends Fragment {
                     circleMenu.onSelectAnimationStart(circleMenuButton_gallery);
                     circleMenu.onSelectAnimationEnd(circleMenuButton_gallery);
 
+                    //Send Vibration Event
+                    EventBus.getDefault().post(new ServiceEvent.VibrateEvent());
 
                     smoothcount[gestureNum]=-1;
                     resetSmoothCount();
@@ -385,6 +394,8 @@ public class TabFragment1 extends Fragment {
                 circleMenu.onSelectAnimationStart(circleMenuButton_music);
                 circleMenu.onSelectAnimationEnd(circleMenuButton_music);
 
+                //Send Vibration Event
+                EventBus.getDefault().post(new ServiceEvent.VibrateEvent());
 
                 smoothcount[gestureNum]=-1;
                 resetSmoothCount();

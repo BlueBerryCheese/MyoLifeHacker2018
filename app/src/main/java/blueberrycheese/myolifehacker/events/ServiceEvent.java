@@ -40,6 +40,12 @@ public class ServiceEvent {
         }
     }
 
+    public static class VibrateEvent{
+        public VibrateEvent(){
+
+        }
+    }
+
     public static class DetectModel{
         public IGestureDetectModel detectModel;
 
@@ -47,7 +53,6 @@ public class ServiceEvent {
             this.detectModel = model;
         }
     }
-
 
     public static class testEvent{
         public String text;

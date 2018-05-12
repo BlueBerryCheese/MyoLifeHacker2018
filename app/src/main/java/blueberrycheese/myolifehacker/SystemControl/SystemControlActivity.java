@@ -245,6 +245,8 @@ public class SystemControlActivity extends AppCompatActivity {
     public void onMessageEvent(ServiceEvent.GestureEvent event) {
         gestureNum = event.gestureNumber;
         Log.d("Event","SystemEvent Gesture num : "+event.gestureNumber);
+        //Send Vibration Event
+        EventBus.getDefault().post(new ServiceEvent.VibrateEvent());
         systemFeature.function(gestureNum);
         mHandler.post(new Runnable() {
             @Override
