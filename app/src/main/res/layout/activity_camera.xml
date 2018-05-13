@@ -46,6 +46,14 @@ android:layout_height="match_parent"
         <!--app:layout_anchor="@+id/camera"-->
         <!--app:layout_anchorGravity="right|top" />-->
 
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/lottie_camera"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        app:lottie_fileName="scaling_loader.json"
+        android:layout_marginTop="300dp"/>
+
+
     <LinearLayout
         android:id="@+id/linearlayout1"
         android:layout_width="match_parent"

@@ -28,12 +28,15 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.airbnb.lottie.LottieAnimationView;
+
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.HashMap;
 
+import blueberrycheese.myolifehacker.FontConfig;
 import blueberrycheese.myolifehacker.ImageViewer.CommentGalleryActivity;
 import blueberrycheese.myolifehacker.ImageViewer.GalleryActivity;
 import blueberrycheese.myolifehacker.R;
@@ -66,10 +69,9 @@ public class SystemControlActivity extends AppCompatActivity {
     private TextView gestureText;
     private MyoGattCallback mMyoCallback;
     private MyoCommandList commandList = new MyoCommandList();
-
     private String deviceName;
     String[] gestureString = {"WiFi On, Off", "Sound Mode Chnage ", "Volume Up", "Volume Down", "Brightness Up", "Brightness Down"};
-
+    private LottieAnimationView animationView_system;
     private GestureSaveModel saveModel;
     private GestureSaveMethod saveMethod;
     private GestureDetectModel_System detectModel;
@@ -110,6 +112,12 @@ public class SystemControlActivity extends AppCompatActivity {
         mHandler = new Handler();
         mContext = this;
 
+
+        FontConfig.setGlobalFont(this,getWindow().getDecorView());
+        animationView_system = (LottieAnimationView) findViewById(R.id.lottie_system);
+        animationView_system.setVisibility(View.INVISIBLE);
+      //  final LottieAnimationView animationView_system = (LottieAnimationView) findViewById(R.id.lottie);
+      //  animationView_system
         //startNopModel() will setCurrentModel to another model so Service's gesture detect model won't work! - So I commented out
 //        startNopModel();
 //20180430 For service
@@ -183,7 +191,6 @@ public class SystemControlActivity extends AppCompatActivity {
         }
     }
 
-
 //    public void onClickDetect() {
 //        if (saveMethod.getSaveState() == GestureSaveMethod.SaveState.Have_Saved) {
 //            gestureText.setText("Let's Go !!");
@@ -248,6 +255,9 @@ public class SystemControlActivity extends AppCompatActivity {
         //Send Vibration Event
         EventBus.getDefault().post(new ServiceEvent.VibrateEvent());
         systemFeature.function(gestureNum);
+        animationView_system.playAnimation();
+        animationView_system.loop(true);
+        animationView_system.setVisibility(View.VISIBLE);
         mHandler.post(new Runnable() {
             @Override
             public void run() {

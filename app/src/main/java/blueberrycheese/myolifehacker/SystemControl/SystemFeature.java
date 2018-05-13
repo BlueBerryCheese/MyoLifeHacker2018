@@ -7,6 +7,11 @@ import android.media.AudioManager;
 import android.net.wifi.WifiManager;
 import android.provider.Settings;
 
+import com.airbnb.lottie.LottieAnimationView;
+
+import blueberrycheese.myolifehacker.R;
+import blueberrycheese.myolifehacker.Toasty;
+
 /**
  * Created by User on 2017-12-01.
  */
@@ -48,7 +53,6 @@ public class SystemFeature {
             i = 0;
         }
     }
-
     public void function(int poseNum){
 // 테스트용으로 기능 수행 안되게 주석처리함
 

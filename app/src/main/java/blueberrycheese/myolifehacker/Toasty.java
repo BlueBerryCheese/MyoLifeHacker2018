@@ -37,7 +37,7 @@ public class Toasty {
 
     private static final Typeface LOADED_TOAST_TYPEFACE = Typeface.create("sans-serif-condensed", Typeface.NORMAL);
     private static Typeface currentTypeface = LOADED_TOAST_TYPEFACE;    //폰트
-    private static int textSize = 18; // in SP      //글씨 크기
+    private static int textSize = 22; // in SP      //글씨 크기
 
     private static boolean tintIcon = true;
 

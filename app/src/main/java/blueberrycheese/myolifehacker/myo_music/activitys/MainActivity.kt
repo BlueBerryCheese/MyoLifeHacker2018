@@ -863,10 +863,10 @@ class MainActivity : SimpleActivity(), SongListListener{
                     //Send Vibration Event
                     EventBus.getDefault().post(ServiceEvent.VibrateEvent())
                     sendIntent(PLAYPAUSE)
-
                     smoothcount[gestureNum] = -1
                     resetSmoothCount()
                 }
+
                 smoothcount[gestureNum]++
             }
 
