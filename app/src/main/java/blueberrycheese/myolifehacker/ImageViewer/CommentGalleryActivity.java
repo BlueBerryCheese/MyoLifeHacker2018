@@ -33,7 +33,7 @@ public class CommentGalleryActivity extends AppCompatActivity {
                 getIntent().getExtras().getInt(GalleryActivity.CLICK_INDEX));
         numCounter = getIntent().getExtras().getInt(GalleryActivity.CLICK_INDEX);
         max_size = getIntent().getExtras().getInt(GalleryActivity.LIST_SIZE);
-
+        Log.d("commentGalleryActivity",numCounter+""+max_size);
     }
     @Override
     protected void onResume() {
@@ -71,20 +71,7 @@ public class CommentGalleryActivity extends AppCompatActivity {
 
             case 1 :
 
-                if(numCounter>=max_size){
-                    numCounter=0;
-                }
-                if(smoothcount[gestureNum]>1) {
-                    numCounter++;
-                    mGallery.setData((CommentGalleryContainer) getIntent().getSerializableExtra(GalleryActivity.COMMENT_LIST),numCounter);
-                    resetSmoothCount();
-                }
                 smoothcount[gestureNum]++;
-
-                break;
-
-            case 2 :
-
                 if(numCounter<0){
                     numCounter=max_size-1;
                 }
@@ -93,7 +80,22 @@ public class CommentGalleryActivity extends AppCompatActivity {
                     mGallery.setData((CommentGalleryContainer) getIntent().getSerializableExtra(GalleryActivity.COMMENT_LIST),numCounter);
                     resetSmoothCount();
                 }
+
+
+                break;
+
+            case 2 :
+
                 smoothcount[gestureNum]++;
+                if(numCounter>=max_size){
+                    numCounter=0;
+                }
+                if(smoothcount[gestureNum]>1) {
+                    numCounter++;
+                    mGallery.setData((CommentGalleryContainer) getIntent().getSerializableExtra(GalleryActivity.COMMENT_LIST),numCounter);
+                    resetSmoothCount();
+                }
+
                 break;
 
             case 3 :
