@@ -54,6 +54,7 @@ import blueberrycheese.myolifehacker.myo_manage.MyoGattCallback;
 import blueberrycheese.myolifehacker.myo_manage.GestureDetectModelManager;
 import blueberrycheese.myolifehacker.myo_manage.IGestureDetectModel;
 import blueberrycheese.myolifehacker.myo_manage.MyoCommandList;
+import blueberrycheese.myolifehacker.myo_manage.MyoService;
 import blueberrycheese.myolifehacker.myo_manage.NopModel;
 
 public class CameraActivity extends AppCompatActivity implements View.OnClickListener, ControlView.Callback {
@@ -80,6 +81,12 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
     //Detect용 가져옴
     /** Device Scanning Time (ms) */
     private static final long SCAN_PERIOD = 5000;
+
+    private static final int VIBRATION_A = 1;
+    private static final int VIBRATION_B = 2;
+    private static final int VIBRATION_C = 3;
+
+    private static final int ADDITIONAL_DELAY = 5000;
 
     private static final String TAG = "CameraActivity";
 //    private BluetoothDevice bluetoothDevice;
@@ -519,78 +526,99 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         animationView_camera.setVisibility(View.VISIBLE);
         switch(gestureNum){
             case 0 :
-                if(smoothcount[gestureNum]>1) {
+                smoothcount[gestureNum]++;
+                if(smoothcount[gestureNum]>2) {
                     //Send Vibration Event
-                    EventBus.getDefault().post(new ServiceEvent.VibrateEvent());
+                    EventBus.getDefault().post(new ServiceEvent.VibrateEvent(VIBRATION_A));
+                    //Restart lock Timer so user can use gesture continuously
+                    EventBus.getDefault().post(new ServiceEvent.restartLockTimerEvent(ADDITIONAL_DELAY));
 
                     capturePhoto();
-                    smoothcount[gestureNum]=-1;
+//                    smoothcount[gestureNum]=-1;
                     resetSmoothCount();
                     Toasty.success(getBaseContext(), "capture Photo", Toast.LENGTH_SHORT, false).show();
                 }
-                smoothcount[gestureNum]++;
+
 
                 break;
 
             case 1 :
-                if(smoothcount[gestureNum]>1) {
+                smoothcount[gestureNum]++;
+                if(smoothcount[gestureNum]>2) {
                     //Send Vibration Event
-                    EventBus.getDefault().post(new ServiceEvent.VibrateEvent());
+                    EventBus.getDefault().post(new ServiceEvent.VibrateEvent(VIBRATION_A));
+                    //Restart lock Timer so user can use gesture continuously
+                    EventBus.getDefault().post(new ServiceEvent.restartLockTimerEvent(ADDITIONAL_DELAY));
+
                     switch(currentCameraFlash){
                         case OFF:
-                            camera.setFlash(Flash.OFF);
+                            camera.setFlash(Flash.ON);
+                            currentCameraFlash = Flash.ON;
                             Toasty.success(getBaseContext(), "Flash mode off", Toast.LENGTH_SHORT, false).show();
                             break;
                         case ON:
                             camera.setFlash(Flash.AUTO);
+                            currentCameraFlash = Flash.AUTO;
                             Toasty.success(getBaseContext(), "Flash mode Auto", Toast.LENGTH_SHORT, false).show();
                             break;
                         case AUTO:
                             camera.setFlash(Flash.TORCH);
+                            currentCameraFlash = Flash.TORCH;
                             Toasty.success(getBaseContext(), "Flash mode Touch", Toast.LENGTH_SHORT, false).show();
                             break;
                         case TORCH:
                             camera.setFlash(Flash.OFF);
+                            currentCameraFlash = Flash.OFF;
                             Toasty.success(getBaseContext(), "Flash mode off", Toast.LENGTH_SHORT, false).show();
                             break;
                         default:
                             break;
                     }
 
-                    smoothcount[gestureNum]=-1;
+//                    smoothcount[gestureNum]=-1;
                     resetSmoothCount();
                 }
-                smoothcount[gestureNum]++;
+
                 break;
 
             case 2 :
-                if(smoothcount[gestureNum]>1) {
+                smoothcount[gestureNum]++;
+                if(smoothcount[gestureNum]>2) {
                     //Send Vibration Event
-                    EventBus.getDefault().post(new ServiceEvent.VibrateEvent());
+                    EventBus.getDefault().post(new ServiceEvent.VibrateEvent(VIBRATION_A));
+                    //Restart lock Timer so user can use gesture continuously
+                    EventBus.getDefault().post(new ServiceEvent.restartLockTimerEvent(ADDITIONAL_DELAY));
+
                     switch(currentGrid){
                         case OFF:
                             camera.setGrid(Grid.DRAW_3X3);
+                            currentGrid = Grid.DRAW_3X3;
                             Toasty.success(getBaseContext(), "Grid mode  Draw", Toast.LENGTH_SHORT, false).show();
                             break;
                         case DRAW_3X3:
                             camera.setGrid(Grid.OFF);
+                            currentGrid = Grid.OFF;
                             Toasty.success(getBaseContext(), "Grid mode off", Toast.LENGTH_SHORT, false).show();
                             break;
                         default:
                             break;
                     }
 
-                    smoothcount[gestureNum]=-1;
+//                    smoothcount[gestureNum]=-1;
                     resetSmoothCount();
                 }
-                smoothcount[gestureNum]++;
+
 
                 break;
 
             case 3 :
+                smoothcount[gestureNum]++;
                 if(smoothcount[gestureNum]>1) {
                     //Send Vibration Event
-                    EventBus.getDefault().post(new ServiceEvent.VibrateEvent());
+                    EventBus.getDefault().post(new ServiceEvent.VibrateEvent(VIBRATION_A));
+                    //Restart lock Timer so user can use gesture continuously
+                    EventBus.getDefault().post(new ServiceEvent.restartLockTimerEvent(ADDITIONAL_DELAY));
+
                     camera.setSessionType(SessionType.VIDEO);
                     if(videoRecording == false){
                         videoRecording = true;
@@ -602,10 +630,10 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
                         Toasty.success(getBaseContext(), "Video record stop", Toast.LENGTH_SHORT, false).show();
                     }
 
-                    smoothcount[gestureNum]=-1;
+//                    smoothcount[gestureNum]=-1;
                     resetSmoothCount();
                 }
-                smoothcount[gestureNum]++;
+
                 break;
 
             default :

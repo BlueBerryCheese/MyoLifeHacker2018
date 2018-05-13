@@ -11,6 +11,10 @@ public class MyoCommandList {
     private byte[] send_bytes_data;
     private static final String TAG = "MyoCommandList";
 
+    private static final int VIBRATION_A = 1;
+    private static final int VIBRATION_B = 2;
+    private static final int VIBRATION_C = 3;
+
     public byte[] sendUnsetData() {
         byte command_data = (byte) 0x01;
         byte payload_data = (byte) 3;
@@ -23,32 +27,57 @@ public class MyoCommandList {
         return send_bytes_data;
     }
 
-    public byte[] sendVibration1() {
+
+    public byte[] sendVibration(int vNum) {
         byte command_vibrate = (byte) 0x03;
         byte payload_vibrate = (byte) 1;
-        byte vibrate_type = (byte) 0x01;
+        byte vibrate_type = 0x01;
+
+        switch(vNum){
+            case VIBRATION_A:
+                vibrate_type = (byte) 0x01;
+                break;
+            case VIBRATION_B:
+                vibrate_type = (byte) 0x02;
+                break;
+            case VIBRATION_C:
+                vibrate_type = (byte) 0x03;
+                break;
+            default :
+                break;
+        }
+
         send_bytes_data = new byte[]{command_vibrate, payload_vibrate, vibrate_type};
 
         return send_bytes_data;
     }
 
-    public byte[] sendVibration2() {
-        byte command_vibrate = (byte) 0x03;
-        byte payload_vibrate = (byte) 1;
-        byte vibrate_type = (byte) 0x02;
-        send_bytes_data = new byte[]{command_vibrate, payload_vibrate, vibrate_type};
-
-        return send_bytes_data;
-    }
-
-    public byte[] sendVibration3() {
-        byte command_vibrate = (byte) 0x03;
-        byte payload_vibrate = (byte) 1;
-        byte vibrate_type = (byte) 0x03;
-        send_bytes_data = new byte[]{command_vibrate, payload_vibrate, vibrate_type};
-
-        return send_bytes_data;
-    }
+//    public byte[] sendVibration1() {
+//        byte command_vibrate = (byte) 0x03;
+//        byte payload_vibrate = (byte) 1;
+//        byte vibrate_type = (byte) 0x01;
+//        send_bytes_data = new byte[]{command_vibrate, payload_vibrate, vibrate_type};
+//
+//        return send_bytes_data;
+//    }
+//
+//    public byte[] sendVibration2() {
+//        byte command_vibrate = (byte) 0x03;
+//        byte payload_vibrate = (byte) 1;
+//        byte vibrate_type = (byte) 0x02;
+//        send_bytes_data = new byte[]{command_vibrate, payload_vibrate, vibrate_type};
+//
+//        return send_bytes_data;
+//    }
+//
+//    public byte[] sendVibration3() {
+//        byte command_vibrate = (byte) 0x03;
+//        byte payload_vibrate = (byte) 1;
+//        byte vibrate_type = (byte) 0x03;
+//        send_bytes_data = new byte[]{command_vibrate, payload_vibrate, vibrate_type};
+//
+//        return send_bytes_data;
+//    }
 
     public byte[] sendEmgOnly() {
         byte command_data = (byte) 0x01;

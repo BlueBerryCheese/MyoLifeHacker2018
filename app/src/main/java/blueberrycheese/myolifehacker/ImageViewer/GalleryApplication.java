@@ -12,17 +12,18 @@ import com.facebook.imagepipeline.listener.RequestLoggingListener;
 import java.util.HashSet;
 import java.util.Set;
 
+////Moved to MyoApp.java. Can remove this file. -- 2018.05.13
 
 public class GalleryApplication extends Application {
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        FLog.setMinimumLoggingLevel(FLog.VERBOSE);
-        Set<RequestListener> listeners = new HashSet<>();
-        listeners.add(new RequestLoggingListener());
-        ImagePipelineConfig config = ImagePipelineConfig.newBuilder(this)
-                .setRequestListeners(listeners)
-                .build();
-        Fresco.initialize(this, config);
-    }
+//    @Override
+//    public void onCreate() {
+//        super.onCreate();
+//        FLog.setMinimumLoggingLevel(FLog.VERBOSE);
+//        Set<RequestListener> listeners = new HashSet<>();
+//        listeners.add(new RequestLoggingListener());
+//        ImagePipelineConfig config = ImagePipelineConfig.newBuilder(this)
+//                .setRequestListeners(listeners)
+//                .build();
+//        Fresco.initialize(this, config);
+//    }
 }
