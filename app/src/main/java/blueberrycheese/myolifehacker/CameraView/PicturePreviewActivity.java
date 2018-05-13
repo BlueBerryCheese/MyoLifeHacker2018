@@ -133,8 +133,8 @@ public class PicturePreviewActivity extends AppCompatActivity {
     }
 
     public void resetSmoothCount(){
-        for(int i : smoothcount){
-            i = -1;
+        for(int i=0;i<smoothcount.length;i++){
+            smoothcount[i]=0;
         }
     }
 

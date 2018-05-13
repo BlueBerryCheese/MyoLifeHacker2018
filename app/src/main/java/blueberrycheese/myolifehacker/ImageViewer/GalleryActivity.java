@@ -127,6 +127,7 @@ public class GalleryActivity extends AppCompatActivity {
                 smoothcount[gestureNum]++;
                 if(smoothcount[gestureNum]>1) {
                     //Send Vibration Event
+                    resetSmoothCount();
                     EventBus.getDefault().post(new ServiceEvent.VibrateEvent());
                     Intent it = new Intent();
                     it.putExtra(CLICK_INDEX, positionNum);
@@ -198,8 +199,8 @@ public class GalleryActivity extends AppCompatActivity {
     }
 
     public void resetSmoothCount(){
-        for(int i : smoothcount){
-            i = -1;
+        for(int i=0;i<smoothcount.length;i++){
+            smoothcount[i]=0;
         }
     }
 

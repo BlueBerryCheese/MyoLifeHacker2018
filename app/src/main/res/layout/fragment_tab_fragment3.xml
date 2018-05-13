@@ -24,6 +24,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
+                android:textAlignment="center"
                 android:text="제스처 잘 인식될 수 있도록\n학습하는 메뉴입니다."
                 android:textSize="24dp" />
             <!--Additional text for tutorial-->
@@ -85,7 +86,7 @@
                         android:layout_height="wrap_content"
                         android:background="@drawable/imgbtn_rect_state2"
                         android:layout_centerHorizontal="true"
-                        android:text="Remove"
+                        android:text="Reset"
                         android:textAllCaps="false"
                        />
 
@@ -155,7 +156,7 @@
                     android:layout_gravity="center"
                     android:background="@drawable/imgbtn_rect_state2"
                     android:layout_marginTop="25dp"
-                    android:text="Sync"
+                    android:text="Adapt"
                     android:textAllCaps="false" />
             </LinearLayout>
             <LinearLayout
@@ -275,7 +276,7 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/imgbtn_rect_state2"
                 android:layout_marginLeft="20dp"
-                android:text="Save"
+                android:text="Learn"
                 android:textAllCaps="false"
                 android:layout_below="@+id/SelectLinearLayout"
                 android:layout_toRightOf="@+id/gestureTextView"
@@ -288,7 +289,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1.5"
             android:background="@color/FontColor"
-            android:text="Save Data"
+            android:text="Learn Gesture"
             android:textColor="@color/BackgroundColor" />
 
         <Button
@@ -297,11 +298,11 @@
             android:layout_height="wrap_content"
             android:layout_weight="1.5"
             android:background="#9F9B9A"
-            android:text="Sync Data"
+            android:text="Adapt Gesture"
             android:textColor="@color/BackgroundColor" />
         <Button
             android:id="@+id/btn_removeScroll"
-            android:text="Remove Data"
+            android:text="Reset Gesture"
             android:textColor="@color/BackgroundColor"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
