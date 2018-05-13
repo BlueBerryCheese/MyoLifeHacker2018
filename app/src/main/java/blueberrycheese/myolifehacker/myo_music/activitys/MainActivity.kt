@@ -120,6 +120,11 @@ class MainActivity : SimpleActivity(), SongListListener{
     internal var smoothcount = IntArray(6)
     lateinit var bus: Bus
 
+    private val VIBRATION_A = 1
+    private val VIBRATION_B = 2
+    private val VIBRATION_C = 3
+    private val ADDITIONAL_DELAY = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.music_activity_main)
@@ -860,9 +865,13 @@ class MainActivity : SimpleActivity(), SongListListener{
 //                        action = PLAYPAUSE
 //                        startService(this)
 //                    }
-                    //Send Vibration Event
-                    EventBus.getDefault().post(ServiceEvent.VibrateEvent())
                     sendIntent(PLAYPAUSE)
+
+                    //Send Vibration Event
+                    EventBus.getDefault().post(ServiceEvent.VibrateEvent(VIBRATION_A))
+                    //Restart lock Timer so user can use gesture continuously
+                    EventBus.getDefault().post(ServiceEvent.restartLockTimerEvent(ADDITIONAL_DELAY))
+
                     smoothcount[gestureNum] = -1
                     resetSmoothCount()
                 }
@@ -879,9 +888,13 @@ class MainActivity : SimpleActivity(), SongListListener{
 //                        action = PREVIOUS
 //                        startService(this)
 //                    }
-                    //Send Vibration Event
-                    EventBus.getDefault().post(ServiceEvent.VibrateEvent())
                     sendIntent(PREVIOUS)
+
+                    //Send Vibration Event
+                    EventBus.getDefault().post(ServiceEvent.VibrateEvent(VIBRATION_A))
+                    //Restart lock Timer so user can use gesture continuously
+                    EventBus.getDefault().post(ServiceEvent.restartLockTimerEvent(ADDITIONAL_DELAY))
+
                     smoothcount[gestureNum] = -1
                     resetSmoothCount()
                 }
@@ -895,10 +908,15 @@ class MainActivity : SimpleActivity(), SongListListener{
 //                        action = NEXT
 //                        startService(this)
 //                    }
-                    //Send Vibration Event
-                    EventBus.getDefault().post(ServiceEvent.VibrateEvent())
+
                     //앞으로
                     sendIntent(NEXT)
+
+                    //Send Vibration Event
+                    EventBus.getDefault().post(ServiceEvent.VibrateEvent(VIBRATION_A))
+                    //Restart lock Timer so user can use gesture continuously
+                    EventBus.getDefault().post(ServiceEvent.restartLockTimerEvent(ADDITIONAL_DELAY))
+
                     smoothcount[gestureNum] = -1
                     resetSmoothCount()
                 }

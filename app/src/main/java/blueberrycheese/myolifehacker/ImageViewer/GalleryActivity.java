@@ -30,6 +30,12 @@ public class GalleryActivity extends AppCompatActivity {
     public static final String COMMENT_LIST = "COMMENT_LIST";
     public static final String LIST_SIZE = "LIST_SIZE";
     private static final String SAMPLE_COMMENT = "";
+
+    private static final int VIBRATION_A = 1;
+    private static final int VIBRATION_B = 2;
+    private static final int VIBRATION_C = 3;
+    private static final int ADDITIONAL_DELAY = 0;
+
     private CommentImageGrid mCommentGrid;
     private TextView img_pager;
     CommentGalleryContainer commentList;
@@ -127,7 +133,10 @@ public class GalleryActivity extends AppCompatActivity {
                 smoothcount[gestureNum]++;
                 if(smoothcount[gestureNum]>1) {
                     //Send Vibration Event
-                    EventBus.getDefault().post(new ServiceEvent.VibrateEvent());
+                    EventBus.getDefault().post(new ServiceEvent.VibrateEvent(VIBRATION_A));
+                    //Restart lock Timer so user can use gesture continuously
+                    EventBus.getDefault().post(new ServiceEvent.restartLockTimerEvent(ADDITIONAL_DELAY));
+
                     Intent it = new Intent();
                     it.putExtra(CLICK_INDEX, positionNum);
                     it.putExtra(COMMENT_LIST, commentList);
@@ -145,7 +154,10 @@ public class GalleryActivity extends AppCompatActivity {
                 if(smoothcount[gestureNum]>1) {
 
                     //Send Vibration Event
-                    EventBus.getDefault().post(new ServiceEvent.VibrateEvent());
+                    EventBus.getDefault().post(new ServiceEvent.VibrateEvent(VIBRATION_A));
+                    //Restart lock Timer so user can use gesture continuously
+                    EventBus.getDefault().post(new ServiceEvent.restartLockTimerEvent(ADDITIONAL_DELAY));
+
                     positionNum --;
                     if (positionNum>=urls.size()){
                         positionNum=0;
@@ -168,7 +180,10 @@ public class GalleryActivity extends AppCompatActivity {
                 smoothcount[gestureNum]++;
                 if(smoothcount[gestureNum]>1) {
                     //Send Vibration Event
-                    EventBus.getDefault().post(new ServiceEvent.VibrateEvent());
+                    EventBus.getDefault().post(new ServiceEvent.VibrateEvent(VIBRATION_A));
+                    //Restart lock Timer so user can use gesture continuously
+                    EventBus.getDefault().post(new ServiceEvent.restartLockTimerEvent(ADDITIONAL_DELAY));
+
                     positionNum ++;
                     if (positionNum>=urls.size()){
                         positionNum=0;

@@ -29,6 +29,11 @@ import blueberrycheese.myolifehacker.events.ServiceEvent;
 
 public class PicturePreviewActivity extends AppCompatActivity {
     private static final String TAG = "PicturePreviewActivity";
+    private static final int ADDITIONAL_DELAY = 0;
+    private static final int VIBRATION_A = 1;
+    private static final int VIBRATION_B = 2;
+    private static final int VIBRATION_C = 3;
+
     private int gestureNum = -1;
     int[] smoothcount = new int[6];
 
@@ -83,6 +88,9 @@ public class PicturePreviewActivity extends AppCompatActivity {
             }
         });
 
+        //Restart lock Timer so user can use gesture continuously
+        EventBus.getDefault().post(new ServiceEvent.restartLockTimerEvent(ADDITIONAL_DELAY));
+
     }
 
     private static float getApproximateFileMegabytes(Bitmap bitmap) {
@@ -119,6 +127,10 @@ public class PicturePreviewActivity extends AppCompatActivity {
         switch(gestureNum){
             case 0 :
                 if(smoothcount[gestureNum]>1) {
+                    //Send Vibration Event
+                    EventBus.getDefault().post(new ServiceEvent.VibrateEvent(VIBRATION_A));
+                    //Restart lock Timer so user can use gesture continuously
+                    EventBus.getDefault().post(new ServiceEvent.restartLockTimerEvent(ADDITIONAL_DELAY));
                     finish();
                     smoothcount[gestureNum]=-1;
                     resetSmoothCount();

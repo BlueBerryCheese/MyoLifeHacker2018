@@ -61,6 +61,11 @@ public class SystemControlActivity extends AppCompatActivity {
     private static final int REQUEST_ENABLE_BT = 1;
 
     private static final String TAG = "BLE_Myo";
+    private static final int VIBRATION_A = 1;
+    private static final int VIBRATION_B = 2;
+    private static final int VIBRATION_C = 3;
+    private static final int ADDITIONAL_DELAY = 0;
+
     private BluetoothDevice bluetoothDevice;
     private Handler mHandler;
     private BluetoothAdapter mBluetoothAdapter;
@@ -253,7 +258,10 @@ public class SystemControlActivity extends AppCompatActivity {
         gestureNum = event.gestureNumber;
         Log.d("Event","SystemEvent Gesture num : "+event.gestureNumber);
         //Send Vibration Event
-        EventBus.getDefault().post(new ServiceEvent.VibrateEvent());
+        EventBus.getDefault().post(new ServiceEvent.VibrateEvent(VIBRATION_A));
+        //Restart lock Timer so user can use gesture continuously
+        EventBus.getDefault().post(new ServiceEvent.restartLockTimerEvent(ADDITIONAL_DELAY));
+
         systemFeature.function(gestureNum);
         animationView_system.playAnimation();
         animationView_system.loop(true);
