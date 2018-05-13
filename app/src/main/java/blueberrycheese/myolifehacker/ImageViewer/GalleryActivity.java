@@ -133,6 +133,8 @@ public class GalleryActivity extends AppCompatActivity {
                 smoothcount[gestureNum]++;
                 if(smoothcount[gestureNum]>1) {
                     //Send Vibration Event
+
+                    resetSmoothCount();
                     EventBus.getDefault().post(new ServiceEvent.VibrateEvent(VIBRATION_A));
                     //Restart lock Timer so user can use gesture continuously
                     EventBus.getDefault().post(new ServiceEvent.restartLockTimerEvent(ADDITIONAL_DELAY));
@@ -213,8 +215,8 @@ public class GalleryActivity extends AppCompatActivity {
     }
 
     public void resetSmoothCount(){
-        for(int i : smoothcount){
-            i = -1;
+        for(int i=0;i<smoothcount.length;i++){
+            smoothcount[i]=0;
         }
     }
 

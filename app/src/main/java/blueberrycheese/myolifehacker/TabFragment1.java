@@ -446,12 +446,13 @@ public class TabFragment1 extends Fragment {
                     circleMenu.onSelectAnimationEnd(circleMenuButton_volume);
 
                     //Send Vibration Event
+
                     EventBus.getDefault().post(new ServiceEvent.VibrateEvent(VIBRATION_A));
                     //Restart lock Timer so user can use gesture continuously
                     EventBus.getDefault().post(new ServiceEvent.restartLockTimerEvent(ADDITIONAL_DELAY));
 
-                    smoothcount[gestureNum]=-1;
                     resetSmoothCount();
+                    smoothcount[gestureNum]=-1;
                     Toasty.success(getContext(), "Open interior function", Toast.LENGTH_SHORT, false).show();
                 }
                 smoothcount[gestureNum]++;
@@ -463,12 +464,14 @@ public class TabFragment1 extends Fragment {
                     circleMenu.onSelectAnimationEnd(circleMenuButton_camera);
 
                     //Send Vibration Event
+
                     EventBus.getDefault().post(new ServiceEvent.VibrateEvent(VIBRATION_A));
                     //Restart lock Timer so user can use gesture continuously
                     EventBus.getDefault().post(new ServiceEvent.restartLockTimerEvent(ADDITIONAL_DELAY));
 
-                    smoothcount[gestureNum]=-1;
                     resetSmoothCount();
+                    smoothcount[gestureNum]=-1;
+
                     Toasty.success(getContext(), "Open camera", Toast.LENGTH_SHORT, false).show();
                 }
                 smoothcount[gestureNum]++;
@@ -480,12 +483,14 @@ public class TabFragment1 extends Fragment {
                     circleMenu.onSelectAnimationEnd(circleMenuButton_gallery);
 
                     //Send Vibration Event
+
                     EventBus.getDefault().post(new ServiceEvent.VibrateEvent(VIBRATION_A));
                     //Restart lock Timer so user can use gesture continuously
                     EventBus.getDefault().post(new ServiceEvent.restartLockTimerEvent(ADDITIONAL_DELAY));
 
-                    smoothcount[gestureNum]=-1;
                     resetSmoothCount();
+                    smoothcount[gestureNum]=-1;
+
                     Toasty.success(getContext(), "Open gallery", Toast.LENGTH_SHORT, false).show();
                 }
                 smoothcount[gestureNum]++;
@@ -496,12 +501,14 @@ public class TabFragment1 extends Fragment {
                 circleMenu.onSelectAnimationEnd(circleMenuButton_music);
 
                 //Send Vibration Event
+
                 EventBus.getDefault().post(new ServiceEvent.VibrateEvent(VIBRATION_A));
                 //Restart lock Timer so user can use gesture continuously
                 EventBus.getDefault().post(new ServiceEvent.restartLockTimerEvent(ADDITIONAL_DELAY));
 
-                smoothcount[gestureNum]=-1;
                 resetSmoothCount();
+                smoothcount[gestureNum]=-1;
+
                 Toasty.success(getContext(), "Open music", Toast.LENGTH_SHORT, false).show();
             }
                 smoothcount[gestureNum]++;
@@ -510,11 +517,12 @@ public class TabFragment1 extends Fragment {
                 break;
 
         }
+        //Log.e("Hello",smoothcount[0]+" " + smoothcount[1]+" " + smoothcount[2]+" " + smoothcount[3]);
     }
-//TODO: smoothCount 처음엔 0으로 초기화될텐데 reset할땐 -1로 하면 초반 첫 제스처의 경우는 0에서 2가면 동작하고 나머지는 -1에서 2가면 동작하는 차이가 발생.
+
     public void resetSmoothCount(){
-        for(int i : smoothcount){
-            i = -1;
+        for(int i=0;i<smoothcount.length;i++){
+            smoothcount[i]=0;
         }
     }
 }

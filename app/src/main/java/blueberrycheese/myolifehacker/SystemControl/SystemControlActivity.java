@@ -279,6 +279,15 @@ public class SystemControlActivity extends AppCompatActivity {
                     case 2:
                         emgDataText.setText("Volume Down");
                         break;
+                    case 3:
+                        emgDataText.setText("Sound-Vibrate");
+                        break;
+                    case 4:
+                        emgDataText.setText("Screen Brighter");
+                        break;
+                    case 5:
+                        emgDataText.setText("Screen darker");
+                        break;
                     default:
                         break;
                 }

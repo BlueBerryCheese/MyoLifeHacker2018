@@ -49,8 +49,8 @@ public class SystemFeature {
         audioManager.adjustStreamVolume(AudioManager.STREAM_MUSIC, AudioManager.ADJUST_LOWER, AudioManager.FLAG_SHOW_UI);
     }
     public void resetSmoothCount(){
-        for(int i : smoothcount){
-            i = 0;
+        for(int i=0;i<smoothcount.length;i++){
+            smoothcount[i]=0;
         }
     }
     public void function(int poseNum){
@@ -67,26 +67,27 @@ public class SystemFeature {
                         //Toast.makeText(mContext,"WiFi OFF",Toast.LENGTH_LONG).show();
                     }
                     //Wifi On off
+                    smoothcount[poseNum]=-1;
                     resetSmoothCount();
-                    //smoothcount[poseNum]=-1;
+
                 }
                 smoothcount[poseNum]++;
             break;
             case 1:
                 //Volume Down
-                if(smoothcount[poseNum]>0){
+                if(smoothcount[poseNum]>1){
                     VolumeDown();
-                    //smoothcount[poseNum]=-1;
                     resetSmoothCount();
+                    smoothcount[poseNum]=-1;
                 }
                 smoothcount[poseNum]++;
                 break;
             case 2:
                 //Volume up
-                if(smoothcount[poseNum]>0){
+                if(smoothcount[poseNum]>1){
                     VolumeUp();
-                    //smoothcount[poseNum]=-1;
                     resetSmoothCount();
+                    smoothcount[poseNum]=-1;
                 }
                 smoothcount[poseNum]++;
                 break;
@@ -112,29 +113,31 @@ public class SystemFeature {
                             break;
                     }
                     resetSmoothCount();
+                    smoothcount[poseNum]=-1;
                 }
                 smoothcount[poseNum]++;
                 break;
             case 4:
                 //Brightness up
-                if(smoothcount[poseNum]>0){
+                if(smoothcount[poseNum]>1){
                     currentBrightness = Settings.System.getInt(cResolver, Settings.System.SCREEN_BRIGHTNESS,0
                     );
                     Settings.System.putInt(cResolver, Settings.System.SCREEN_BRIGHTNESS_MODE, Settings.System.SCREEN_BRIGHTNESS_MODE_MANUAL);
                     Settings.System.putInt(cResolver, Settings.System.SCREEN_BRIGHTNESS, ((currentBrightness + BrightnessDiff)>95)?currentBrightness:currentBrightness + BrightnessDiff);
                     resetSmoothCount();
-                    //smoothcount[poseNum]=-1;
+                    smoothcount[poseNum]=-1;
                 }
                 smoothcount[poseNum]++;
                 break;
             case 5:
                 //Brightness down
-                if(smoothcount[poseNum]>0){
+                if(smoothcount[poseNum]>1){
                     currentBrightness = Settings.System.getInt(cResolver, Settings.System.SCREEN_BRIGHTNESS,0
                     );
                     Settings.System.putInt(cResolver, Settings.System.SCREEN_BRIGHTNESS_MODE, Settings.System.SCREEN_BRIGHTNESS_MODE_MANUAL);
                     Settings.System.putInt(cResolver, Settings.System.SCREEN_BRIGHTNESS, ((currentBrightness - BrightnessDiff)<20)?currentBrightness:currentBrightness - BrightnessDiff);
                     resetSmoothCount();
+                    smoothcount[poseNum]=-1;
                 }
                 smoothcount[poseNum]++;
                 break;
@@ -144,91 +147,4 @@ public class SystemFeature {
 
     }
 
-
-//이 아래는 필요없는듯 위에 function 주석 풀고 사용하면 될듯
-//public void function(int poseNum){
-//    if(old_pos!=poseNum){
-//        old_pos=poseNum;
-//        switch(poseNum){
-//            case 0:
-//
-//                    if(!wifiManager.isWifiEnabled()){
-//                        WifiEnable();
-//                        //Toast.makeText(mContext,"WiFi On",Toast.LENGTH_LONG).show();
-//                    } else{
-//                        WifiDisable();
-//                        //Toast.makeText(mContext,"WiFi OFF",Toast.LENGTH_LONG).show();
-//                    }
-//                    //Wifi On off
-//                    resetSmoothCount();
-//                    //smoothcount[poseNum]=-1;
-//
-//                break;
-//            case 1:
-//                //Sound on off vibration
-//
-//                    switch(audioManager.getRingerMode()){
-//                        case AudioManager.RINGER_MODE_NORMAL:
-//                            audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
-//                            //Toast.makeText(mContext,"RingerModeSilent",Toast.LENGTH_LONG).show();
-//                            break;
-//                        case AudioManager.RINGER_MODE_SILENT:
-//                            audioManager.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
-//                            //Toast.makeText(mContext,"RingerModeVibrate",Toast.LENGTH_LONG).show();
-//                            break;
-//                        case AudioManager.RINGER_MODE_VIBRATE:
-//                            audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
-//                            //Toast.makeText(mContext,"RingerModeNormal",Toast.LENGTH_LONG).show();
-//                            break;
-//                        default:
-//                            audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
-//                            //Toast.makeText(mContext,"RingerModeNormal",Toast.LENGTH_LONG).show();
-//                            break;
-//                    }
-//                    resetSmoothCount();
-//
-//                break;
-//            case 2:
-//                //Volume up
-//
-//                    VolumeUp();
-//                    //smoothcount[poseNum]=-1;
-//                    resetSmoothCount();
-//
-//                break;
-//            case 3:
-//                //Volume Down
-//
-//                    VolumeDown();
-//                    //smoothcount[poseNum]=-1;
-//                    resetSmoothCount();
-//
-//                break;
-//            case 4:
-//                //Brightness up
-//
-//                    currentBrightness = Settings.System.getInt(cResolver, Settings.System.SCREEN_BRIGHTNESS,0);
-//                    Settings.System.putInt(cResolver, Settings.System.SCREEN_BRIGHTNESS_MODE, Settings.System.SCREEN_BRIGHTNESS_MODE_MANUAL);
-//                    Settings.System.putInt(cResolver, Settings.System.SCREEN_BRIGHTNESS, ((currentBrightness + BrightnessDiff)>95)?currentBrightness:currentBrightness + BrightnessDiff);
-//                    resetSmoothCount();
-//                    //smoothcount[poseNum]=-1;
-//
-//                break;
-//            case 5:
-//                //Brightness down
-//
-//                    currentBrightness = Settings.System.getInt(cResolver, Settings.System.SCREEN_BRIGHTNESS,0
-//                    );
-//                    Settings.System.putInt(cResolver, Settings.System.SCREEN_BRIGHTNESS_MODE, Settings.System.SCREEN_BRIGHTNESS_MODE_MANUAL);
-//                    Settings.System.putInt(cResolver, Settings.System.SCREEN_BRIGHTNESS, ((currentBrightness - BrightnessDiff)<20)?currentBrightness:currentBrightness - BrightnessDiff);
-//                    resetSmoothCount();
-//
-//                break;
-//            default :
-//                break;
-//        }
-//
-//    }
-//
-//}
 }
