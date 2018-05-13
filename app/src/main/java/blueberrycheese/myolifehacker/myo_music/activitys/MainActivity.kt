@@ -46,10 +46,8 @@ import com.simplemobiletools.commons.models.Release
 import com.simplemobiletools.commons.views.MyLinearLayoutManager
 import blueberrycheese.myolifehacker.BuildConfig
 import blueberrycheese.myolifehacker.R
-import blueberrycheese.myolifehacker.R.string.playpause
 import blueberrycheese.myolifehacker.SystemControl.GestureDetectMethod_System
 import blueberrycheese.myolifehacker.SystemControl.GestureDetectModel_System
-import blueberrycheese.myolifehacker.events.ServiceEvent
 import blueberrycheese.myolifehacker.myo_manage.*
 import blueberrycheese.myolifehacker.myo_music.Gesture.GestureDetectMethod_Music
 import blueberrycheese.myolifehacker.myo_music.Gesture.GestureDetectModel_Music
@@ -79,7 +77,7 @@ import java.io.FileOutputStream
 import java.util.*
 import java.util.logging.Level.OFF
 
-class MainActivity : SimpleActivity(), SongListListener{
+class MainActivity : SimpleActivity(), SongListListener, BluetoothAdapter.LeScanCallback {
     private var isThirdPartyIntent = false
     private var songs = ArrayList<Song>()
     private var searchMenuItem: MenuItem? = null
@@ -123,7 +121,6 @@ class MainActivity : SimpleActivity(), SongListListener{
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.music_activity_main)
-
         appLaunched()
         isThirdPartyIntent = intent.action == Intent.ACTION_VIEW
 
@@ -154,8 +151,7 @@ class MainActivity : SimpleActivity(), SongListListener{
 
         songs_playlist_empty_add_folder.setOnClickListener { addFolderToPlaylist() }
         volumeControlStream = AudioManager.STREAM_MUSIC
-        //뮤직 플레이어 실행하고 메시지 뜨는 곳
-        //checkWhatsNewDialog()
+        checkWhatsNewDialog()
         storeStateVariables()
 
         songs_list.recyclerScrollCallback = object : RecyclerScrollCallback {
@@ -175,37 +171,33 @@ class MainActivity : SimpleActivity(), SongListListener{
 
         //Detect용
         //gestureText = findViewById(R.id.MusicActivityGesture) as TextView
+        //startNopModel()       -->TODO: 에러 자꾸떠서 잠시 주석 확인 후 바꿔야함
 
-//        startNopModel()
-//
-//        val intent = getIntent()
-//
-//        if (intent != null) {
-//            Log.d(TAG, "44444")
-//            bluetoothDevice = intent.extras.getParcelable("bluetoothDevice")
-//            if (bluetoothDevice != null) {
-//                Log.d(TAG, "55555")
-//                deviceName = bluetoothDevice?.getName()
-//                Log.d(TAG, "66666")
-//                val views = HashMap<String, View>()
-//                mMyoCallback = MyoGattCallback(mHandler)
-//                mBluetoothGatt = bluetoothDevice?.connectGatt(this, false, mMyoCallback)
-//                Log.d(TAG, "77777")
-//                mMyoCallback?.setBluetoothGatt(mBluetoothGatt)
-//                Log.d(TAG, "bluetoothDevice is $deviceName")
-//                val mBluetoothManager = getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
-//                mBluetoothAdapter = mBluetoothManager.adapter
-//            }
-//
-//        }
-//        //dttButton = findViewById(R.id.dttButton_music) as Butto
+        val intent = getIntent()
+
+        if (intent != null) {
+            Log.d(TAG, "44444")
+            bluetoothDevice = intent.extras.getParcelable("bluetoothDevice")
+            if (bluetoothDevice != null) {
+                Log.d(TAG, "55555")
+                deviceName = bluetoothDevice?.getName()
+                Log.d(TAG, "66666")
+                val views = HashMap<String, View>()
+                mMyoCallback = MyoGattCallback(mHandler)
+                mBluetoothGatt = bluetoothDevice?.connectGatt(this, false, mMyoCallback)
+                Log.d(TAG, "77777")
+                mMyoCallback?.setBluetoothGatt(mBluetoothGatt)
+                Log.d(TAG, "bluetoothDevice is $deviceName")
+                val mBluetoothManager = getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
+                mBluetoothAdapter = mBluetoothManager.adapter
+            }
+
+        }
+        //dttButton = findViewById(R.id.dttButton_music) as Button
     }
 
     override fun onResume() {
         super.onResume()
-        if (!EventBus.getDefault().isRegistered(this)) {
-            EventBus.getDefault().register(this)
-        }
         if (storedTextColor != config.textColor) {
             updateAlbumCover()
         }
@@ -714,85 +706,85 @@ class MainActivity : SimpleActivity(), SongListListener{
     override fun listToggleSongRepetition() {
         toggleSongRepetition()
     }
-//처음나오는 메시지
-//    private fun checkWhatsNewDialog() {
-//        arrayListOf<Release>().apply {
-//            add(Release(25, R.string.release_25))
-//            add(Release(27, R.string.release_27))
-//            add(Release(28, R.string.release_28))
-//            add(Release(37, R.string.release_37))
-//            checkWhatsNew(this, BuildConfig.VERSION_CODE)
-//        }
-//    }
+
+    private fun checkWhatsNewDialog() {
+        arrayListOf<Release>().apply {
+            add(Release(25, R.string.release_25))
+            add(Release(27, R.string.release_27))
+            add(Release(28, R.string.release_28))
+            add(Release(37, R.string.release_37))
+            checkWhatsNew(this, BuildConfig.VERSION_CODE)
+        }
+    }
 
     //Detect용 추가
 
     /** Define of BLE Callback  */
-//    override fun onLeScan(device: BluetoothDevice, rssi: Int, scanRecord: ByteArray) {
-//        var device = device
-//        Log.d(TAG, "Hello onLeSacn")
-//        device = this.bluetoothDevice!!
-//        if (deviceName == device.name) {
-//            mBluetoothAdapter?.stopLeScan(this)
-//            // Trying to connect GATT
-//            val views = HashMap<String, View>()
-//
-//            mMyoCallback = MyoGattCallback(mHandler)
-//            mBluetoothGatt = device.connectGatt(this, false, mMyoCallback)
-//            mMyoCallback?.setBluetoothGatt(mBluetoothGatt)
-//        }
-//    }
+    override fun onLeScan(device: BluetoothDevice, rssi: Int, scanRecord: ByteArray) {
+        var device = device
+        Log.d(TAG, "Hello onLeSacn")
+        device = this.bluetoothDevice!!
+        if (deviceName == device.name) {
+            mBluetoothAdapter?.stopLeScan(this)
+            // Trying to connect GATT
+            val views = HashMap<String, View>()
+
+            mMyoCallback = MyoGattCallback(mHandler)
+            mBluetoothGatt = device.connectGatt(this, false, mMyoCallback)
+            mMyoCallback?.setBluetoothGatt(mBluetoothGatt)
+        }
+    }
 
 
     override fun onStop() {
         EventBus.getDefault().unregister(this)
         super.onStop()
         searchMenuItem?.collapseActionView()
-        //this.closeBLEGatt()
+        this.closeBLEGatt()
 
     }
 
-//    fun closeBLEGatt() {
-//        if (mBluetoothGatt == null) {
-//            return
-//        }
-//        mMyoCallback?.stopCallback()
-//        mBluetoothGatt?.close()
-//        mBluetoothGatt = null
-//    }
-//
-//    fun startSaveModel() {
-//        val model = saveModel
-//        model!!.setAction(GestureDetectSendResultAction_Music(this)) //변경
-//        GestureDetectModelManager.setCurrentModel(model)
-//    }
-//
-//    fun startDetectModel() {
-//        val model = detectModel
-//        model!!.setAction(GestureDetectSendResultAction_Music(this))    //변경
-//        GestureDetectModelManager.setCurrentModel(model)
-//    }
-//
-//    fun startNopModel() {
-//        GestureDetectModelManager.setCurrentModel(NopModel())
-//    }
-//
-//    fun setGestureText(message: String) {
-//        mHandler!!.post(Runnable { gestureText?.setText(message) })
-//    }
-//
-//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-//        super.onActivityResult(requestCode, resultCode, data)
-//        if (requestCode == REQUEST_ENABLE_BT && resultCode == Activity.RESULT_OK) {
-//            if (mHandler != null) {
-//                mHandler.postDelayed(Runnable { mBluetoothAdapter?.stopLeScan(this@MainActivity) }, SCAN_PERIOD)
-//            }
-//            mBluetoothAdapter?.startLeScan(this)
-//        }
-//
-//    }
-//
-//    internal var detectOn = false
+    fun closeBLEGatt() {
+        if (mBluetoothGatt == null) {
+            return
+        }
+        mMyoCallback?.stopCallback()
+        mBluetoothGatt?.close()
+        mBluetoothGatt = null
+    }
+
+    fun startSaveModel() {
+        val model = saveModel
+        model!!.setAction(GestureDetectSendResultAction_Music(this)) //변경
+        GestureDetectModelManager.setCurrentModel(model)
+    }
+
+    fun startDetectModel() {
+        val model = detectModel
+        model!!.setAction(GestureDetectSendResultAction_Music(this))    //변경
+        GestureDetectModelManager.setCurrentModel(model)
+    }
+
+    fun startNopModel() {
+        GestureDetectModelManager.setCurrentModel(NopModel())
+    }
+
+    fun setGestureText(message: String) {
+        mHandler!!.post(Runnable { gestureText?.setText(message) })
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_ENABLE_BT && resultCode == Activity.RESULT_OK) {
+            if (mHandler != null) {
+                mHandler.postDelayed(Runnable { mBluetoothAdapter?.stopLeScan(this@MainActivity) }, SCAN_PERIOD)
+            }
+            mBluetoothAdapter?.startLeScan(this)
+        }
+
+    }
+
+    internal var detectOn = false
 
 /*
     fun onClickdtt_music(v: View) {
@@ -844,24 +836,22 @@ class MainActivity : SimpleActivity(), SongListListener{
 //제스처에 따라 기능 얻어오는 곳
 
     @org.greenrobot.eventbus.Subscribe(threadMode = ThreadMode.MAIN)
-    fun onMessageEvent(event: ServiceEvent.GestureEvent) {
+    fun onMessageEvent(event: MusicEvent) {
 
-        gestureNum = event.gestureNumber
-        Log.d("MusicEvent", "MusicEvent Gesture num : " + event.gestureNumber)
+        gestureNum = event.gesture
+        Log.d("CameraEvent", "CameraEvent Gesture num : " + event.gesture)
 
         when (gestureNum) {
             0 -> {
-
-                if (smoothcount[gestureNum] > 1) {
+                Log.d(TAG, "44444")
+                if (smoothcount[gestureNum] > 15) {
                     //intent로 Musicservice에 가서 기능 가져오기
-                    // 멈춤,재생
-//                    Intent(this, MusicService::class.java).apply {
-//
-//                        action = PLAYPAUSE
-//                        startService(this)
-//                    }
-                    sendIntent(PLAYPAUSE)
+                    Intent(this, MusicService::class.java).apply {
 
+                        action = PLAYPAUSE
+                        startService(this)
+                    }
+                    //멈춤
                     smoothcount[gestureNum] = -1
                     resetSmoothCount()
                 }
@@ -869,15 +859,15 @@ class MainActivity : SimpleActivity(), SongListListener{
             }
 
             1 -> {
+                Log.d(TAG, "55555")
+                if (smoothcount[gestureNum] > 15){
+                    //재생
+                    Intent(this, MusicService::class.java).apply {
 
-                if (smoothcount[gestureNum] > 1){
-                    //이전
-//                    Intent(this, MusicService::class.java).apply {
-//
-//                        action = PREVIOUS
-//                        startService(this)
-//                    }
-                    sendIntent(PREVIOUS)
+                        action = PREVIOUS
+                        startService(this)
+                    }
+
                     smoothcount[gestureNum] = -1
                     resetSmoothCount()
                 }
@@ -885,14 +875,14 @@ class MainActivity : SimpleActivity(), SongListListener{
             }
 
             2 -> {
-                if (smoothcount[gestureNum] > 1) {
-//                    Intent(this, MusicService::class.java).apply {
-//
-//                        action = NEXT
-//                        startService(this)
-//                    }
+                if (smoothcount[gestureNum] > 15) {
+                    Intent(this, MusicService::class.java).apply {
+
+                        action = NEXT
+                        startService(this)
+                    }
                     //앞으로
-                    sendIntent(NEXT)
+
                     smoothcount[gestureNum] = -1
                     resetSmoothCount()
                 }
@@ -900,8 +890,8 @@ class MainActivity : SimpleActivity(), SongListListener{
             }
 
             3 -> {
-                if (smoothcount[gestureNum] > 1) {
-
+                if (smoothcount[gestureNum] > 15) {
+                    //뒤로
 
 
                     smoothcount[gestureNum] = -1
@@ -918,7 +908,7 @@ class MainActivity : SimpleActivity(), SongListListener{
     fun resetSmoothCount() {
 
         for ( i in smoothcount) {
-            val i = -1
+           val i = -1
         }
     }
 }

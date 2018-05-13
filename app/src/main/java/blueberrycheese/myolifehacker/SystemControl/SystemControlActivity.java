@@ -266,13 +266,11 @@ public class SystemControlActivity extends AppCompatActivity {
             }
         });
     }
-    /*
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(ServiceEvent.GestureEvent event) {
         gestureNum = event.gestureNumber;
         Log.d("Event","SystemEvent Gesture num : "+event.gestureNumber);
         systemFeature.function(gestureNum);
-        */
 //        switch(gestureNum){
 //            case 0 :
 //                if(smoothcount[gestureNum]>1) {
@@ -310,7 +308,7 @@ public class SystemControlActivity extends AppCompatActivity {
 //                break;
 //
 //        }
-//    }
+    }
 
     public void resetSmoothCount(){
         for(int i : smoothcount){

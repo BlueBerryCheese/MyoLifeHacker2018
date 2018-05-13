@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.util.EventLog;
 import android.util.Log;
 
 import org.greenrobot.eventbus.EventBus;
@@ -23,7 +24,7 @@ import blueberrycheese.myolifehacker.events.ServiceEvent;
 public class MyoService extends Service {
     private static final String TAG = "Myo_Service";
     //Previous SCAN_PERIOD was 5000.
-    private static final long SCAN_PERIOD = 5000;
+    private static final long SCAN_PERIOD = 3000;
 
 
     NotificationManager manager;
@@ -43,7 +44,7 @@ public class MyoService extends Service {
     private IGestureDetectModel model;
 
     private int gestureNum = -1;
-    private int falseCount = 0;
+    private int postCount = 0;
 
     public MyoService() {
     }
@@ -155,15 +156,14 @@ public class MyoService extends Service {
 
     private final Runnable runMethodModel = new Runnable(){
         public void run(){
-
+            postCount++;
+            if(postCount > 2){
+                Log.d(TAG,"postDelayed already executed enough! Something's wrong now.");
+                stopSelf();
+                return;
+            }
 //            Log.d("EMGFALSETest","mMyoCallbaack.setMyoControlCommand-before if clause: " + mMyoCallback.setMyoControlCommand(commandList.sendEmgOnly()));
             if (mBluetoothGatt == null || !mMyoCallback.setMyoControlCommand(commandList.sendEmgOnly())) {
-                falseCount++;
-                if(falseCount > 3){
-                    Log.d(TAG,"postDelayed already executed enough! Something's wrong now.");
-                    stopSelf();
-                    return;
-                }
                 Log.d(TAG,"False EMG");
                 Log.d(TAG,"mBluetoothGatt : " + mBluetoothGatt);
 //                Log.d("EMGFALSETest","mMyoCallbaack.setMyoControlCommand-sendEmgOnlyFirst: " + mMyoCallback.setMyoControlCommand(commandList.sendEmgOnly()));
@@ -173,7 +173,7 @@ public class MyoService extends Service {
                         Log.d(TAG,"mMyoCallbaack.setMyoControlCommand - PostDelayed running again");
                         new Handler().post(runMethodModel);
                     }
-                },1900);
+                },1000);
 //                Log.d("EMGFALSETest","mMyoCallbaack.setMyoControlCommand-sendEmgOnlyLast: " + mMyoCallback.setMyoControlCommand(commandList.sendEmgOnly()));
 //call stopSelf() for killing service
 //                      stopSelf();

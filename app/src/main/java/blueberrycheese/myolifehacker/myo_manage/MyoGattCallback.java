@@ -262,8 +262,6 @@ public class MyoGattCallback extends BluetoothGattCallback {
 
     long last_send_never_sleep_time_ms = System.currentTimeMillis();
     final static long NEVER_SLEEP_SEND_TIME = 10000;  // Milli Second
-    String currentModelForLog = "";
-
     @Override
     public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
         if (EMG_0_ID.equals(characteristic.getUuid().toString())) {
@@ -271,11 +269,7 @@ public class MyoGattCallback extends BluetoothGattCallback {
             byte[] emg_data = characteristic.getValue();
             //Original
 //            GestureDetectModelManager.getCurrentModel().event(systemTime_ms,emg_data);
-//            currentModelForLog = GestureDetectModelManager.getCurrentModel().toString();
-            if(GestureDetectModelManager.getCurrentModel() != null && !currentModelForLog.equals(GestureDetectModelManager.getCurrentModel().toString())){
-                Log.e(TAG,"GestureDetectModelManager.getCurrentMoel : " + GestureDetectModelManager.getCurrentModel());
-                currentModelForLog = GestureDetectModelManager.getCurrentModel().toString();
-            }
+            Log.e(TAG,"GestureDetectModelManager.getCurrentMoel : " + GestureDetectModelManager.getCurrentModel());
             try{
                 GestureDetectModelManager.getCurrentModel().event(systemTime_ms,emg_data);
             }catch(NullPointerException e){
