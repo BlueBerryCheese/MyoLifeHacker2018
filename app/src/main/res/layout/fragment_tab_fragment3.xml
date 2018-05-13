@@ -22,10 +22,10 @@
             <TextView
                 android:id="@+id/textView_tutorial"
                 android:layout_width="match_parent"
-                android:layout_height="80dp"
-                android:layout_marginTop="4dp"
-                android:text="제스처 인식률을 높이기 위한 작업을 수행할 수 있습니다. \n각 항목을 클릭하여 자세한 설명과 함께 기능을 수행할 수 있습니다."
-                android:textSize="16dp" />
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="제스처 잘 인식될 수 있도록\n학습하는 메뉴입니다."
+                android:textSize="24dp" />
             <!--Additional text for tutorial-->
             <!--\n자신의 제스처 데이터를 저장하여 더 나은 인식을 위한 새로운 기준을 만들어보세요. :)-->
             <LinearLayout
@@ -35,64 +35,126 @@
                 android:layout_below="@+id/textView_tutorial"
                 android:layout_marginTop="40dp"
                 android:layout_marginBottom="10dp"
-                android:visibility="gone">
+                android:visibility="gone"
+                android:orientation="vertical">
 
-                <NumberPicker
-                    android:id="@+id/remove_gestureNumberPicker"
-                    android:layout_width="0dp"
-                    android:layout_height="80dp"
-                    android:layout_weight="15">
+                <RelativeLayout
+                    android:id="@+id/topLinearRelativeLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <ViewAnimator
+                        android:id="@+id/viewanimator"
+                        android:layout_width="100dp"
+                        android:layout_height="80dp"
+                        android:layout_centerHorizontal="true">
 
-                </NumberPicker>
+                    </ViewAnimator>
+                    <ImageButton
+                        android:id="@+id/btn_back"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:adjustViewBounds="true"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/arrow_back"
+                        android:background="@android:color/transparent"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="20dp"
+                        android:layout_toLeftOf="@+id/viewanimator"/>
+                    <ImageButton
+                        android:id="@+id/btn_forward"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:adjustViewBounds="true"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/arrow_forward"
+                        android:background="@android:color/transparent"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="20dp"
+                        android:layout_toRightOf="@+id/viewanimator"/>
 
-                <Button
-                    android:id="@+id/btnRemove"
-                    android:layout_width="0dp"
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/topLinearRelativeLayout2"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginTop="20dp"
-                    android:background="@drawable/imgbtn_rect_state"
-                    android:text="Remove"
-                    android:textAllCaps="false"
-                    android:layout_weight="10"/>
+                    android:layout_marginTop="20dp">
+                    <Button
+                        android:id="@+id/btnRemove"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/imgbtn_rect_state2"
+                        android:layout_centerHorizontal="true"
+                        android:text="Remove"
+                        android:textAllCaps="false"
+                       />
 
-                <Button
-                    android:id="@+id/btnTutorial"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginTop="20dp"
-                    android:background="@drawable/imgbtn_rect_state"
-                    android:text="Tutorial"
-                    android:textAllCaps="false"
-                    android:layout_weight="10"/>
+                    <Button
+                        android:id="@+id/btnTutorial"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="40dp"
+                        android:layout_toRightOf="@id/btnRemove"
+                        android:background="@drawable/imgbtn_rect_state2"
+                        android:text="Tutorial"
+                        android:textAllCaps="false"/>
+                </RelativeLayout>
+
+
             </LinearLayout>
             <LinearLayout
                 android:id="@+id/AdaptiveNumberPickerLinearLayout"
-                android:layout_width="wrap_content"
-                android:layout_height="90dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_below="@+id/textView_tutorial"
                 android:layout_marginTop="40dp"
                 android:layout_marginBottom="10dp"
-                android:visibility="gone">
+                android:visibility="gone"
+                android:orientation="vertical">
 
-                <NumberPicker
-                    android:id="@+id/AdapterNumberPicker"
-                    android:layout_width="80dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginLeft="30dp">
+                <RelativeLayout
+                    android:id="@+id/topLinearRelativeLayout_adapt"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <ViewAnimator
+                        android:id="@+id/viewanimator_adapt"
+                        android:layout_width="100dp"
+                        android:layout_height="80dp"
+                        android:layout_centerHorizontal="true">
 
-                </NumberPicker>
+                    </ViewAnimator>
+                    <ImageButton
+                        android:id="@+id/btn_back_adapt"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:adjustViewBounds="true"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/arrow_back"
+                        android:background="@android:color/transparent"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="20dp"
+                        android:layout_toLeftOf="@+id/viewanimator_adapt"/>
+                    <ImageButton
+                        android:id="@+id/btn_forward_adapt"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:adjustViewBounds="true"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/arrow_forward"
+                        android:background="@android:color/transparent"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="20dp"
+                        android:layout_toRightOf="@+id/viewanimator_adapt"/>
+
+                </RelativeLayout>
 
                 <Button
                     android:id="@+id/btn_Sync"
                     android:layout_width="90dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@drawable/imgbtn_rect_state"
+                    android:layout_gravity="center"
+                    android:background="@drawable/imgbtn_rect_state2"
                     android:layout_marginTop="25dp"
-                    android:layout_marginLeft="60dp"
                     android:text="Sync"
                     android:textAllCaps="false" />
             </LinearLayout>
@@ -104,87 +166,106 @@
                 android:layout_marginTop="40dp"
                 android:layout_marginBottom="10dp"
                 android:visibility="gone"
+                android:orientation="vertical"
                 >
 
-                <NumberPicker
-                    android:id="@+id/gestureNumberPicker"
-                    android:layout_width="0dp"
-                    android:layout_height="80dp"
-                    android:layout_weight="10">
+                <RelativeLayout
+                    android:id="@+id/topLinearRelativeLayout_save"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <ViewAnimator
+                        android:id="@+id/viewanimator_save"
+                        android:layout_width="100dp"
+                        android:layout_height="80dp"
+                        android:layout_centerHorizontal="true">
+
+                    </ViewAnimator>
+                    <ImageButton
+                        android:id="@+id/btn_back_save"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:adjustViewBounds="true"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/arrow_back"
+                        android:background="@android:color/transparent"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="20dp"
+                        android:layout_toLeftOf="@+id/viewanimator_save"/>
+                    <ImageButton
+                        android:id="@+id/btn_forward_save"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:adjustViewBounds="true"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/arrow_forward"
+                        android:background="@android:color/transparent"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="20dp"
+                        android:layout_toRightOf="@+id/viewanimator_save"/>
+
+                </RelativeLayout>
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:gravity="center">
+                    <View
+                        android:id="@+id/view1"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                        android:background="@drawable/imgbtn_default"
+                        android:textColor="@android:color/black" />
+
+                    <View
+                        android:id="@+id/view2"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                        android:layout_toRightOf="@id/view1"
+                        android:background="@drawable/imgbtn_default"
+                        android:textColor="@android:color/black" />
+
+                    <View
+                        android:id="@+id/view3"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                        android:layout_toRightOf="@id/view2"
+                        android:background="@drawable/imgbtn_default"
+                        android:textColor="@android:color/black" />
+
+                    <View
+                        android:id="@+id/view4"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                        android:layout_toRightOf="@id/view3"
+                        android:background="@drawable/imgbtn_default"
+                        android:textColor="@android:color/black" />
+
+                    <View
+                        android:id="@+id/view5"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                        android:layout_toRightOf="@id/view4"
+                        android:background="@drawable/imgbtn_default"
+                        android:textColor="@android:color/black" />
+                </RelativeLayout>
 
 
-                </NumberPicker>
-                <ImageView
-                    android:id="@+id/saveGesture_Image"
-                    android:layout_width="0dp"
-                    android:layout_height="40dp"
-                    android:src="@drawable/gesture_1_nb"
-                    android:layout_gravity="center"
-                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                    android:background="@drawable/imgbtn_default"
-                    android:textColor="@android:color/black"
-                    android:layout_weight="10"
-                    />
-                <View
-                    android:id="@+id/view1"
-                    android:layout_width="0dp"
-                    android:layout_height="40dp"
-                    android:layout_gravity="center"
-                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                    android:background="@drawable/imgbtn_default"
-                    android:textColor="@android:color/black"
-                    android:layout_weight="10"/>
-
-                <View
-                    android:id="@+id/view2"
-                    android:layout_width="0dp"
-                    android:layout_height="40dp"
-                    android:layout_gravity="center"
-                    android:layout_marginLeft="@dimen/cnt_margin"
-                    android:background="@drawable/imgbtn_default"
-                    android:textColor="@android:color/black"
-                    android:layout_weight="10"/>
-
-                <View
-                    android:id="@+id/view3"
-                    android:layout_width="0dp"
-                    android:layout_height="40dp"
-                    android:layout_gravity="center"
-                    android:layout_marginLeft="@dimen/cnt_margin"
-                    android:background="@drawable/imgbtn_default"
-                    android:text="Hello"
-                    android:textColor="@android:color/black"
-                    android:layout_weight="10"/>
-
-                <View
-                    android:id="@+id/view4"
-                    android:layout_width="0dp"
-                    android:layout_height="40dp"
-                    android:layout_gravity="center"
-                    android:layout_marginLeft="@dimen/cnt_margin"
-                    android:background="@drawable/imgbtn_default"
-                    android:text="Hello"
-                    android:textColor="@android:color/black"
-                    android:layout_weight="10"/>
-
-                <View
-                    android:id="@+id/view5"
-                    android:layout_width="0dp"
-                    android:layout_height="40dp"
-                    android:layout_gravity="center"
-                    android:layout_marginLeft="@dimen/cnt_margin"
-                    android:background="@drawable/imgbtn_default"
-                    android:text="Hello"
-                    android:textColor="@android:color/black"
-                    android:layout_weight="10"/>
             </LinearLayout>
 
             <TextView
                 android:id="@+id/gestureTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+
+                android:layout_width="100dp"
+                android:layout_height="50dp"
+                android:gravity="center"
                 android:layout_centerHorizontal="true"
                 android:layout_below="@+id/SelectLinearLayout"
+                android:textAlignment="center"
                 android:text="Connect Myo "
                 android:textSize="16dp"
                 android:visibility="gone"/>
@@ -192,7 +273,7 @@
                 android:id="@+id/btn_Save"
                 android:layout_width="90dp"
                 android:layout_height="wrap_content"
-                android:background="@drawable/imgbtn_rect_state"
+                android:background="@drawable/imgbtn_rect_state2"
                 android:layout_marginLeft="20dp"
                 android:text="Save"
                 android:textAllCaps="false"
