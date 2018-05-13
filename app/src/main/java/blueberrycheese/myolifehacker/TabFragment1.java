@@ -420,6 +420,10 @@ public class TabFragment1 extends Fragment {
                     circleMenu.onOpenAnimationStart();
                     circleMenu.toggle();
                     circleMenu.onOpenAnimationEnd();
+
+                    //Send Vibration Event
+                    EventBus.getDefault().post(new ServiceEvent.VibrateEvent());
+
                     smoothcount[gestureNum]=-1;
                     resetSmoothCount();
                     Toasty.success(getContext(), "Open menu", Toast.LENGTH_SHORT, false).show();
@@ -432,6 +436,8 @@ public class TabFragment1 extends Fragment {
                 if(smoothcount[gestureNum]>1) {
                     circleMenu.onSelectAnimationStart(circleMenuButton_volume);
                     circleMenu.onSelectAnimationEnd(circleMenuButton_volume);
+                    //Send Vibration Event
+                    EventBus.getDefault().post(new ServiceEvent.VibrateEvent());
                     smoothcount[gestureNum]=-1;
                     resetSmoothCount();
                     Toasty.success(getContext(), "Open interior function", Toast.LENGTH_SHORT, false).show();
@@ -443,6 +449,9 @@ public class TabFragment1 extends Fragment {
                 if(smoothcount[gestureNum]>1) {
                     circleMenu.onSelectAnimationStart(circleMenuButton_camera);
                     circleMenu.onSelectAnimationEnd(circleMenuButton_camera);
+                    //Send Vibration Event
+                    EventBus.getDefault().post(new ServiceEvent.VibrateEvent());
+
                     smoothcount[gestureNum]=-1;
                     resetSmoothCount();
                     Toasty.success(getContext(), "Open camera", Toast.LENGTH_SHORT, false).show();
@@ -454,6 +463,10 @@ public class TabFragment1 extends Fragment {
                 if(smoothcount[gestureNum]>1) {
                     circleMenu.onSelectAnimationStart(circleMenuButton_gallery);
                     circleMenu.onSelectAnimationEnd(circleMenuButton_gallery);
+
+                    //Send Vibration Event
+                    EventBus.getDefault().post(new ServiceEvent.VibrateEvent());
+
                     smoothcount[gestureNum]=-1;
                     resetSmoothCount();
                     Toasty.success(getContext(), "Open gallery", Toast.LENGTH_SHORT, false).show();
@@ -464,6 +477,10 @@ public class TabFragment1 extends Fragment {
                 if(smoothcount[gestureNum]>1) {
                 circleMenu.onSelectAnimationStart(circleMenuButton_music);
                 circleMenu.onSelectAnimationEnd(circleMenuButton_music);
+
+                //Send Vibration Event
+                EventBus.getDefault().post(new ServiceEvent.VibrateEvent());
+
                 smoothcount[gestureNum]=-1;
                 resetSmoothCount();
                 Toasty.success(getContext(), "Open music", Toast.LENGTH_SHORT, false).show();

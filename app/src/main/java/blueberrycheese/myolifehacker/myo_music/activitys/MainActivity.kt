@@ -860,6 +860,8 @@ class MainActivity : SimpleActivity(), SongListListener{
 //                        action = PLAYPAUSE
 //                        startService(this)
 //                    }
+                    //Send Vibration Event
+                    EventBus.getDefault().post(ServiceEvent.VibrateEvent())
                     sendIntent(PLAYPAUSE)
                     smoothcount[gestureNum] = -1
                     resetSmoothCount()
@@ -877,6 +879,8 @@ class MainActivity : SimpleActivity(), SongListListener{
 //                        action = PREVIOUS
 //                        startService(this)
 //                    }
+                    //Send Vibration Event
+                    EventBus.getDefault().post(ServiceEvent.VibrateEvent())
                     sendIntent(PREVIOUS)
                     smoothcount[gestureNum] = -1
                     resetSmoothCount()
@@ -891,6 +895,8 @@ class MainActivity : SimpleActivity(), SongListListener{
 //                        action = NEXT
 //                        startService(this)
 //                    }
+                    //Send Vibration Event
+                    EventBus.getDefault().post(ServiceEvent.VibrateEvent())
                     //앞으로
                     sendIntent(NEXT)
                     smoothcount[gestureNum] = -1

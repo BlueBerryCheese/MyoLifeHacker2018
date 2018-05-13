@@ -520,6 +520,9 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         switch(gestureNum){
             case 0 :
                 if(smoothcount[gestureNum]>1) {
+                    //Send Vibration Event
+                    EventBus.getDefault().post(new ServiceEvent.VibrateEvent());
+
                     capturePhoto();
                     smoothcount[gestureNum]=-1;
                     resetSmoothCount();
@@ -531,6 +534,8 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
 
             case 1 :
                 if(smoothcount[gestureNum]>1) {
+                    //Send Vibration Event
+                    EventBus.getDefault().post(new ServiceEvent.VibrateEvent());
                     switch(currentCameraFlash){
                         case OFF:
                             camera.setFlash(Flash.OFF);
@@ -560,6 +565,8 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
 
             case 2 :
                 if(smoothcount[gestureNum]>1) {
+                    //Send Vibration Event
+                    EventBus.getDefault().post(new ServiceEvent.VibrateEvent());
                     switch(currentGrid){
                         case OFF:
                             camera.setGrid(Grid.DRAW_3X3);
@@ -582,6 +589,8 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
 
             case 3 :
                 if(smoothcount[gestureNum]>1) {
+                    //Send Vibration Event
+                    EventBus.getDefault().post(new ServiceEvent.VibrateEvent());
                     camera.setSessionType(SessionType.VIDEO);
                     if(videoRecording == false){
                         videoRecording = true;

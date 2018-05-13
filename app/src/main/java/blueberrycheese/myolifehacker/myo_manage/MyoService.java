@@ -227,6 +227,11 @@ public class MyoService extends Service {
         }
     }
 
+    @Subscribe
+    public void vibrate(ServiceEvent.VibrateEvent event){
+        mMyoCallback.setMyoControlCommand(commandList.sendVibration1());
+        Log.d(TAG,"Got VibrateEvent");
+    }
 //    @Subscribe(sticky = true)
 //    public void getMyoDevice_String(ServiceEvent.MyoDevice_StringEvent event){
 //        Log.e("serviceevent", event.MyoDevice_String + " arrived at service !!");

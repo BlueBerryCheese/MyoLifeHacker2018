@@ -124,6 +124,8 @@ public class GalleryActivity extends AppCompatActivity {
         switch(gestureNum){
             case 0 :
                 if(smoothcount[gestureNum]>1) {
+                    //Send Vibration Event
+                    EventBus.getDefault().post(new ServiceEvent.VibrateEvent());
                     Intent it = new Intent();
                     it.putExtra(CLICK_INDEX, positionNum);
                     it.putExtra(COMMENT_LIST, commentList);
@@ -137,6 +139,8 @@ public class GalleryActivity extends AppCompatActivity {
 
             case 1 :
                 if(smoothcount[gestureNum]>1) {
+                    //Send Vibration Event
+                    EventBus.getDefault().post(new ServiceEvent.VibrateEvent());
                     positionNum ++;
                     mCommentGrid.getChildAt(post_postionNum).setBackground(getResources().getDrawable(R.drawable.transparent_button));
                     mCommentGrid.getChildAt(positionNum).setBackground(getResources().getDrawable(R.color.color_accent));
@@ -151,6 +155,8 @@ public class GalleryActivity extends AppCompatActivity {
 
             case 2 :
                 if(smoothcount[gestureNum]>1) {
+                    //Send Vibration Event
+                    EventBus.getDefault().post(new ServiceEvent.VibrateEvent());
                     positionNum --;
                     mCommentGrid.getChildAt(post_postionNum).setBackground(getResources().getDrawable(R.drawable.transparent_button));
                     mCommentGrid.getChildAt(positionNum).setBackground(getResources().getDrawable(R.color.color_accent));

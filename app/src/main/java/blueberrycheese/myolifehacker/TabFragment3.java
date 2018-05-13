@@ -23,7 +23,6 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.TranslateAnimation;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.NumberPicker;
@@ -177,7 +176,15 @@ public class TabFragment3 extends Fragment {
         //saveMethod = new GestureSaveMethod(0,view.getContext());
         saveMethod = new GestureSaveMethod();
         mHandler = new Handler();
-        /////////  파일 삭제하는 numberPicker 설정.
+
+        // Below 4 lines are for preventing IndexOutOfBoundsException Error
+        remove_gesturenNumberPicker.setSaveFromParentEnabled(false);
+        remove_gesturenNumberPicker.setSaveEnabled(true);
+        adapter_gesturenNumberPicker.setSaveFromParentEnabled(false);
+        adapter_gesturenNumberPicker.setSaveEnabled(true);
+
+
+        // 파일 삭제하는 numberPicker 설정.
         remove_gesturenNumberPicker.setMinValue(0);
         remove_gesturenNumberPicker.setMaxValue(8);
         remove_gesturenNumberPicker.setDisplayedValues(new String[]{"Model","All","All_Gesture","Gesture 1","Gesture 2","Gesture 3","Gesture 4","Gesture 5","Gesture 6"});
@@ -185,9 +192,9 @@ public class TabFragment3 extends Fragment {
 
         // 어댑터 설정하는 numberPicker 설정.
         adapter_gesturenNumberPicker.setMinValue(0);
-        adapter_gesturenNumberPicker.setMaxValue(5);
+        adapter_gesturenNumberPicker.setMaxValue(4);
         adapter_gesturenNumberPicker.setWrapSelectorWheel(false);
-        adapter_gesturenNumberPicker.setDisplayedValues(new String[]{"100%","80%","60%","40%","20%","0%"});
+        adapter_gesturenNumberPicker.setDisplayedValues(new String[]{"100%","80%","60%","40%","20%"});
 
         //텍스트뷰 폰트설정
         ///////
@@ -308,7 +315,7 @@ public class TabFragment3 extends Fragment {
                 alertBuiler2.setTitle("File Delete / Tutorial");
                 alertBuiler2.setMessage("생성한 모델 또는 각각의 제스처들의 데이터들을 삭제합니다. \n 삭제하고 싶은 항목을 선택하고 delete를 눌러주세요");
                 alertBuiler3.setTitle("Data Percent");
-                alertBuiler3.setMessage("제스처 인식이 본인에게 좀 더 잘 되게 하도록 하는 어댑터 부분 입니다.\n 각각의 제스처들을 저장한 데이터들을 합쳐서 만들 때 기존 데이터들의 비율을 정합니다.");
+                alertBuiler3.setMessage("제스처 인식이 본인에게 좀 더 잘 되게 하도록 하는 Adaptation 부분 입니다.\n 각각의 제스처들을 저장한 데이터들을 합쳐서 만들 때 기존 데이터들의 비율을 정합니다.");
                 AlertDialog dialog2 = alertBuiler3.create();
                 alertBuiler2.setPositiveButton("다음", new DialogInterface.OnClickListener() {
                     @Override
@@ -383,9 +390,6 @@ public class TabFragment3 extends Fragment {
                     case 4:     // 20%
                         pass_adapter=0.2;
                         break;
-                    case 5:
-                        pass_adapter=0;
-                        break;
                 }
 
                 final Context ncontext = v.getContext();
@@ -450,7 +454,10 @@ public class TabFragment3 extends Fragment {
             @Override
             public void onClick(View v) {
 
-                textView_tutorial.setText("각각의 제스처에 대한 사용자의 데이터를 세이브 부분입니다.\n 그림을 보고 그림에 나와있는 동작을 취한 후 save 버튼을 눌러 값을 저장하세요");
+                textView_tutorial.setText("제스처를 선택하고 그림에 나와있는 동작을 취한 후 Save 버튼을 눌러 값을 저장하세요.");
+                //Additional text for tutorial
+                //각각의 제스처에 대해 자신의 데이터를 저장합니다.
+                //저장한 데이터는 SYNC DATA 수행을 위해 사용됩니다.
                 main_linearlayout.removeView(showRelativelayout);
                 main_linearlayout.addView(showRelativelayout,0);
                 Animation animation;
@@ -478,7 +485,9 @@ public class TabFragment3 extends Fragment {
             @Override
             public void onClick(View v) {
 
-                textView_tutorial.setText("제스처 인식이 본인에게 좀 더 잘 되게 하도록 하는 어댑터 부분 입니다.\n 각각의 제스처들을 저장한 데이터들을 합쳐서 만들 때 기존 데이터들의 비율을 정합니다.");
+                textView_tutorial.setText("생성 시 사용될 기존 데이터 비율(%)을 아래에서 지정해준 후 Sync 버튼을 눌러주세요.");
+                //Additional text for tutorial
+//                자신이 저장한 제스처 데이터와 기존의 데이터를 이용하여 제스처 인식을 위한 새로운 기준을 생성합니다.
                 main_linearlayout.removeView(showRelativelayout);
                 main_linearlayout.addView(showRelativelayout,0);
                 Animation animation;
@@ -506,7 +515,10 @@ public class TabFragment3 extends Fragment {
             @Override
             public void onClick(View v) {
 
-                textView_tutorial.setText("생성한 모델 또는 각각의 제스처들의 데이터들을 삭제합니다. \n 삭제하고 싶은 항목을 선택하고 delete를 눌러주세요");
+                textView_tutorial.setText("삭제하고 싶은 항목을 선택한 후 Remove 버튼을 눌러주세요.");
+                //Additional text for tutorial
+                //생성한 기준 또는 자신이 저장한 제스처 데이터들을 삭제합니다.
+                //*All 선택 시 기준과 저장된 제스처 데이터 모두 삭제됩니다!
                 main_linearlayout.removeView(showRelativelayout);
                 main_linearlayout.addView(showRelativelayout,0);
                 Animation animation;
