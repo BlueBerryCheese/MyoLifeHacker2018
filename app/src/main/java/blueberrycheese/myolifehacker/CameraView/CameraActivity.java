@@ -44,6 +44,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.HashMap;
 
+import blueberrycheese.myolifehacker.FontConfig;
 import blueberrycheese.myolifehacker.R;
 import blueberrycheese.myolifehacker.Toasty;
 import blueberrycheese.myolifehacker.events.ServiceEvent;
@@ -72,7 +73,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
     // To show stuff in the callback
     private Size mCaptureNativeSize;
     private long mCaptureTime;
-    LottieAnimationView animationView_camera;
+    private LottieAnimationView animationView_camera;
     boolean videoRecording = false;
 //    Button dttButton;
 
@@ -124,11 +125,13 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
             }
         });
 
+
+        FontConfig.setGlobalFont(this,getWindow().getDecorView());
         findViewById(R.id.edit).setOnClickListener(this);
         findViewById(R.id.capturePhoto).setOnClickListener(this);
         findViewById(R.id.captureVideo).setOnClickListener(this);
         findViewById(R.id.toggleCamera).setOnClickListener(this);
-        final LottieAnimationView animationView_camera = (LottieAnimationView) findViewById(R.id.lottie_camera);
+        animationView_camera = (LottieAnimationView) findViewById(R.id.lottie_camera);
         animationView_camera.setVisibility(View.INVISIBLE);
         controlPanel = findViewById(R.id.controls);
         ViewGroup group = (ViewGroup) controlPanel.getChildAt(0);

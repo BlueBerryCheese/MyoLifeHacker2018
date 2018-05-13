@@ -6,9 +6,11 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.bosong.commentgallerylib.CommentGalleryContainer;
 import com.bosong.commentgallerylib.CommentImageGrid;
 
@@ -21,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import blueberrycheese.myolifehacker.FontConfig;
 import blueberrycheese.myolifehacker.R;
 import blueberrycheese.myolifehacker.Toasty;
 import blueberrycheese.myolifehacker.events.ServiceEvent;
@@ -40,10 +43,14 @@ public class GalleryActivity extends AppCompatActivity {
     private int gestureNum = -1;
     private int positionNum = 0;
     private int post_postionNum=-1;
+
+    private LottieAnimationView animationView_gallery;
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gallery);
+        animationView_gallery = (LottieAnimationView) findViewById(R.id.lottie_camera);
+        animationView_gallery.setVisibility(View.INVISIBLE);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);  //윈도우 가장위에 배터리,wifi뜨는 부분 제거
         mCommentGrid = (CommentImageGrid) findViewById(R.id.comment_grid);
         File mediaStorageDir = new File(Environment.getExternalStorageDirectory().toString(),dir_path);
@@ -58,6 +65,7 @@ public class GalleryActivity extends AppCompatActivity {
 
         imgs = file.list();
 
+        FontConfig.setGlobalFont(this,getWindow().getDecorView());
         urls = Arrays.asList(imgs);
         commentList = new CommentGalleryContainer(urls, SAMPLE_COMMENT);
         for(int i=0;i<urls.size();i++){
@@ -102,6 +110,9 @@ public class GalleryActivity extends AppCompatActivity {
     }
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(ServiceEvent.GestureEvent event) {
+        animationView_gallery.playAnimation();
+        animationView_gallery.loop(true);
+        animationView_gallery.setVisibility(View.VISIBLE);
         gestureNum = event.gestureNumber;
         Log.d("MenuEvent","MenuEvent Gesture num : "+event.gestureNumber);
         if (positionNum>=urls.size()){

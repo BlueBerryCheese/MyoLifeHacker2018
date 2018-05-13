@@ -36,6 +36,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.HashMap;
 
+import blueberrycheese.myolifehacker.FontConfig;
 import blueberrycheese.myolifehacker.ImageViewer.CommentGalleryActivity;
 import blueberrycheese.myolifehacker.ImageViewer.GalleryActivity;
 import blueberrycheese.myolifehacker.R;
@@ -70,7 +71,7 @@ public class SystemControlActivity extends AppCompatActivity {
     private MyoCommandList commandList = new MyoCommandList();
     private String deviceName;
     String[] gestureString = {"WiFi On, Off", "Sound Mode Chnage ", "Volume Up", "Volume Down", "Brightness Up", "Brightness Down"};
-    LottieAnimationView animationView_system;
+    private LottieAnimationView animationView_system;
     private GestureSaveModel saveModel;
     private GestureSaveMethod saveMethod;
     private GestureDetectModel_System detectModel;
@@ -111,7 +112,9 @@ public class SystemControlActivity extends AppCompatActivity {
         mHandler = new Handler();
         mContext = this;
 
-        final LottieAnimationView animationView_system = (LottieAnimationView) findViewById(R.id.lottie_system);
+
+        FontConfig.setGlobalFont(this,getWindow().getDecorView());
+        animationView_system = (LottieAnimationView) findViewById(R.id.lottie_system);
         animationView_system.setVisibility(View.INVISIBLE);
       //  final LottieAnimationView animationView_system = (LottieAnimationView) findViewById(R.id.lottie);
       //  animationView_system
@@ -187,7 +190,6 @@ public class SystemControlActivity extends AppCompatActivity {
             }
         }
     }
-
 
 //    public void onClickDetect() {
 //        if (saveMethod.getSaveState() == GestureSaveMethod.SaveState.Have_Saved) {

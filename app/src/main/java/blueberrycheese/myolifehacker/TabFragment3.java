@@ -10,6 +10,7 @@ import android.app.ProgressDialog;
 import android.bluetooth.BluetoothManager;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -132,7 +133,18 @@ public class TabFragment3 extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        FontConfig.setGlobalFont(getActivity(),getActivity().getWindow().getDecorView());  // 폰트 설정.
     }
+
+/*
+    @Override
+    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view_font=inflater.inflate(R.layout.fragment_tab_fragment3, parent,false);
+        FontConfig.setGlobalFont(getActivity(), view);
+        MyViewHolder holder=new MyViewHolder(view);
+        return holder;
+    }
+*/
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -177,6 +189,12 @@ public class TabFragment3 extends Fragment {
         adapter_gesturenNumberPicker.setWrapSelectorWheel(false);
         adapter_gesturenNumberPicker.setDisplayedValues(new String[]{"100%","80%","60%","40%","20%","0%"});
 
+        //텍스트뷰 폰트설정
+        ///////
+        Typeface font = Typeface.createFromAsset(getActivity().getAssets(), "BMYEONSUNG_ttf.ttf");
+        textView_tutorial.setTypeface(font);
+        gestureText.setTypeface(font);
+
         //애니메이션
         ////////////////
 
@@ -200,6 +218,8 @@ public class TabFragment3 extends Fragment {
                 }).show();
 
 */
+
+
 
         //현재 기본적으로 numberpicker는 0~5까지 하지만 번호변환으로 1~6으로 보이게 하였음
         //6까지 올리면 더이상올라가지 않게 함
