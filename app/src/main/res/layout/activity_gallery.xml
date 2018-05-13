@@ -15,7 +15,7 @@
         android:background="@color/FontColor"
         android:textColor="@color/BackgroundColor"
         android:textAlignment="center"
-
+        android:gravity="center"
         android:text="Hello?"
         android:textSize="20dp"/>
     <ScrollView

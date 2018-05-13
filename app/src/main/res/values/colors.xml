@@ -9,4 +9,5 @@
     <color name="BackgroundColor">#F2F2F2</color>
     <color name="AccentColor">#FC3A3E</color>
     <color name="FontColor">#323048</color>
+    <color name="Transparent">#00000000</color>
 </resources>
