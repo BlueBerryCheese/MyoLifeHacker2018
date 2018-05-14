@@ -564,7 +564,7 @@ public class TabFragment3 extends Fragment {
                 //0:NONE,1:TOP_OPENED,2:MIDDLE_OPENED,3:BOTTOM_OPENED
                 Animation animation;
                 Animation animation1;
-                textView_tutorial.setText("잘 인식되지 않는 제스처를 선택하여\n 제스처를 반복적으로 취해주시고 Save버튼을 눌러주세요.");
+                textView_tutorial.setText("잘 인식되지 않는 제스처를 선택하여\n 제스처를 반복적으로 취해주시고 \nLearn버튼을 눌러주세요.");
                 switch (state) {
                     case 0:
                         //Additional text for tutorial
@@ -615,7 +615,7 @@ public class TabFragment3 extends Fragment {
                 //0:NONE,1:TOP_OPENED,2:MIDDLE_OPENED,3:BOTTOM_OPENED
                 Animation animation;
                 Animation animation1;
-                textView_tutorial.setText("생성 시 사용될 기존 데이터 비율(%)을 아래에서 지정해준 후 Sync 버튼을 눌러주세요.");
+                textView_tutorial.setText("생성 시 사용될 기존 데이터 비율(%)을 아래에서 지정해준 후\nAdapt 버튼을 눌러주세요.");
                 //Additional text for tutorial
                 //자신이 저장한 제스처 데이터와 기존의 데이터를 이용하여 제스처 인식을 위한 새로운 기준을 생성합니다.
                 switch (state) {
@@ -665,7 +665,7 @@ public class TabFragment3 extends Fragment {
                 //0:NONE,1:TOP_OPENED,2:MIDDLE_OPENED,3:BOTTOM_OPENED
                 Animation animation;
                 Animation animation1;
-                textView_tutorial.setText("삭제하고 싶은 항목을 선택한 후 Remove 버튼을 눌러주세요.");
+                textView_tutorial.setText("삭제하고 싶은 항목을 선택한 후\nReset 버튼을 눌러주세요.");
                 //Additional text for tutorial
                 //생성한 기준 또는 자신이 저장한 제스처 데이터들을 삭제합니다.
                 //*All 선택 시 기준과 저장된 제스처 데이터 모두 삭제됩니다!

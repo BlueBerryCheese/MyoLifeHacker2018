@@ -17,6 +17,12 @@ import blueberrycheese.myolifehacker.R;
 import blueberrycheese.myolifehacker.events.ServiceEvent;
 
 public class CommentGalleryActivity extends AppCompatActivity {
+    private static final int VIBRATION_A = 1;
+    private static final int VIBRATION_B = 2;
+    private static final int VIBRATION_C = 3;
+
+    private static final int ADDITIONAL_DELAY = 5000;
+
     private int numCounter = 0;
     private CommentGallery mGallery;
     int[] smoothcount = new int[6];
@@ -67,6 +73,14 @@ public class CommentGalleryActivity extends AppCompatActivity {
 //                }
 //                smoothcount[gestureNum]++;
 
+                smoothcount[gestureNum]++;
+                if(smoothcount[gestureNum]>1) {
+                    numCounter--;
+                    mGallery.setData((CommentGalleryContainer) getIntent().getSerializableExtra(GalleryActivity.COMMENT_LIST),numCounter);
+                    resetSmoothCount();
+                    finish();
+                }
+
                 break;
 
             case 1 :
@@ -80,6 +94,10 @@ public class CommentGalleryActivity extends AppCompatActivity {
                     mGallery.setData((CommentGalleryContainer) getIntent().getSerializableExtra(GalleryActivity.COMMENT_LIST),numCounter);
                     resetSmoothCount();
                 }
+                //Send Vibration Event
+                EventBus.getDefault().post(new ServiceEvent.VibrateEvent(VIBRATION_A));
+                //Restart lock Timer so user can use gesture continuously
+                EventBus.getDefault().post(new ServiceEvent.restartLockTimerEvent(ADDITIONAL_DELAY));
 
 
                 break;
@@ -95,6 +113,10 @@ public class CommentGalleryActivity extends AppCompatActivity {
                     mGallery.setData((CommentGalleryContainer) getIntent().getSerializableExtra(GalleryActivity.COMMENT_LIST),numCounter);
                     resetSmoothCount();
                 }
+                //Send Vibration Event
+                EventBus.getDefault().post(new ServiceEvent.VibrateEvent(VIBRATION_A));
+                //Restart lock Timer so user can use gesture continuously
+                EventBus.getDefault().post(new ServiceEvent.restartLockTimerEvent(ADDITIONAL_DELAY));
 
                 break;
 
@@ -109,8 +131,8 @@ public class CommentGalleryActivity extends AppCompatActivity {
     }
 
     public void resetSmoothCount(){
-        for(int i : smoothcount){
-            i = -1;
+        for(int i=0;i<smoothcount.length;i++){
+            smoothcount[i]=0;
         }
     }
 }

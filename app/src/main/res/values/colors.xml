@@ -10,4 +10,12 @@
     <color name="AccentColor">#FC3A3E</color>
     <color name="FontColor">#323048</color>
     <color name="Transparent">#00000000</color>
+    <color name="MyoSplashColor">#2A293B</color>
+    <color name="MyoSplashColorV2">#434358</color>
+    <color name="MyoSplashColorV3">#3D3C4C</color>
+    <color name="Blue">#3949ab</color>
+
+
+
+
 </resources>

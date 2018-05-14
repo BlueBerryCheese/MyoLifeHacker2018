@@ -13,13 +13,13 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
-import android.widget.Button;
 
 import com.airbnb.lottie.LottieAnimationView;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
+import blueberrycheese.myolifehacker.MyoApp;
 import blueberrycheese.myolifehacker.R;
 import blueberrycheese.myolifehacker.events.ServiceEvent;
 
@@ -27,7 +27,11 @@ public class MyoService extends Service {
     private static final String TAG = "Myo_Service";
     //Previous SCAN_PERIOD was 5000.
     private static final long SCAN_PERIOD = 5000;
+    private static final int TIMETOLOCK = 6000;
 
+    private static final int VIBRATION_A = 1;
+    private static final int VIBRATION_B = 2;
+    private static final int VIBRATION_C = 3;
 
     NotificationManager manager;
     Notification myNotication;
@@ -48,6 +52,12 @@ public class MyoService extends Service {
     private int gestureNum = -1;
     private int falseCount = 0;
 
+    private MyoApp myoApp = null;
+    public int[] smoothcount = new int[6];
+    private final int LITTLEFINGER = 4;
+    private final int SCISSORS = 5;
+
+
     public MyoService() {
     }
 
@@ -62,7 +72,6 @@ public class MyoService extends Service {
     @Override
     public void onCreate(){
         super.onCreate();
-
     }
 
     @Override
@@ -122,6 +131,7 @@ public class MyoService extends Service {
         mMyoCallback = new MyoGattCallback(mHandler);
         mBluetoothGatt = myoDevice.connectGatt(getApplicationContext(), false, mMyoCallback);
         mMyoCallback.setBluetoothGatt(mBluetoothGatt);
+        myoApp = (MyoApp) getApplicationContext();
 
 //  Made separated runnable()... Look down below
 //
@@ -175,7 +185,7 @@ public class MyoService extends Service {
                         Log.d(TAG,"mMyoCallbaack.setMyoControlCommand - PostDelayed running again");
                         new Handler().post(runMethodModel);
                     }
-                },1900);
+                },1800);
 //                Log.d("EMGFALSETest","mMyoCallbaack.setMyoControlCommand-sendEmgOnlyLast: " + mMyoCallback.setMyoControlCommand(commandList.sendEmgOnly()));
 //call stopSelf() for killing service
 //                      stopSelf();
@@ -186,6 +196,8 @@ public class MyoService extends Service {
                     detectMethod = new GestureDetectMethod(mHandler, saveMethod.getCompareDataList());    //아예 새롭게 각각의 detectMethod를 구현하는것이 빠를것으로 예상된다.
                     detectModel = new GestureDetectModel(detectMethod);
                     startDetectModel();
+                    //Send Vibration Event
+                    EventBus.getDefault().post(new ServiceEvent.VibrateEvent(VIBRATION_C));
                 }
 
                 if (saveMethod.getSaveState() == GestureSaveMethod.SaveState.Have_Saved) {
@@ -199,11 +211,105 @@ public class MyoService extends Service {
 
     //아래에서 NumberSmoother에서 post한 gestureNumber(i_element)를 받음.
     @Subscribe
-    public void getGestureNumber(ServiceEvent.GestureEvent event){
+    public void getGestureNumber(ServiceEvent.GestureEvent_forService event){
+
         gestureNum = event.gestureNumber;
-        Log.d(TAG,"Gesture num : "+event.gestureNumber);
+        Log.d(TAG,"Gesture num : "+ gestureNum);
+
+        if(myoApp.isUnlocked()){
+            EventBus.getDefault().post(new ServiceEvent.GestureEvent(gestureNum));
+//            Log.d(TAG,"Send EventBus post - Gesture num : "+ gestureNum);
+        }
+
+        switch(gestureNum) {
+            case LITTLEFINGER:
+                smoothcount[gestureNum]++;
+
+                if (smoothcount[gestureNum] > 2) {
+                    if(!myoApp.isUnlocked()){
+                        myoApp.unlockGesture(0);
+                        Log.d(TAG,"Unlock "+ LITTLEFINGER);
+                    }
+                    //create runnable for lock.
+                    mHandler.postDelayed(lockRunnable, TIMETOLOCK);
+
+                    //Send Vibration Event
+                    EventBus.getDefault().post(new ServiceEvent.VibrateEvent(VIBRATION_B));
+
+                    resetSmoothCount();
+//                    smoothcount[gestureNum] = -1;
+                    mHandler.removeCallbacks(resetCountRunnable);
+                }
+
+                //create runnable to reset smoothcount
+                mHandler.removeCallbacks(resetCountRunnable);
+                mHandler.postDelayed(resetCountRunnable, TIMETOLOCK);
+
+                break;
+
+            case SCISSORS:
+                smoothcount[gestureNum]++;
+
+                if (smoothcount[gestureNum] > 2) {
+                    if(!myoApp.isUnlocked()){
+                        myoApp.unlockGesture(1);
+                        Log.d(TAG,"Unlock "+ SCISSORS);
+                    }
+
+                    //create runnable for lock.
+                    mHandler.postDelayed(lockRunnable, TIMETOLOCK);
+
+                    //Send Vibration Event
+                    EventBus.getDefault().post(new ServiceEvent.VibrateEvent(VIBRATION_B));
+
+                    resetSmoothCount();
+//                    smoothcount[gestureNum] = -1;
+                    mHandler.removeCallbacks(resetCountRunnable);
+                }
+
+                //create runnable to reset smoothcount
+                mHandler.removeCallbacks(resetCountRunnable);
+                mHandler.postDelayed(resetCountRunnable, TIMETOLOCK);
+
+                break;
+
+            default:
+                break;
+
+        }
+
     }
 
+    public void resetSmoothCount(){
+        for(int i=0;i<smoothcount.length;i++){
+            smoothcount[i]=0;
+        }
+        Log.e(TAG,"resetSmoothCount - reset");
+    }
+
+    private Runnable resetCountRunnable = new Runnable(){
+        @Override
+        public void run(){
+            resetSmoothCount();
+            Log.e(TAG,"Reset Count Runnable : smoothcount reset");
+        }
+    };
+
+    private Runnable lockRunnable = new Runnable(){
+        @Override
+        public void run(){
+            //Lock gesture
+            myoApp.lockGesture();
+            Log.e(TAG,"Lock_Runnable : Gesture locked");
+        }
+    };
+
+    @Subscribe
+    public void restartLockTimer(ServiceEvent.restartLockTimerEvent event){
+        mHandler.removeCallbacks(lockRunnable);
+        mHandler.postDelayed(lockRunnable, TIMETOLOCK);
+        Log.e(TAG,"Lock_Runnable : restart Lock Timer!");
+    }
 
     @Subscribe(sticky = true)
     public void getMyoDevice(ServiceEvent.testEvent event){
@@ -229,8 +335,8 @@ public class MyoService extends Service {
 
     @Subscribe
     public void vibrate(ServiceEvent.VibrateEvent event){
-        mMyoCallback.setMyoControlCommand(commandList.sendVibration1());
-        Log.d(TAG,"Got VibrateEvent");
+        mMyoCallback.setMyoControlCommand(commandList.sendVibration(event.vibrateNum));
+        Log.d(TAG,"Vibrate Myo - Got VibrateEvent");
     }
 //    @Subscribe(sticky = true)
 //    public void getMyoDevice_String(ServiceEvent.MyoDevice_StringEvent event){

@@ -14,12 +14,12 @@ public class ServiceEvent {
         }
     }
 
-    public static class MyoDevice_StringEvent{
+    public static class GestureEvent_forService{
 
-        public String MyoDevice_String;
+        public int gestureNumber;
 
-        public MyoDevice_StringEvent(String device){
-            this.MyoDevice_String = device;
+        public GestureEvent_forService(int i_element){
+            this.gestureNumber = i_element;
         }
     }
 
@@ -32,6 +32,21 @@ public class ServiceEvent {
         }
     }
 
+
+    public static class VibrateEvent{
+        public int vibrateNum;
+        public VibrateEvent(int vNum){
+            this.vibrateNum = vNum;
+        }
+    }
+
+    public static class restartLockTimerEvent{
+        public int addDelay = 0;
+        public restartLockTimerEvent(int addDelay){
+            this.addDelay = addDelay;
+        }
+    }
+
     public static class setDetectModel_Event{
         public int set;
 
@@ -40,17 +55,23 @@ public class ServiceEvent {
         }
     }
 
-    public static class VibrateEvent{
-        public VibrateEvent(){
 
-        }
-    }
+    ///////Test
 
     public static class DetectModel{
         public IGestureDetectModel detectModel;
 
         public DetectModel(IGestureDetectModel model){
             this.detectModel = model;
+        }
+    }
+
+    public static class MyoDevice_StringEvent{
+
+        public String MyoDevice_String;
+
+        public MyoDevice_StringEvent(String device){
+            this.MyoDevice_String = device;
         }
     }
 
