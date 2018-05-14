@@ -244,9 +244,9 @@ class MainActivity : SimpleActivity(), SongListListener{
 
     override fun onResume() {
         super.onResume()
-        if (!EventBus.getDefault().isRegistered(this)) {
-            EventBus.getDefault().register(this)
-        }
+//        if (!EventBus.getDefault().isRegistered(this)) {
+//            EventBus.getDefault().register(this)
+//        }
         if (storedTextColor != config.textColor) {
             updateAlbumCover()
         }
@@ -766,222 +766,115 @@ class MainActivity : SimpleActivity(), SongListListener{
 //        }
 //    }
 
-    //Detect용 추가
-
-    /** Define of BLE Callback  */
-//    override fun onLeScan(device: BluetoothDevice, rssi: Int, scanRecord: ByteArray) {
-//        var device = device
-//        Log.d(TAG, "Hello onLeSacn")
-//        device = this.bluetoothDevice!!
-//        if (deviceName == device.name) {
-//            mBluetoothAdapter?.stopLeScan(this)
-//            // Trying to connect GATT
-//            val views = HashMap<String, View>()
-//
-//            mMyoCallback = MyoGattCallback(mHandler)
-//            mBluetoothGatt = device.connectGatt(this, false, mMyoCallback)
-//            mMyoCallback?.setBluetoothGatt(mBluetoothGatt)
-//        }
-//    }
-
 
     override fun onStop() {
-        EventBus.getDefault().unregister(this)
+//        EventBus.getDefault().unregister(this)
         super.onStop()
         searchMenuItem?.collapseActionView()
         //this.closeBLEGatt()
 
     }
 
-//    fun closeBLEGatt() {
-//        if (mBluetoothGatt == null) {
-//            return
-//        }
-//        mMyoCallback?.stopCallback()
-//        mBluetoothGatt?.close()
-//        mBluetoothGatt = null
-//    }
-//
-//    fun startSaveModel() {
-//        val model = saveModel
-//        model!!.setAction(GestureDetectSendResultAction_Music(this)) //변경
-//        GestureDetectModelManager.setCurrentModel(model)
-//    }
-//
-//    fun startDetectModel() {
-//        val model = detectModel
-//        model!!.setAction(GestureDetectSendResultAction_Music(this))    //변경
-//        GestureDetectModelManager.setCurrentModel(model)
-//    }
-//
-//    fun startNopModel() {
-//        GestureDetectModelManager.setCurrentModel(NopModel())
-//    }
-//
-//    fun setGestureText(message: String) {
-//        mHandler!!.post(Runnable { gestureText?.setText(message) })
-//    }
-//
-//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-//        super.onActivityResult(requestCode, resultCode, data)
-//        if (requestCode == REQUEST_ENABLE_BT && resultCode == Activity.RESULT_OK) {
-//            if (mHandler != null) {
-//                mHandler.postDelayed(Runnable { mBluetoothAdapter?.stopLeScan(this@MainActivity) }, SCAN_PERIOD)
-//            }
-//            mBluetoothAdapter?.startLeScan(this)
-//        }
-//
-//    }
-//
-//    internal var detectOn = false
-
-/*
-    fun onClickdtt_music(v: View) {
-        if (detectOn == false) {
-            if (mBluetoothGatt == null || !mMyoCallback?.setMyoControlCommand(commandList.sendEmgOnly())!!) {
-                Log.d(TAG, "False EMG")d
-            } else {
-                saveMethod = GestureSaveMethod(-1, this, 1.0)
-                if (saveMethod!!.getSaveState() == GestureSaveMethod.SaveState.Have_Saved) {
-                    gestureText?.setText("DETECT Ready")
-                } else {
-                    gestureText?.setText("Teach me \'Gesture\'")
-                }
-                if (saveMethod!!.getSaveState() == GestureSaveMethod.SaveState.Have_Saved) {
-                    gestureText?.setText("Let's Go !!")
-                    /*detectMethod = new GestureDetectMethod(saveMethod.getCompareDataList());*/
-                    detectMethod = GestureDetectMethod_Music(mHandler, saveMethod!!.getCompareDataList())    //아예 새롭게 각각의 detectMethod를 구현하는것이 빠를것으로 예상된다.
-                    //detectMethod = new GestureDetectMethod(saveMethod.getCompareDataList(),algorithm1);
-                    detectModel = GestureDetectModel_Music(detectMethod)
-                    startDetectModel()
-                }
-                detectOn = true
-                dttButton?.setText("On")
-
-            }
-        } else if (detectOn == true) {
-            if (mBluetoothGatt == null
-                    || !mMyoCallback?.setMyoControlCommand(commandList.sendUnsetData())!!
-                    || !mMyoCallback?.setMyoControlCommand(commandList.sendNormalSleep())!!) {
-                Log.d(TAG, "False Data Stop")
-            }
-            detectOn = false
-            dttButton?.setText("Off")
-        }
-    }
-
-
-    fun emgOff() {
-        if (mBluetoothGatt == null
-                || !mMyoCallback?.setMyoControlCommand(commandList.sendUnsetData())!!
-                || !mMyoCallback?.setMyoControlCommand(commandList.sendNormalSleep())!!) {
-            Log.d(TAG, "Data Stop")
-
-        }
-    }
-*/
-
-
 //제스처에 따라 기능 얻어오는 곳
-
-    @org.greenrobot.eventbus.Subscribe(threadMode = ThreadMode.MAIN)
-    fun onMessageEvent(event: ServiceEvent.GestureEvent) {
-
-        gestureNum = event.gestureNumber
-        Log.d("MusicEvent", "MusicEvent Gesture num : " + event.gestureNumber)
-
-        when (gestureNum) {
-            0 -> {
-
-                if (smoothcount[gestureNum] > 1) {
-                    //intent로 Musicservice에 가서 기능 가져오기
-                    // 멈춤,재생
-//                    Intent(this, MusicService::class.java).apply {
 //
-//                        action = PLAYPAUSE
-//                        startService(this)
-//                    }
-                    sendIntent(PLAYPAUSE)
-
-                    //Send Vibration Event
-                    EventBus.getDefault().post(ServiceEvent.VibrateEvent(VIBRATION_A))
-                    //Restart lock Timer so user can use gesture continuously
-                    EventBus.getDefault().post(ServiceEvent.restartLockTimerEvent(ADDITIONAL_DELAY))
-
-                    Toasty.normal(this!!, "Play/Pause", Toast.LENGTH_SHORT, icon_1).show()
-                    smoothcount[gestureNum] = -1
-                    resetSmoothCount()
-                }
-
-                smoothcount[gestureNum]++
-            }
-
-            1 -> {
-
-                if (smoothcount[gestureNum] > 1){
-                    //이전
-//                    Intent(this, MusicService::class.java).apply {
+//    @org.greenrobot.eventbus.Subscribe(threadMode = ThreadMode.MAIN)
+//    fun onMessageEvent(event: ServiceEvent.GestureEvent) {
 //
-//                        action = PREVIOUS
-//                        startService(this)
-//                    }
-                    sendIntent(PREVIOUS)
-
-                    //Send Vibration Event
-                    EventBus.getDefault().post(ServiceEvent.VibrateEvent(VIBRATION_A))
-                    //Restart lock Timer so user can use gesture continuously
-                    EventBus.getDefault().post(ServiceEvent.restartLockTimerEvent(ADDITIONAL_DELAY))
-
-                    Toasty.normal(this!!, "Previous", Toast.LENGTH_SHORT, icon_2).show()
-                    smoothcount[gestureNum] = -1
-                    resetSmoothCount()
-                }
-                smoothcount[gestureNum]++
-            }
-
-            2 -> {
-                if (smoothcount[gestureNum] > 1) {
-//                    Intent(this, MusicService::class.java).apply {
+//        gestureNum = event.gestureNumber
+//        Log.d("MusicEvent", "MusicEvent Gesture num : " + event.gestureNumber)
 //
-//                        action = NEXT
-//                        startService(this)
-//                    }
-
-                    //앞으로
-                    sendIntent(NEXT)
-
-                    //Send Vibration Event
-                    EventBus.getDefault().post(ServiceEvent.VibrateEvent(VIBRATION_A))
-                    //Restart lock Timer so user can use gesture continuously
-                    EventBus.getDefault().post(ServiceEvent.restartLockTimerEvent(ADDITIONAL_DELAY))
-
-                    Toasty.normal(this!!, "Next", Toast.LENGTH_SHORT, icon_3).show()
-                    smoothcount[gestureNum] = -1
-                    resetSmoothCount()
-                }
-                smoothcount[gestureNum]++
-            }
-
-            3 -> {
-                if (smoothcount[gestureNum] > 1) {
-
-
-
-                    smoothcount[gestureNum] = -1
-                    resetSmoothCount()
-                }
-                smoothcount[gestureNum]++
-            }
-
-            else -> {
-            }
-        }
-    }
-
-    fun resetSmoothCount() {
-
-        for ( i in smoothcount) {
-            val i = -1
-        }
-    }
+//        when (gestureNum) {
+//            0 -> {
+//
+//                if (smoothcount[gestureNum] > 1) {
+//                    //intent로 Musicservice에 가서 기능 가져오기
+//                    // 멈춤,재생
+////                    Intent(this, MusicService::class.java).apply {
+////
+////                        action = PLAYPAUSE
+////                        startService(this)
+////                    }
+//                    sendIntent(PLAYPAUSE)
+//
+//                    //Send Vibration Event
+//                    EventBus.getDefault().post(ServiceEvent.VibrateEvent(VIBRATION_A))
+//                    //Restart lock Timer so user can use gesture continuously
+//                    EventBus.getDefault().post(ServiceEvent.restartLockTimerEvent(ADDITIONAL_DELAY))
+//
+//                    Toasty.normal(this!!, "Play/Pause", Toast.LENGTH_SHORT, icon_1).show()
+//                    smoothcount[gestureNum] = -1
+//                    resetSmoothCount()
+//                }
+//
+//                smoothcount[gestureNum]++
+//            }
+//
+//            1 -> {
+//
+//                if (smoothcount[gestureNum] > 1){
+//                    //이전
+////                    Intent(this, MusicService::class.java).apply {
+////
+////                        action = PREVIOUS
+////                        startService(this)
+////                    }
+//                    sendIntent(PREVIOUS)
+//
+//                    //Send Vibration Event
+//                    EventBus.getDefault().post(ServiceEvent.VibrateEvent(VIBRATION_A))
+//                    //Restart lock Timer so user can use gesture continuously
+//                    EventBus.getDefault().post(ServiceEvent.restartLockTimerEvent(ADDITIONAL_DELAY))
+//
+//                    Toasty.normal(this!!, "Previous", Toast.LENGTH_SHORT, icon_2).show()
+//                    smoothcount[gestureNum] = -1
+//                    resetSmoothCount()
+//                }
+//                smoothcount[gestureNum]++
+//            }
+//
+//            2 -> {
+//                if (smoothcount[gestureNum] > 1) {
+////                    Intent(this, MusicService::class.java).apply {
+////
+////                        action = NEXT
+////                        startService(this)
+////                    }
+//
+//                    //앞으로
+//                    sendIntent(NEXT)
+//
+//                    //Send Vibration Event
+//                    EventBus.getDefault().post(ServiceEvent.VibrateEvent(VIBRATION_A))
+//                    //Restart lock Timer so user can use gesture continuously
+//                    EventBus.getDefault().post(ServiceEvent.restartLockTimerEvent(ADDITIONAL_DELAY))
+//
+//                    Toasty.normal(this!!, "Next", Toast.LENGTH_SHORT, icon_3).show()
+//                    smoothcount[gestureNum] = -1
+//                    resetSmoothCount()
+//                }
+//                smoothcount[gestureNum]++
+//            }
+//
+//            3 -> {
+//                if (smoothcount[gestureNum] > 1) {
+//
+//
+//
+//                    smoothcount[gestureNum] = -1
+//                    resetSmoothCount()
+//                }
+//                smoothcount[gestureNum]++
+//            }
+//
+//            else -> {
+//            }
+//        }
+//    }
+//
+//    fun resetSmoothCount() {
+//
+//        for ( i in smoothcount) {
+//            val i = -1
+//        }
+//    }
 }
