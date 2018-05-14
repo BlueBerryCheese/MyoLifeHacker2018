@@ -31,4 +31,12 @@
 
             />
     </ScrollView>
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/lottie_gallery"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:lottie_fileName="material_wave_loading.json"
+        android:gravity="center"
+        android:layout_marginTop="550dp"/>
 </RelativeLayout>
+
