@@ -120,7 +120,7 @@ public class SystemControlActivity extends AppCompatActivity {
 
         FontConfig.setGlobalFont(this,getWindow().getDecorView());
         animationView_system = (LottieAnimationView) findViewById(R.id.lottie_system);
-       // animationView_system.setVisibility(View.INVISIBLE);
+        animationView_system.setVisibility(View.INVISIBLE);
       //  final LottieAnimationView animationView_system = (LottieAnimationView) findViewById(R.id.lottie);
       //  animationView_system
         //startNopModel() will setCurrentModel to another model so Service's gesture detect model won't work! - So I commented out
