@@ -7,10 +7,12 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.bosong.commentgallerylib.CommentGalleryContainer;
 import com.bosong.commentgallerylib.CommentImageGrid;
 
@@ -24,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import blueberrycheese.myolifehacker.FontConfig;
 import blueberrycheese.myolifehacker.R;
 import blueberrycheese.myolifehacker.Toasty;
 import blueberrycheese.myolifehacker.events.ServiceEvent;
@@ -33,12 +36,13 @@ public class GalleryActivity extends AppCompatActivity {
     public static final String COMMENT_LIST = "COMMENT_LIST";
     public static final String LIST_SIZE = "LIST_SIZE";
     private static final String SAMPLE_COMMENT = "";
-
+    private LottieAnimationView animationView_gallery;
     private static final int VIBRATION_A = 1;
     private static final int VIBRATION_B = 2;
     private static final int VIBRATION_C = 3;
     private static final int ADDITIONAL_DELAY = 0;
 
+    private boolean myoConnection;
     private CommentImageGrid mCommentGrid;
     private TextView img_pager;
     CommentGalleryContainer commentList;
@@ -101,6 +105,10 @@ public class GalleryActivity extends AppCompatActivity {
         icon_5 = getResources().getDrawable(R.drawable.gesture_5_w);
         icon_6 = getResources().getDrawable(R.drawable.gesture_6_w);
 
+        FontConfig.setGlobalFont(this,getWindow().getDecorView());
+        animationView_gallery = (LottieAnimationView) findViewById(R.id.lottie_gallery);
+        animationView_gallery.setVisibility(View.INVISIBLE);
+
         post_postionNum=positionNum;
         mCommentGrid.setOnItemClickLisener(new CommentImageGrid.OnItemClickListener() {
             @Override
@@ -134,6 +142,22 @@ public class GalleryActivity extends AppCompatActivity {
         super.onStop();
 //        this.closeBLEGatt();
     }
+
+    // 마요 연결되어 있으면 애니메이션 재생
+    @Subscribe(sticky = true)
+    public void getMyoDevice(ServiceEvent.myoConnected_Event event) {
+        myoConnection = event.connection;
+        if(myoConnection) {
+            animationView_gallery.playAnimation();
+            animationView_gallery.loop(true);
+            animationView_gallery.setVisibility(View.VISIBLE);
+        }
+        else {
+            animationView_gallery.cancelAnimation();
+            animationView_gallery.setVisibility(View.INVISIBLE);
+        }
+    }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(ServiceEvent.GestureEvent event) {
         gestureNum = event.gestureNumber;

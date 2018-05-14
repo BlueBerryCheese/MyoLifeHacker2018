@@ -55,6 +55,13 @@ public class ServiceEvent {
         }
     }
 
+    public static class myoConnected_Event{
+        public boolean connection;
+        public myoConnected_Event(boolean flag){
+            this.connection = flag;
+        }
+    }
+
 
     ///////Test
 

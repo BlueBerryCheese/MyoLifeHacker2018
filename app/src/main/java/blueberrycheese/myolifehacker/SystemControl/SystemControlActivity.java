@@ -82,6 +82,7 @@ public class SystemControlActivity extends AppCompatActivity {
     private GestureDetectModel_System detectModel;
     private GestureDetectMethod_System detectMethod;
 
+    private boolean myoConnection;
     private Button Option1;
     private Button Option2;
     private Button Option3;
@@ -253,6 +254,22 @@ public class SystemControlActivity extends AppCompatActivity {
 //            mBluetoothAdapter.startLeScan(this);
 //        }
     }
+
+    // 마요 연결되어 있으면 애니메이션 재생
+    @Subscribe(sticky = true)
+    public void getMyoDevice(ServiceEvent.myoConnected_Event event) {
+        myoConnection = event.connection;
+        if(myoConnection) {
+            animationView_system.playAnimation();
+            animationView_system.loop(true);
+            animationView_system.setVisibility(View.VISIBLE);
+        }
+        else {
+            animationView_system.cancelAnimation();
+            animationView_system.setVisibility(View.INVISIBLE);
+        }
+    }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(ServiceEvent.GestureEvent event) {
         gestureNum = event.gestureNumber;
