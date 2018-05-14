@@ -9,13 +9,10 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothManager;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.IBinder;
-import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.airbnb.lottie.LottieAnimationView;
 
@@ -24,7 +21,6 @@ import org.greenrobot.eventbus.Subscribe;
 
 import blueberrycheese.myolifehacker.MyoApp;
 import blueberrycheese.myolifehacker.R;
-import blueberrycheese.myolifehacker.Toasty;
 import blueberrycheese.myolifehacker.events.ServiceEvent;
 
 public class MyoService extends Service {
@@ -52,7 +48,7 @@ public class MyoService extends Service {
     private GestureDetectModel detectModel;
     private GestureDetectMethod detectMethod;
     private IGestureDetectModel model;
-    private Drawable locked, unlocked;
+
     private int gestureNum = -1;
     private int falseCount = 0;
 
@@ -76,8 +72,6 @@ public class MyoService extends Service {
     @Override
     public void onCreate(){
         super.onCreate();
-        locked = getResources().getDrawable(R.drawable.locked);
-        unlocked = getResources().getDrawable(R.drawable.unlocked);
     }
 
     @Override
@@ -234,18 +228,8 @@ public class MyoService extends Service {
                 if (smoothcount[gestureNum] > 2) {
                     if(!myoApp.isUnlocked()){
                         myoApp.unlockGesture(0);
-
-                        Handler mHandler = new Handler(Looper.getMainLooper());
-                        mHandler.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                // 내용
-                                Toasty.normal(getBaseContext(),"Gesture recognition Unlocked", Toast.LENGTH_SHORT,unlocked).show();
-                            }
-                        }, 0);
                         Log.d(TAG,"Unlock "+ LITTLEFINGER);
                     }
-
                     //create runnable for lock.
                     mHandler.postDelayed(lockRunnable, TIMETOLOCK);
 
@@ -269,14 +253,6 @@ public class MyoService extends Service {
                 if (smoothcount[gestureNum] > 2) {
                     if(!myoApp.isUnlocked()){
                         myoApp.unlockGesture(1);
-                        Handler mHandler = new Handler(Looper.getMainLooper());
-                        mHandler.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                // 내용
-                                Toasty.normal(getBaseContext(),"Gesture recognition Unlocked", Toast.LENGTH_SHORT,unlocked).show();
-                            }
-                        }, 0);
                         Log.d(TAG,"Unlock "+ SCISSORS);
                     }
 
@@ -288,7 +264,6 @@ public class MyoService extends Service {
 
                     resetSmoothCount();
 //                    smoothcount[gestureNum] = -1;
-
                     mHandler.removeCallbacks(resetCountRunnable);
                 }
 
@@ -325,7 +300,6 @@ public class MyoService extends Service {
         public void run(){
             //Lock gesture
             myoApp.lockGesture();
-            Toasty.normal(getBaseContext(),"Time over myo Locked", Toast.LENGTH_SHORT,locked).show();
             Log.e(TAG,"Lock_Runnable : Gesture locked");
         }
     };
@@ -334,7 +308,6 @@ public class MyoService extends Service {
     public void restartLockTimer(ServiceEvent.restartLockTimerEvent event){
         mHandler.removeCallbacks(lockRunnable);
         mHandler.postDelayed(lockRunnable, TIMETOLOCK);
-      //  Toasty.normal(getBaseContext(),"Lock_Runnable : restart Lock Timer!", Toast.LENGTH_SHORT).show();
         Log.e(TAG,"Lock_Runnable : restart Lock Timer!");
     }
 
