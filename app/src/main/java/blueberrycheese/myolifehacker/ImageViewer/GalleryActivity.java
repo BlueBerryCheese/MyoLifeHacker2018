@@ -2,12 +2,14 @@ package blueberrycheese.myolifehacker.ImageViewer;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.WindowManager;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bosong.commentgallerylib.CommentGalleryContainer;
 import com.bosong.commentgallerylib.CommentImageGrid;
@@ -23,6 +25,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import blueberrycheese.myolifehacker.R;
+import blueberrycheese.myolifehacker.Toasty;
 import blueberrycheese.myolifehacker.events.ServiceEvent;
 
 public class GalleryActivity extends AppCompatActivity {
@@ -46,6 +49,7 @@ public class GalleryActivity extends AppCompatActivity {
     int[] smoothcount = new int[6];
     private int gestureNum = -1;
     private int positionNum = 0;
+    private Drawable icon_1,icon_2,icon_3,icon_4,icon_5,icon_6;
     private int post_postionNum=-1;
     private int paddingDp;
     private float density;
@@ -89,6 +93,13 @@ public class GalleryActivity extends AppCompatActivity {
 //        mCommentGrid.getChildAt(positionNum).setPadding(paddingPixel,paddingPixel,paddingPixel,paddingPixel);
 //        mCommentGrid.getChildAt(positionNum).setBackground(getResources().getDrawable(R.color.color_accent));
         ActiveImage(positionNum);
+
+        icon_1 = getResources().getDrawable(R.drawable.gesture_1_w);
+        icon_2 = getResources().getDrawable(R.drawable.gesture_2_w);
+        icon_3 = getResources().getDrawable(R.drawable.gesture_3_w);
+        icon_4 = getResources().getDrawable(R.drawable.gesture_4_w);
+        icon_5 = getResources().getDrawable(R.drawable.gesture_5_w);
+        icon_6 = getResources().getDrawable(R.drawable.gesture_6_w);
 
         post_postionNum=positionNum;
         mCommentGrid.setOnItemClickLisener(new CommentImageGrid.OnItemClickListener() {
@@ -145,7 +156,7 @@ public class GalleryActivity extends AppCompatActivity {
                     it.putExtra(LIST_SIZE,urls.size());
                     it.setClass(GalleryActivity.this, CommentGalleryActivity.class);
                     startActivity(it);
-
+                    Toasty.normal(getBaseContext(),"Open picture", Toast.LENGTH_SHORT, icon_1).show();
                 }
 
 
@@ -172,6 +183,7 @@ public class GalleryActivity extends AppCompatActivity {
 //                    mCommentGrid.getChildAt(post_postionNum).setBackground(getResources().getDrawable(R.drawable.transparent_button));
 //                    mCommentGrid.getChildAt(positionNum).setBackground(getResources().getDrawable(R.color.color_accent));
                     post_postionNum=positionNum;
+                    Toasty.normal(getBaseContext(),"Previous picture", Toast.LENGTH_SHORT, icon_2).show();
                     resetSmoothCount();
                 }
 
@@ -198,6 +210,7 @@ public class GalleryActivity extends AppCompatActivity {
 //                    mCommentGrid.getChildAt(post_postionNum).setBackground(getResources().getDrawable(R.color.Transparent));
 //                    mCommentGrid.getChildAt(positionNum).setBackground(getResources().getDrawable(R.color.color_accent));
                     post_postionNum=positionNum;
+                    Toasty.normal(getBaseContext(),"Next Picture", Toast.LENGTH_SHORT, icon_3).show();
                     resetSmoothCount();
                 }
 

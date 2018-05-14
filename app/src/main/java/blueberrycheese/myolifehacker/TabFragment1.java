@@ -9,6 +9,7 @@ import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCallback;
 import android.bluetooth.BluetoothManager;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -96,8 +97,7 @@ public class TabFragment1 extends Fragment {
     private BluetoothDevice device;
     private OnFragmentInteractionListener mListener;
     String deviceName;
-    private Button btn_im,btn_im2,btn_im3;
-
+    private Drawable icon_1,icon_2,icon_3,icon_4,icon_5,icon_6;
     private GestureSaveModel saveModel;
     private GestureSaveMethod   saveMethod;
     private GestureDetectModel_Menu detectModel;
@@ -138,6 +138,12 @@ public class TabFragment1 extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
         FontConfig.setGlobalFont(getActivity(),getActivity().getWindow().getDecorView());
+        icon_1 = getResources().getDrawable(R.drawable.gesture_1_w);
+        icon_2 = getResources().getDrawable(R.drawable.gesture_2_w);
+        icon_3 = getResources().getDrawable(R.drawable.gesture_3_w);
+        icon_4 = getResources().getDrawable(R.drawable.gesture_4_w);
+        icon_5 = getResources().getDrawable(R.drawable.gesture_5_w);
+        icon_6 = getResources().getDrawable(R.drawable.gesture_6_w);
     }
     public Button btn_hello;
     @Override
@@ -156,9 +162,7 @@ public class TabFragment1 extends Fragment {
         circleMenuButton_camera = (CircleMenuButton)view.findViewById(R.id.camera_button);
         circleMenuButton_gallery = (CircleMenuButton)view.findViewById(R.id.gallery_button);
 //        circleMenu.setBackgroundColor(getResources().getColor(R.color.FontColor));
-        btn_im = (Button)view.findViewById(R.id.btnin);
-        btn_im2 = (Button)view.findViewById(R.id.btnin_2);
-        btn_im3 = (Button)view.findViewById(R.id.btnin_3);
+
 
 
         final LottieAnimationView animationView = (LottieAnimationView) view.findViewById(R.id.lottie);
@@ -185,6 +189,7 @@ public class TabFragment1 extends Fragment {
             }
         });
 
+        /*
         btn_im.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -205,6 +210,7 @@ public class TabFragment1 extends Fragment {
             public void onClick(View v) {
                 animationView.setVisibility(View.GONE);
             }    });
+            */
         animationView.playAnimation();
         //animationView.setAnimation(View.INVISIBLE);
        // animationView.setVisibility(view.GONE);
@@ -227,13 +233,15 @@ public class TabFragment1 extends Fragment {
                // animationView.loop(true);
                // animationView.cancelAnimation();
 
+
                 switch(viewId){
                     case R.id.camera_button:
                         Log.d("cameracircle","cameraclicked");
                         Intent intent = new Intent(getActivity().getApplicationContext(), CameraActivity.class);
 //                        intent.putExtra("bluetoothDevice", device);
                         startActivity(intent);
-                        Toasty.success(getContext(), "Open camera", Toast.LENGTH_SHORT, false).show();
+                        //Toasty.success(getContext(), "Open camera", Toast.LENGTH_SHORT, true).show();
+                        Toasty.normal(getContext(),"Open camera",Toast.LENGTH_SHORT, icon_3).show();
                        // animationView.cancelAnimation();
                        // animationView.setVisibility(View.GONE);
                         break;
@@ -243,7 +251,8 @@ public class TabFragment1 extends Fragment {
                         Intent intent2 = new Intent(getActivity().getApplicationContext(), SystemControlActivity.class);
                         intent2.putExtra("bluetoothDevice", device);
                         startActivity(intent2);
-                        Toasty.success(getContext(), "Open interior function", Toast.LENGTH_SHORT, false).show();
+                        //Toasty.success(getContext(), "Open interior function", Toast.LENGTH_SHORT, true).show();
+                        Toasty.normal(getContext(),"Open interior function",Toast.LENGTH_SHORT, icon_2).show();
                         //animationView.cancelAnimation();
                        // animationView.setVisibility(View.GONE);
                         break;
@@ -252,7 +261,8 @@ public class TabFragment1 extends Fragment {
                         Intent intent3 = new Intent(getActivity().getApplicationContext(), blueberrycheese.myolifehacker.myo_music.activities.activitys.MainActivity.class);
                         intent3.putExtra("bluetoothDevice", device);
                         startActivity(intent3);
-                        Toasty.success(getContext(), "Open music", Toast.LENGTH_SHORT, false).show();
+                        //Toasty.success(getContext(), "Open music", Toast.LENGTH_SHORT, true).show();
+                        Toasty.normal(getContext(),"Open music",Toast.LENGTH_SHORT, icon_5).show();
                        // animationView.cancelAnimation();
                        // animationView.setVisibility(View.GONE);
                         break;
@@ -261,7 +271,8 @@ public class TabFragment1 extends Fragment {
                         Intent intent4 = new Intent(getActivity().getApplicationContext(), GalleryActivity.class);
                         intent4.putExtra("bluetoothDevice", device);
                         startActivity(intent4);
-                        Toasty.success(getContext(), "Open gallery", Toast.LENGTH_SHORT, false).show();
+                        //Toasty.success(getContext(), "Open gallery", Toast.LENGTH_SHORT, true).show();
+                        Toasty.normal(getContext(),"Open gallery",Toast.LENGTH_SHORT, icon_4).show();
                         //animationView.cancelAnimation();
                         //animationView.setVisibility(View.GONE);
                         break;
@@ -434,7 +445,9 @@ public class TabFragment1 extends Fragment {
 
                     smoothcount[gestureNum]=-1;
                     resetSmoothCount();
-                    Toasty.success(getContext(), "Open menu", Toast.LENGTH_SHORT, false).show();
+                   // Toasty.success(getContext(), "Open menu", Toast.LENGTH_SHORT, false).show();
+                    Toasty.normal(getContext(),"Open menu",Toast.LENGTH_SHORT, icon_1).show();
+
                 }
                 smoothcount[gestureNum]++;
 
@@ -453,7 +466,7 @@ public class TabFragment1 extends Fragment {
 
                     resetSmoothCount();
                     smoothcount[gestureNum]=-1;
-                    Toasty.success(getContext(), "Open interior function", Toast.LENGTH_SHORT, false).show();
+                    Toasty.normal(getContext(),"Open nterior function",Toast.LENGTH_SHORT, icon_2).show();
                 }
                 smoothcount[gestureNum]++;
                 break;
@@ -471,8 +484,7 @@ public class TabFragment1 extends Fragment {
 
                     resetSmoothCount();
                     smoothcount[gestureNum]=-1;
-
-                    Toasty.success(getContext(), "Open camera", Toast.LENGTH_SHORT, false).show();
+                    Toasty.normal(getContext(),"Open camera",Toast.LENGTH_SHORT, icon_3).show();
                 }
                 smoothcount[gestureNum]++;
                 break;
@@ -490,8 +502,7 @@ public class TabFragment1 extends Fragment {
 
                     resetSmoothCount();
                     smoothcount[gestureNum]=-1;
-
-                    Toasty.success(getContext(), "Open gallery", Toast.LENGTH_SHORT, false).show();
+                    Toasty.normal(getContext(),"Open gallery",Toast.LENGTH_SHORT, icon_4).show();
                 }
                 smoothcount[gestureNum]++;
                 break;
@@ -508,8 +519,7 @@ public class TabFragment1 extends Fragment {
 
                 resetSmoothCount();
                 smoothcount[gestureNum]=-1;
-
-                Toasty.success(getContext(), "Open music", Toast.LENGTH_SHORT, false).show();
+                Toasty.normal(getContext(),"Open music",Toast.LENGTH_SHORT, icon_5).show();
             }
                 smoothcount[gestureNum]++;
                 break;

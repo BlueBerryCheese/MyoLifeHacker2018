@@ -216,7 +216,7 @@ public class TabFragment3 extends Fragment {
 
         //텍스트뷰 폰트설정
         ///////
-        Typeface font = Typeface.createFromAsset(getActivity().getAssets(), "BMYEONSUNG_ttf.ttf");
+        Typeface font = Typeface.createFromAsset(getActivity().getAssets(), "yun_340.ttf");
         textView_tutorial.setTypeface(font);
         gestureText.setTypeface(font);
 
@@ -402,7 +402,7 @@ public class TabFragment3 extends Fragment {
                                 MyoDataFileReader dataFileReader = new MyoDataFileReader(TAG,FileList_kmeans);
                                 dataFileReader.removeFile(inds_remove);     //removeFile 메소드 호출
                                 saveMethod.setState(GestureSaveMethod.SaveState.Not_Saved);
-                                Toasty.success(ncontext, "Delete succes", Toast.LENGTH_SHORT, false).show();
+                                Toasty.success(ncontext, "Delete succes", Toast.LENGTH_SHORT, true).show();
                             }
                         }
                 );
@@ -468,7 +468,7 @@ public class TabFragment3 extends Fragment {
                         views[i].setBackgroundResource(R.drawable.imgbtn_default);
                     }
                     if(inds_gesture_num!=0)
-                        Toasty.info(ncontext, "Gesture "+inds_gesture_num+" save complete", Toast.LENGTH_SHORT, false).show();
+                        Toasty.info(ncontext, "Gesture "+inds_gesture_num+" save complete", Toast.LENGTH_SHORT, true).show();
                     //  gestureSaveImageChange(inds_num);
                 }
                 gestureText.setText("Gesture" + (inds_num + 1) + "'s Saving Count : " + (saveMethod.getGestureCounter() + 1)); // 아래쪽 텍스트 변경
@@ -527,7 +527,7 @@ public class TabFragment3 extends Fragment {
                         }
                     },1000);
 
-                    Toasty.error(ncontext, "Please delete model first", Toast.LENGTH_LONG,false).show();
+                    Toasty.error(ncontext, "Please delete model first", Toast.LENGTH_LONG,true).show();
                 } else if (saveMethod.getSaveState() == GestureSaveMethod.SaveState.Not_Saved || saveMethod.getSaveState() == GestureSaveMethod.SaveState.Now_Saving) {
                     saveMethod.setState(GestureSaveMethod.SaveState.Now_Saving);
                     // dialog= new LoadingDialog().setProgress(mactivity);

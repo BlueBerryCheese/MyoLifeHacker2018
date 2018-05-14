@@ -40,6 +40,6 @@ final class ToastyUtils {
             return context.getDrawable(id);
         else
             return context.getResources().getDrawable(id);
-        
+
     }
 }

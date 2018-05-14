@@ -23,7 +23,7 @@ import android.widget.Toast;
 @SuppressLint("InflateParams")
 public class Toasty {
     @ColorInt
-    private static int DEFAULT_TEXT_COLOR = Color.parseColor("#000000");
+    private static int DEFAULT_TEXT_COLOR = Color.parseColor("#FFFFFF");
     @ColorInt
     private static int ERROR_COLOR = Color.parseColor("#D50000");
     @ColorInt

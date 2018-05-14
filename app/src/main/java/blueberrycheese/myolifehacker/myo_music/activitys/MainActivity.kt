@@ -1,6 +1,7 @@
 package blueberrycheese.myolifehacker.myo_music.activities.activitys
 
 import android.app.Activity
+import android.app.PendingIntent.getActivity
 import android.app.SearchManager
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
@@ -9,6 +10,7 @@ import android.bluetooth.BluetoothManager
 import android.content.Context
 import android.content.Intent
 import android.graphics.Paint
+import android.graphics.Typeface
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.media.AudioManager
@@ -28,6 +30,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.SeekBar
 import android.widget.TextView
+import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
@@ -45,10 +48,12 @@ import com.simplemobiletools.commons.models.RadioItem
 import com.simplemobiletools.commons.models.Release
 import com.simplemobiletools.commons.views.MyLinearLayoutManager
 import blueberrycheese.myolifehacker.BuildConfig
+import blueberrycheese.myolifehacker.FontConfig
 import blueberrycheese.myolifehacker.R
 import blueberrycheese.myolifehacker.R.string.playpause
 import blueberrycheese.myolifehacker.SystemControl.GestureDetectMethod_System
 import blueberrycheese.myolifehacker.SystemControl.GestureDetectModel_System
+import blueberrycheese.myolifehacker.Toasty
 import blueberrycheese.myolifehacker.events.ServiceEvent
 import blueberrycheese.myolifehacker.myo_manage.*
 import blueberrycheese.myolifehacker.myo_music.Gesture.GestureDetectMethod_Music
@@ -67,6 +72,7 @@ import blueberrycheese.myolifehacker.myo_music.activities.models.Events
 import blueberrycheese.myolifehacker.myo_music.activities.models.Playlist
 import blueberrycheese.myolifehacker.myo_music.activities.models.Song
 import blueberrycheese.myolifehacker.myo_music.activities.services.MusicService
+import com.airbnb.lottie.LottieAnimationView
 import com.squareup.otto.Bus
 import com.squareup.otto.Subscribe
 import kotlinx.android.synthetic.main.music_activity_main.*
@@ -87,6 +93,12 @@ class MainActivity : SimpleActivity(), SongListListener{
     private var artView: ViewGroup? = null
     private var oldCover: Drawable? = null
 
+    private var icon_1: Drawable? = null
+    private var icon_2:Drawable? = null
+    private var icon_3:Drawable? = null
+    private var icon_4:Drawable? = null
+    private var icon_5:Drawable? = null
+    private var icon_6:Drawable? = null
     private var actionbarSize = 0
     private var topArtHeight = 0
 
@@ -110,7 +122,7 @@ class MainActivity : SimpleActivity(), SongListListener{
     private val commandList = MyoCommandList()
     private var deviceName: String? = null
     internal var gestureString = arrayOf("WiFi On, Off", "Sound Mode Chnage ", "Volume Up", "Volume Down", "Brightness Up", "Brightness Down")
-
+    internal var animationView_music: LottieAnimationView? = null
     private val saveModel: GestureSaveModel? = null
     private var saveMethod: GestureSaveMethod? = null
     private var detectModel: GestureDetectModel_Music? = null
@@ -129,9 +141,33 @@ class MainActivity : SimpleActivity(), SongListListener{
         super.onCreate(savedInstanceState)
         setContentView(R.layout.music_activity_main)
 
+        FontConfig.setGlobalFont(this, this!!.getWindow().getDecorView())
+        icon_1 = resources.getDrawable(R.drawable.gesture_1_w)
+        icon_2 = resources.getDrawable(R.drawable.gesture_2_w)
+        icon_3 = resources.getDrawable(R.drawable.gesture_3_w)
+        icon_4 = resources.getDrawable(R.drawable.gesture_4_w)
+        icon_5 = resources.getDrawable(R.drawable.gesture_5_w)
+        icon_6 = resources.getDrawable(R.drawable.gesture_6_w)
+      //  playlist = findViewById(R.id.playlists_list) as TextView
         appLaunched()
         isThirdPartyIntent = intent.action == Intent.ACTION_VIEW
 
+        /*
+        View view=inflater.inflate(R.layout.music_activity_playlists, parent,false)
+        Util.setGlobalFont(context, view)
+        MyViewHolder holder=new MyViewHolder(view)
+        return holder
+
+        */
+
+       // lottie_music.visibility(INVISIABLE)
+        lottie_music.playAnimation()
+        lottie_music.loop(true)
+        /*
+        animationView_music = findViewById<View>(R.id.lottie_music) as LottieAnimationView
+        animationView_music!!.playAnimation()
+        animationView_music.loop(true)
+  */
         bus = BusProvider.instance
         bus.register(this)
         initSeekbarChangeListener()
@@ -872,6 +908,7 @@ class MainActivity : SimpleActivity(), SongListListener{
                     //Restart lock Timer so user can use gesture continuously
                     EventBus.getDefault().post(ServiceEvent.restartLockTimerEvent(ADDITIONAL_DELAY))
 
+                    Toasty.normal(this!!, "Play/Pause", Toast.LENGTH_SHORT, icon_1).show()
                     smoothcount[gestureNum] = -1
                     resetSmoothCount()
                 }
@@ -895,6 +932,7 @@ class MainActivity : SimpleActivity(), SongListListener{
                     //Restart lock Timer so user can use gesture continuously
                     EventBus.getDefault().post(ServiceEvent.restartLockTimerEvent(ADDITIONAL_DELAY))
 
+                    Toasty.normal(this!!, "Previous", Toast.LENGTH_SHORT, icon_2).show()
                     smoothcount[gestureNum] = -1
                     resetSmoothCount()
                 }
@@ -917,6 +955,7 @@ class MainActivity : SimpleActivity(), SongListListener{
                     //Restart lock Timer so user can use gesture continuously
                     EventBus.getDefault().post(ServiceEvent.restartLockTimerEvent(ADDITIONAL_DELAY))
 
+                    Toasty.normal(this!!, "Next", Toast.LENGTH_SHORT, icon_3).show()
                     smoothcount[gestureNum] = -1
                     resetSmoothCount()
                 }
