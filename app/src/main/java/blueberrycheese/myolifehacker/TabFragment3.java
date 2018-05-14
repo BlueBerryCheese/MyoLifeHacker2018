@@ -6,11 +6,17 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.RelativeSizeSpan;
+import android.text.style.StyleSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -59,7 +65,7 @@ public class TabFragment3 extends Fragment {
     private final static String FileList_kmeans = "KMEANS_DATA.dat";
     private final static String FileList[] = {"Gesture1.txt","Gesture2.txt","Gesture3.txt","Gesture4.txt","Gesture5.txt","Gesture6.txt"};
     private static int[] remove_gesture_image = {R.drawable.gesture_model_nb,R.drawable.gesture_all_nb,R.drawable.gesture_allgesture_nb,R.drawable.gesture_1_nb,R.drawable.gesture_2_nb,R.drawable.gesture_3_nb,R.drawable.gesture_4_nb,R.drawable.gesture_5_nb,R.drawable.gesture_6_nb};
-    private static int[] adapt_image = {R.drawable.percent_100_nb,R.drawable.percent_80_nb,R.drawable.percent_60_nb,R.drawable.percent_40_nb,R.drawable.percent_20_nb};
+    private static int[] adapt_image = {R.drawable.percent_100_nb,R.drawable.percent_80_nb,R.drawable.percent_60_nb,R.drawable.percent_40_nb,R.drawable.percent_20_nb,R.drawable.percent_0_nb};
     private static int[] save_gesture_image = {R.drawable.gesture_1_nb,R.drawable.gesture_2_nb,R.drawable.gesture_3_nb,R.drawable.gesture_4_nb,R.drawable.gesture_5_nb,R.drawable.gesture_6_nb};
 
 
@@ -216,10 +222,17 @@ public class TabFragment3 extends Fragment {
 
         //텍스트뷰 폰트설정
         ///////
-        Typeface font = Typeface.createFromAsset(getActivity().getAssets(), "yun_340.ttf");
+        Typeface font = Typeface.createFromAsset(getActivity().getAssets(), "NanumBarunGothic.ttf");
         textView_tutorial.setTypeface(font);
         gestureText.setTypeface(font);
 
+        String boldText = "\n\n제스처 러닝";
+        String normalText = "\n\n제스처가 잘 인식될 수 있도록\n 학습하는 메뉴입니다.";
+        SpannableString str = new SpannableString(boldText + normalText);
+        str.setSpan(new StyleSpan(Typeface.BOLD), 0, boldText.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE); //set bold
+        str.setSpan(new RelativeSizeSpan(1.2f), 0, boldText.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE); //set size
+        str.setSpan(new ForegroundColorSpan(Color.BLACK), 0, boldText.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);// set color
+        textView_tutorial.setText(str);
         //애니메이션
         ////////////////
 
@@ -501,6 +514,9 @@ public class TabFragment3 extends Fragment {
                     case 4:     // 20%
                         pass_adapter=0.2;
                         break;
+                    case 5:
+                        pass_adapter=0.0;
+                        break;
                 }
 
                 final Context ncontext = v.getContext();
@@ -564,7 +580,17 @@ public class TabFragment3 extends Fragment {
                 //0:NONE,1:TOP_OPENED,2:MIDDLE_OPENED,3:BOTTOM_OPENED
                 Animation animation;
                 Animation animation1;
-                textView_tutorial.setText("잘 인식되지 않는 제스처를 선택하여\n 제스처를 반복적으로 취해주시고 \nLearn버튼을 눌러주세요.");
+                String boldText = "잘 인식되지 않는 제스처를 선택";
+                String normalText = "하여";
+                String boldText2 = "\n제스처를 반복적으로 취한 후\nLearn버튼";
+                String normalText2 = "을 누르세요.";
+                SpannableString str = new SpannableString(boldText + normalText+boldText2+normalText2);
+                str.setSpan(new StyleSpan(Typeface.BOLD), 0, boldText.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE); //set bold
+                //str.setSpan(new ForegroundColorSpan(Color.BLACK), 0, boldText.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);// set color
+                str.setSpan(new StyleSpan(Typeface.BOLD), boldText.length()+normalText.length(), boldText.length()+normalText.length()+boldText2.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE); //set bold
+                //str.setSpan(new ForegroundColorSpan(Color.BLACK), boldText.length()+normalText.length(), boldText.length()+normalText.length()+boldText2.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);// set color
+                textView_tutorial.setText(str);
+
                 switch (state) {
                     case 0:
                         //Additional text for tutorial
@@ -593,6 +619,7 @@ public class TabFragment3 extends Fragment {
                     default:
                         break;
                 }
+
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -603,8 +630,20 @@ public class TabFragment3 extends Fragment {
                         SelectLinearLayout.setVisibility(View.VISIBLE);
                         main_linearlayout.removeView(showRelativelayout);
                         main_linearlayout.addView(showRelativelayout,1);
+
+
                     }
                 },1010);
+
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        main_linearlayout.removeView(showRelativelayout);
+                        main_linearlayout.addView(showRelativelayout,1);
+
+
+                    }
+                },1020);
                 state=1;
 
             }
@@ -615,7 +654,13 @@ public class TabFragment3 extends Fragment {
                 //0:NONE,1:TOP_OPENED,2:MIDDLE_OPENED,3:BOTTOM_OPENED
                 Animation animation;
                 Animation animation1;
-                textView_tutorial.setText("생성 시 사용될 기존 데이터 비율(%)을 아래에서 지정해준 후\nAdapt 버튼을 눌러주세요.");
+                String boldText = "생성 시 사용될 기존 제스처 비율(%)을 선택 ";
+                String normalText = "후\nAdapt 버튼을 누르세요.";
+
+                SpannableString str = new SpannableString(boldText + normalText);
+                str.setSpan(new StyleSpan(Typeface.BOLD), 0, boldText.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE); //set bold
+                //str.setSpan(new ForegroundColorSpan(Color.BLACK), 0, boldText.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);// set color
+                textView_tutorial.setText(str);
                 //Additional text for tutorial
                 //자신이 저장한 제스처 데이터와 기존의 데이터를 이용하여 제스처 인식을 위한 새로운 기준을 생성합니다.
                 switch (state) {
@@ -656,6 +701,14 @@ public class TabFragment3 extends Fragment {
                         main_linearlayout.addView(showRelativelayout,2);
                     }
                 },1010);
+
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        main_linearlayout.removeView(showRelativelayout);
+                        main_linearlayout.addView(showRelativelayout,2);
+                    }
+                },1020);
                 state=2;
             }
         });
@@ -665,7 +718,13 @@ public class TabFragment3 extends Fragment {
                 //0:NONE,1:TOP_OPENED,2:MIDDLE_OPENED,3:BOTTOM_OPENED
                 Animation animation;
                 Animation animation1;
-                textView_tutorial.setText("삭제하고 싶은 항목을 선택한 후\nReset 버튼을 눌러주세요.");
+                String boldText = "삭제하고 싶은 제스처를 선택";
+                String normalText = "한 후\nReset버튼을 누르세요.";
+
+                SpannableString str = new SpannableString(boldText + normalText);
+                str.setSpan(new StyleSpan(Typeface.BOLD), 0, boldText.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE); //set bold
+                //str.setSpan(new ForegroundColorSpan(Color.BLACK), 0, boldText.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);// set color
+                textView_tutorial.setText(str);
                 //Additional text for tutorial
                 //생성한 기준 또는 자신이 저장한 제스처 데이터들을 삭제합니다.
                 //*All 선택 시 기준과 저장된 제스처 데이터 모두 삭제됩니다!
@@ -708,9 +767,15 @@ public class TabFragment3 extends Fragment {
                         SelectLinearLayout.setVisibility(View.GONE);
                         main_linearlayout.removeView(showRelativelayout);
                         main_linearlayout.addView(showRelativelayout,3);
-
                     }
                 },1010);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        main_linearlayout.removeView(showRelativelayout);
+                        main_linearlayout.addView(showRelativelayout,3);
+                    }
+                },1020);
                 state=3;
             }
         });
