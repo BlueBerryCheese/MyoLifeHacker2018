@@ -42,6 +42,7 @@ public class GalleryActivity extends AppCompatActivity {
     private static final int VIBRATION_C = 3;
     private static final int ADDITIONAL_DELAY = 0;
 
+    private boolean myoConnection;
     private CommentImageGrid mCommentGrid;
     private TextView img_pager;
     CommentGalleryContainer commentList;
@@ -106,7 +107,7 @@ public class GalleryActivity extends AppCompatActivity {
 
         FontConfig.setGlobalFont(this,getWindow().getDecorView());
         animationView_gallery = (LottieAnimationView) findViewById(R.id.lottie_gallery);
-        //animationView_gallery.setVisibility(View.INVISIBLE);
+        animationView_gallery.setVisibility(View.INVISIBLE);
 
         post_postionNum=positionNum;
         mCommentGrid.setOnItemClickLisener(new CommentImageGrid.OnItemClickListener() {
@@ -141,14 +142,26 @@ public class GalleryActivity extends AppCompatActivity {
         super.onStop();
 //        this.closeBLEGatt();
     }
+
+    // 마요 연결되어 있으면 애니메이션 재생
+    @Subscribe(sticky = true)
+    public void getMyoDevice(ServiceEvent.myoConnected_Event event) {
+        myoConnection = event.connection;
+        if(myoConnection) {
+            animationView_gallery.playAnimation();
+            animationView_gallery.loop(true);
+            animationView_gallery.setVisibility(View.VISIBLE);
+        }
+        else {
+            animationView_gallery.cancelAnimation();
+            animationView_gallery.setVisibility(View.INVISIBLE);
+        }
+    }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(ServiceEvent.GestureEvent event) {
         gestureNum = event.gestureNumber;
         Log.d("MenuEvent","MenuEvent Gesture num : "+event.gestureNumber);
-
-        animationView_gallery.playAnimation();
-        animationView_gallery.loop(true);
-        animationView_gallery.setVisibility(View.VISIBLE);
 
         switch(gestureNum){
             case 0 :

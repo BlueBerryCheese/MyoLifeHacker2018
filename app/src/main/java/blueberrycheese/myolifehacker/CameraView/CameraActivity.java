@@ -86,6 +86,8 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
 
     private static final int ADDITIONAL_DELAY = 5000;
 
+    private boolean myoConnection;
+
     private static final String TAG = "CameraActivity";
 //    private Handler mHandler;
     private TextView gestureText;
@@ -132,7 +134,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         findViewById(R.id.captureVideo).setOnClickListener(this);
         findViewById(R.id.toggleCamera).setOnClickListener(this);
         animationView_camera = (LottieAnimationView) findViewById(R.id.lottie_camera);
-        //animationView_camera.setVisibility(View.INVISIBLE);
+        animationView_camera.setVisibility(View.INVISIBLE);
         controlPanel = findViewById(R.id.controls);
         ViewGroup group = (ViewGroup) controlPanel.getChildAt(0);
         Control[] controls = Control.values();
@@ -379,13 +381,26 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         }
     }
 
+    @Subscribe(sticky = true)
+    public void getMyoDevice(ServiceEvent.myoConnected_Event event) {
+        myoConnection = event.connection;
+        if(myoConnection) {
+            animationView_camera.playAnimation();
+            animationView_camera.loop(true);
+            animationView_camera.setVisibility(View.VISIBLE);
+        }
+        else {
+            animationView_camera.cancelAnimation();
+            animationView_camera.setVisibility(View.INVISIBLE);
+        }
+    }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onGestureEvent(ServiceEvent.GestureEvent event) {
         gestureNum = event.gestureNumber;
         Log.d(TAG,"CameraEvent Gesture num : "+event.gestureNumber);
-        animationView_camera.playAnimation();
-        animationView_camera.loop(true);
-        animationView_camera.setVisibility(View.VISIBLE);
+
+
         switch(gestureNum){
             case 0 :
                 smoothcount[gestureNum]++;

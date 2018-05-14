@@ -75,6 +75,7 @@ import blueberrycheese.myolifehacker.myo_music.activities.services.MusicService
 import com.airbnb.lottie.LottieAnimationView
 import com.squareup.otto.Bus
 import com.squareup.otto.Subscribe
+import kotlinx.android.synthetic.main.fragment_tab_fragment1.*
 import kotlinx.android.synthetic.main.music_activity_main.*
 import kotlinx.android.synthetic.main.music_item_navigation.*
 import org.greenrobot.eventbus.EventBus
@@ -82,6 +83,7 @@ import org.greenrobot.eventbus.ThreadMode
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
+import java.security.cert.TrustAnchor
 import java.util.*
 import java.util.logging.Level.OFF
 
@@ -112,6 +114,7 @@ class MainActivity : SimpleActivity(), SongListListener{
     /** Intent code for requesting Bluetooth enable  */
     private val REQUEST_ENABLE_BT = 1
 
+    private var myoConnection: Boolean?  = null
     private val TAG = "BLE_Myo"
     private var bluetoothDevice: BluetoothDevice? = null
     private val mHandler: Handler? = null
@@ -168,11 +171,12 @@ class MainActivity : SimpleActivity(), SongListListener{
 
 
         //lottie_music.visibility(INVISIABLE)
-        /*
+
+       // lottie_music!!.setVisibility(View.VISIBLE)
         lottie_music.setVisibility(View.INVISIBLE)
-        lottie_music.playAnimation()
-        lottie_music.loop(true)
-        */
+        //lottie_music.playAnimation()
+        //lottie_music.loop(true)
+
         /*
         animationView_music = findViewById<View>(R.id.lottie_music) as LottieAnimationView
         animationView_music!!.playAnimation()
@@ -722,6 +726,26 @@ class MainActivity : SimpleActivity(), SongListListener{
                     })
                     .into(art_image)
         } catch (ignored: Exception) {
+        }
+    }
+
+
+    // 마요 연결되어 있으면 애니메이션 재생
+    @org.greenrobot.eventbus.Subscribe(sticky = true)
+    fun getMyoDevice(event: ServiceEvent.myoConnected_Event) {
+        myoConnection = event.connection
+        Log.e("volumecircle", "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"+myoConnection)
+
+        if (myoConnection as Boolean==true) {
+            lottie_music!!.setVisibility(View.VISIBLE)
+            lottie_music!!.playAnimation()
+            lottie_music!!.loop(true)
+
+            Log.e("volumecircle", "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+        } else {
+            lottie_music!!.setVisibility(View.VISIBLE)
+            lottie_music!!.cancelAnimation()
+            Log.e("volumecircle", "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
         }
     }
 

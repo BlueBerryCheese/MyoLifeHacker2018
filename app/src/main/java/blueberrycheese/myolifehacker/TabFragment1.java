@@ -103,7 +103,7 @@ public class TabFragment1 extends Fragment {
     private GestureDetectModel_Menu detectModel;
     private GestureDetectMethod_Menu detectMethod;
     private LottieAnimationView animationView_main;
-
+    private boolean myoConnection;
 
     int[] smoothcount = new int[6];
     private int gestureNum = -1;
@@ -220,7 +220,7 @@ public class TabFragment1 extends Fragment {
 
        // animationView.cancelAnimation();
 
-        //animationView_main.setVisibility(View.INVISIBLE);
+        animationView_main.setVisibility(View.INVISIBLE);
 
 
         circleMenu.setOnItemClickListener(new CircleMenu.OnItemClickListener() {
@@ -240,12 +240,8 @@ public class TabFragment1 extends Fragment {
                         Intent intent = new Intent(getActivity().getApplicationContext(), CameraActivity.class);
 //                        intent.putExtra("bluetoothDevice", device);
                         startActivity(intent);
-                        //Toasty.success(getContext(), "Open camera", Toast.LENGTH_SHORT, true).show();
-
-
-                        Toasty.info(getContext(),"Time over myo Locked", Toast.LENGTH_SHORT,icon_1).show();
-
-
+                        Toasty.success(getContext(), "Open camera", Toast.LENGTH_SHORT, true).show();
+                        //Toasty.info(getContext(),"Time over myo Locked", Toast.LENGTH_SHORT,icon_1).show();
                         //Toasty.normal(getContext(),"Open camera",Toast.LENGTH_SHORT).show();
                        // animationView.cancelAnimation();
                        // animationView.setVisibility(View.GONE);
@@ -431,12 +427,25 @@ public class TabFragment1 extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
 
+    // 마요 연결되어 있으면 애니메이션 재생
+    @Subscribe(sticky = true)
+    public void getMyoDevice(ServiceEvent.myoConnected_Event event) {
+        myoConnection = event.connection;
+        if(myoConnection) {
+            animationView_main.playAnimation();
+            animationView_main.loop(true);
+            animationView_main.setVisibility(View.VISIBLE);
+        }
+        else {
+            animationView_main.cancelAnimation();
+            animationView_main.setVisibility(View.INVISIBLE);
+        }
+    }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(ServiceEvent.GestureEvent event) {
         gestureNum = event.gestureNumber;
         Log.d("MenuEvent","MenuEvent Gesture num : "+event.gestureNumber);
-        animationView_main.setVisibility(View.VISIBLE);
-        animationView_main.playAnimation();
         switch(gestureNum){
             case 0 :
                 if(smoothcount[gestureNum]>1) {

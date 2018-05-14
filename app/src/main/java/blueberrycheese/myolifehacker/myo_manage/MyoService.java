@@ -204,6 +204,7 @@ public class MyoService extends Service {
                     startDetectModel();
                     //Send Vibration Event
                     EventBus.getDefault().post(new ServiceEvent.VibrateEvent(VIBRATION_C));
+                    EventBus.getDefault().postSticky(new ServiceEvent.myoConnected_Event(true));
                 }
 
                 if (saveMethod.getSaveState() == GestureSaveMethod.SaveState.Have_Saved) {
