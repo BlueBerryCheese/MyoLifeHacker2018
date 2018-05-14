@@ -57,10 +57,8 @@
         <activity
             android:name=".CameraView.CameraActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".CameraView.PicturePreviewActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
-        <activity android:name=".CameraView.VideoPreviewActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".CameraView.PicturePreviewActivity" />
+        <activity android:name=".CameraView.VideoPreviewActivity" />
         <activity android:name=".ImageViewer.CommentGalleryActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".ImageViewer.GalleryActivity"
