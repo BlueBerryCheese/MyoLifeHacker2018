@@ -7,12 +7,10 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.airbnb.lottie.LottieAnimationView;
 import com.bosong.commentgallerylib.CommentGalleryContainer;
 import com.bosong.commentgallerylib.CommentImageGrid;
 
@@ -26,7 +24,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import blueberrycheese.myolifehacker.FontConfig;
 import blueberrycheese.myolifehacker.R;
 import blueberrycheese.myolifehacker.Toasty;
 import blueberrycheese.myolifehacker.events.ServiceEvent;
@@ -36,7 +33,7 @@ public class GalleryActivity extends AppCompatActivity {
     public static final String COMMENT_LIST = "COMMENT_LIST";
     public static final String LIST_SIZE = "LIST_SIZE";
     private static final String SAMPLE_COMMENT = "";
-    private LottieAnimationView animationView_gallery;
+
     private static final int VIBRATION_A = 1;
     private static final int VIBRATION_B = 2;
     private static final int VIBRATION_C = 3;
@@ -104,10 +101,6 @@ public class GalleryActivity extends AppCompatActivity {
         icon_5 = getResources().getDrawable(R.drawable.gesture_5_w);
         icon_6 = getResources().getDrawable(R.drawable.gesture_6_w);
 
-        FontConfig.setGlobalFont(this,getWindow().getDecorView());
-        animationView_gallery = (LottieAnimationView) findViewById(R.id.lottie_gallery);
-        //animationView_gallery.setVisibility(View.INVISIBLE);
-
         post_postionNum=positionNum;
         mCommentGrid.setOnItemClickLisener(new CommentImageGrid.OnItemClickListener() {
             @Override
@@ -145,10 +138,6 @@ public class GalleryActivity extends AppCompatActivity {
     public void onMessageEvent(ServiceEvent.GestureEvent event) {
         gestureNum = event.gestureNumber;
         Log.d("MenuEvent","MenuEvent Gesture num : "+event.gestureNumber);
-
-        animationView_gallery.playAnimation();
-        animationView_gallery.loop(true);
-        animationView_gallery.setVisibility(View.VISIBLE);
 
         switch(gestureNum){
             case 0 :

@@ -104,10 +104,6 @@ public class Toasty {
                 INFO_COLOR, duration, withIcon, true);
     }
 
-    public static Toast info(@NonNull Context context, @NonNull CharSequence message, int duration, Drawable icon) {
-        return custom(context, message, icon,duration,  true);
-    }
-
     @CheckResult
     public static Toast success(@NonNull Context context, @NonNull CharSequence message) {
         return success(context, message, Toast.LENGTH_SHORT, true);
@@ -176,14 +172,13 @@ public class Toasty {
             if (icon == null)
                 throw new IllegalArgumentException("Avoid passing 'icon' as null if 'withIcon' is set to true");
             if (tintIcon)
-                //icon = ToastyUtils.tintIcon(icon, INFO_COLOR);
                 icon = ToastyUtils.tintIcon(icon, DEFAULT_TEXT_COLOR);
             ToastyUtils.setBackground(toastIcon, icon);
         } else {
             toastIcon.setVisibility(View.GONE);
         }
+
         toastTextView.setText(message);
-       // toastTextView.setTextColor(INFO_COLOR);
         toastTextView.setTextColor(DEFAULT_TEXT_COLOR);
         toastTextView.setTypeface(currentTypeface);
         toastTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize);
