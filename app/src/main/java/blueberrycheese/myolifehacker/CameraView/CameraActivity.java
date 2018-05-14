@@ -132,7 +132,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         findViewById(R.id.captureVideo).setOnClickListener(this);
         findViewById(R.id.toggleCamera).setOnClickListener(this);
         animationView_camera = (LottieAnimationView) findViewById(R.id.lottie_camera);
-        animationView_camera.setVisibility(View.INVISIBLE);
+        //animationView_camera.setVisibility(View.INVISIBLE);
         controlPanel = findViewById(R.id.controls);
         ViewGroup group = (ViewGroup) controlPanel.getChildAt(0);
         Control[] controls = Control.values();

@@ -160,9 +160,19 @@ class MainActivity : SimpleActivity(), SongListListener{
 
         */
 
-       // lottie_music.visibility(INVISIABLE)
+
+        //animationView_system.setVisibility(View.INVISIBLE)
+
+
+       // lottie_music.setVisibility(View.INVISIBLE)
+
+
+        //lottie_music.visibility(INVISIABLE)
+        /*
+        lottie_music.setVisibility(View.INVISIBLE)
         lottie_music.playAnimation()
         lottie_music.loop(true)
+        */
         /*
         animationView_music = findViewById<View>(R.id.lottie_music) as LottieAnimationView
         animationView_music!!.playAnimation()
