@@ -11,6 +11,7 @@ public class MyoCommandList {
     private byte[] send_bytes_data;
     private static final String TAG = "MyoCommandList";
 
+    private static final int NO_VIBRATION = 0;
     private static final int VIBRATION_A = 1;
     private static final int VIBRATION_B = 2;
     private static final int VIBRATION_C = 3;
@@ -34,6 +35,9 @@ public class MyoCommandList {
         byte vibrate_type = 0x01;
 
         switch(vNum){
+            case NO_VIBRATION:
+                vibrate_type = (byte) 0x00;
+                break;
             case VIBRATION_A:
                 vibrate_type = (byte) 0x01;
                 break;

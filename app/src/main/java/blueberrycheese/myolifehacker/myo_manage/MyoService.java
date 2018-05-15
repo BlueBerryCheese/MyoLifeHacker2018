@@ -9,10 +9,12 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothManager;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.widget.Toast;
@@ -22,6 +24,7 @@ import com.airbnb.lottie.LottieAnimationView;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
+import blueberrycheese.myolifehacker.MainActivity;
 import blueberrycheese.myolifehacker.MyoApp;
 import blueberrycheese.myolifehacker.R;
 import blueberrycheese.myolifehacker.TabFragment1;
@@ -37,7 +40,7 @@ public class MyoService extends Service {
     private static final int VIBRATION_A = 1;
     private static final int VIBRATION_B = 2;
     private static final int VIBRATION_C = 3;
-
+    private int vibrate_state=3;
     NotificationManager manager;
     Notification myNotication;
 
@@ -61,6 +64,8 @@ public class MyoService extends Service {
     public int[] smoothcount = new int[6];
     private final int LITTLEFINGER = 4;
     private final int SCISSORS = 5;
+    private SharedPreferences sharedPreferences;
+
 
     public MyoService() {
     }
@@ -76,8 +81,27 @@ public class MyoService extends Service {
     @Override
     public void onCreate(){
         super.onCreate();
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getBaseContext());  //sharePreference호출 후 적용
+        Log.d(TAG,"recognizing_count : " + sharedPreferences.getString("recognizing_count","30"));
         locked = getResources().getDrawable(R.drawable.locked);
         unlocked = getResources().getDrawable(R.drawable.unlocked);
+        String vp = sharedPreferences.getString("vibrate_power","강하게");
+        int vpp;
+
+        boolean iv = sharedPreferences.getBoolean("vibrate",true);
+        if(iv){
+            if(vp.equals("강하게"))
+                vpp=3;
+            else if(vp.equals("보통"))
+                vpp=2;
+            else if(vp.equals("약하게"))
+                vpp=1;
+            else
+                vpp=3;
+        }else{
+            vpp=0;
+        }
+        vibrate_state = vpp;
     }
 
     @Override
@@ -199,11 +223,13 @@ public class MyoService extends Service {
                 saveMethod  = new GestureSaveMethod(-1, getApplicationContext(),1);
                 Log.d(TAG,"True EMG");
                 if (saveMethod.getSaveState() == GestureSaveMethod.SaveState.Have_Saved) {
-                    detectMethod = new GestureDetectMethod(mHandler, saveMethod.getCompareDataList());    //아예 새롭게 각각의 detectMethod를 구현하는것이 빠를것으로 예상된다.
+
+                    int recog_cnt = Integer.parseInt(sharedPreferences.getString("recognizing_count","30"));
+                    detectMethod = new GestureDetectMethod(mHandler, saveMethod.getCompareDataList(),recog_cnt);    //아예 새롭게 각각의 detectMethod를 구현하는것이 빠를것으로 예상된다.
                     detectModel = new GestureDetectModel(detectMethod);
                     startDetectModel();
                     //Send Vibration Event
-                    EventBus.getDefault().post(new ServiceEvent.VibrateEvent(VIBRATION_C));
+                    EventBus.getDefault().post(new ServiceEvent.VibrateEvent(vibrate_state));
                     EventBus.getDefault().postSticky(new ServiceEvent.myoConnected_Event(true));
                     //EventBus.getDefault().post(new ServiceEvent.myoLock_Event(true));
 
@@ -266,7 +292,9 @@ public class MyoService extends Service {
                         mHandler.removeCallbacks(resetCountRunnable);
                     }
 
+
                     //create runnable to reset smoothcount
+
                     mHandler.removeCallbacks(resetCountRunnable);
                     mHandler.postDelayed(resetCountRunnable, TIMETOLOCK);
 
@@ -303,7 +331,9 @@ public class MyoService extends Service {
                         mHandler.removeCallbacks(resetCountRunnable);
                     }
 
+
                     //create runnable to reset smoothcount
+
                     mHandler.removeCallbacks(resetCountRunnable);
                     mHandler.postDelayed(resetCountRunnable, TIMETOLOCK);
 
@@ -379,6 +409,25 @@ public class MyoService extends Service {
     public void vibrate(ServiceEvent.VibrateEvent event){
         mMyoCallback.setMyoControlCommand(commandList.sendVibration(event.vibrateNum));
         Log.d(TAG,"Vibrate Myo - Got VibrateEvent");
+    }
+
+    @Subscribe(sticky = true)
+    public void setting_event(ServiceEvent.SettingEvent event){
+        Log.d(TAG, "setting_event" + event.vibrate_p + "," + event.recognizing_Num + "," +event.is_vibrate);
+        vibrate_state=3;
+        if(event.is_vibrate){
+            //mMyoCallback.setMyoControlCommand(commandList.sendVibration(event.vibrate_p));
+            vibrate_state=event.vibrate_p;
+            Log.d(TAG, "setting_event" + event.vibrate_p + " on ");
+        }else{
+            //mMyoCallback.setMyoControlCommand(commandList.sendVibration(0));
+            vibrate_state=0;
+            Log.d(TAG, "setting_event" +" No Vibration ");
+        }
+        EventBus.getDefault().post(new ServiceEvent.VibrateEvent(vibrate_state));
+
+
+
     }
 //    @Subscribe(sticky = true)
 //    public void getMyoDevice_String(ServiceEvent.MyoDevice_StringEvent event){
