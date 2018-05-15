@@ -3,11 +3,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+
     tools:context=".TabFragment2">
 
     <!--<TextView-->
         <!--android:layout_width="match_parent"-->
         <!--android:layout_height="match_parent"-->
         <!--android:text="@string/hello_blank_fragment" />-->
+    <fragment
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:name="blueberrycheese.myolifehacker.SettingPreferenceFragment"
+        android:id="@+id/setting_fragmnet"
+        android:layout_marginTop="55dp"
+        android:layout_marginBottom="50dp"
+        >
+    </fragment>
 
 </FrameLayout>

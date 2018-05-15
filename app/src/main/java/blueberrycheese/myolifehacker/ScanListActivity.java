@@ -9,11 +9,13 @@ import android.bluetooth.BluetoothManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.ParcelUuid;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -58,7 +60,7 @@ public class ScanListActivity extends AppCompatActivity implements BluetoothAdap
     //For service
     private ArrayList<BluetoothDevice> bluetoothDeviceList = new ArrayList<>();
     BluetoothDevice bluetoothDevice_Selected;
-
+    private SharedPreferences prefs;
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -76,6 +78,10 @@ public class ScanListActivity extends AppCompatActivity implements BluetoothAdap
                 android.R.layout.simple_expandable_list_item_1, deviceNames);
 
         lv.setAdapter(adapter);
+
+        prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        Log.d("Shared",prefs.getString("vibrate_power",""));
+
 
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -108,6 +114,21 @@ public class ScanListActivity extends AppCompatActivity implements BluetoothAdap
                 startService(new Intent(getApplicationContext(), MyoService.class));
                 EventBus.getDefault().postSticky(new ServiceEvent.MyoDeviceEvent(bluetoothDevice_Selected));
 
+
+//                String vp = prefs.getString("vibrate_power","강하게");
+//                int vpp;
+//                int rc = Integer.parseInt(prefs.getString("recognizing_count","30"));
+//                boolean iv = prefs.getBoolean("vibrate",true);
+//                if(vp.equals("강하게"))
+//                    vpp=3;
+//                else if(vp.equals("보통"))
+//                    vpp=2;
+//                else if(vp.equals("약하게"))
+//                    vpp=1;
+//                else
+//                    vpp=3;
+//                Log.d(TAG,"setting_event : " + vp+" , " + rc+" , " + iv);
+//                EventBus.getDefault().postSticky(new ServiceEvent.SettingEvent(vpp,iv,rc));
             }
         });
     }

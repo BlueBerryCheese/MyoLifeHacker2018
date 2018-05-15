@@ -1,38 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/orangeredblurgradation"
-        android:alpha="0.5"/>
+    android:layout_height="match_parent"
+    android:background="@color/BackgroundColor">
+
 
     <LinearLayout
+        android:id="@+id/scanner_linear_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-        <ListView android:id="@+id/listView1"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginBottom="120dp">
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="350dp" />
-
-
-        <Button
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:text="SCAN"
-            android:textColor="@android:color/white"
-            android:id="@+id/button"
-            android:onClick="onClickScan"
-            android:drawablePadding="-60dp"
-            android:layout_gravity="center_horizontal"
-            android:background="@drawable/imgbtn_states"
-            android:layout_marginTop="50dp"/>
-
-
-
+            android:layout_height="match_parent">
+            <ListView android:id="@+id/listView1"
+                android:layout_width="match_parent"
+                android:layout_height="350dp" />
+        </ScrollView>
 
     </LinearLayout>
-
+    <Button
+        
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:text="SCAN"
+        android:textColor="@color/FontColor"
+        android:id="@+id/button"
+        android:onClick="onClickScan"
+        android:drawablePadding="-60dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="55dp"
+        android:background="@drawable/imgbtn_states2"
+       />
 
 </RelativeLayout>

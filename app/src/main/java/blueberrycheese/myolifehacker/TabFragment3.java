@@ -383,23 +383,7 @@ public class TabFragment3 extends Fragment {
         });
         /////
 
-        ////// 제스처 세이브 numberPicker 값 변동되면 변동되는 값 저장
-//        gesturenNumberPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
-//            @Override
-//            public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
-//                for(int i=0;i<views.length;i++){        // 동그라미 5개 빈동그라미로 초기화
-//                    views[i].setBackgroundResource(R.drawable.imgbtn_default);
-//                }
-//                inds_num = newVal;
-//                gestureSaveImageChange(inds_num);      //이미지 변경
-//                saveMethod.change_save_numer_numberPicker(inds_num);  // 제스처 넘버 값 저장
-//                saveModel = new GestureSaveModel(saveMethod, inds_num);
-//                saveMethod.change_save_index_numberPicker();
-//                //saveMethod = new GestureSaveMethod(inds_num,view.getContext(),1);   //세이브 실행
-//                Log.d(TAG,"Value changes "+(oldVal+1)+" to "+(newVal+1));
-//
-//            }
-//        });
+
         //삭제 버튼
         btn_remove.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -465,26 +449,29 @@ public class TabFragment3 extends Fragment {
                 saveMethod.setState(GestureSaveMethod.SaveState.Now_Saving);        // SaveState 저장중으로 변경
                 // 제스처의 카운트가 0일 때
                 if(saveMethod.getGestureCounter()==4) {// 동그라미 5개일때 제스처이미지 변경
+                    viewAnimator_save.showNext();
+                    inds_num=viewAnimator_save.getDisplayedChild();
+                    saveModel = new GestureSaveModel(saveMethod, inds_num);
+                    Toasty.info(ncontext, "Gesture "+(inds_num+1)+" save complete", Toast.LENGTH_SHORT, true).show();
+                    mHandler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            for(int i=0;i<views.length;i++){        //동그라미 빈칸으로 바꿔줌
+                                views[i].setBackgroundResource(R.drawable.imgbtn_default);
+                            }
+                        }
+                    },300);
                     if(inds_num==5) {
-                        gestureSaveImageChange(0);
-                        inds_gesture_num=6;
+
                     }
                     else {
-                        //gestureSaveImageChange(inds_num + 1);
-                        inds_gesture_num=inds_num+1;
+
                     }
                 }
-                //    gesturenNumberPicker.setValue(inds_num);        //제스처 세이브 numberPicker 값 설정.
-                if(saveMethod.getGestureCounter()==0) {     //위에 setValue로는 setOnValueChangedListener가 인식을 못해서 따로 빼줌.
-                    //gesturenNumberPicker.setValue(inds_num);        //제스처 세이브 numberPicker 값 설정.
-                    for(int i=0;i<views.length;i++){        //동그라미 빈칸으로 바꿔줌
-                        views[i].setBackgroundResource(R.drawable.imgbtn_default);
-                    }
-                    if(inds_gesture_num!=0)
-                        Toasty.info(ncontext, "Gesture "+inds_gesture_num+" save complete", Toast.LENGTH_SHORT, true).show();
-                    //  gestureSaveImageChange(inds_num);
-                }
+
+
                 gestureText.setText("Gesture" + (inds_num + 1) + "'s Saving Count : " + (saveMethod.getGestureCounter() + 1)); // 아래쪽 텍스트 변경
+
                 views[saveMethod.getGestureCounter()].setBackgroundResource(R.drawable.imgbtn_pressed); // 동그라미 채워줌
                 //   }
             }
@@ -654,7 +641,7 @@ public class TabFragment3 extends Fragment {
                 //0:NONE,1:TOP_OPENED,2:MIDDLE_OPENED,3:BOTTOM_OPENED
                 Animation animation;
                 Animation animation1;
-                String boldText = "생성 시 사용될 기존 제스처 비율(%)을 선택 ";
+                String boldText = "Adapt 시 사용될 기존 제스처 비율(%)을 선택 ";
                 String normalText = "후\nAdapt 버튼을 누르세요.";
 
                 SpannableString str = new SpannableString(boldText + normalText);
