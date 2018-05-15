@@ -809,6 +809,14 @@ class MainActivity : SimpleActivity(), SongListListener{
 
     }
 
+    @org.greenrobot.eventbus.Subscribe(threadMode = ThreadMode.MAIN)
+    fun onGestureEvent(event: ServiceEvent.GestureEvent) {
+        EventBus.getDefault().post(ServiceEvent.GestureEvent_forMusic(event.gestureNumber))
+        Log.d(TAG, "Music activity sending gesture : " + event.gestureNumber + " to MusicService")
+    }
+
+
+
 //제스처에 따라 기능 얻어오는 곳
 //
 //    @org.greenrobot.eventbus.Subscribe(threadMode = ThreadMode.MAIN)
