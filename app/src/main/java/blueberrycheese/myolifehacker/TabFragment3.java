@@ -452,7 +452,7 @@ public class TabFragment3 extends Fragment {
                     viewAnimator_save.showNext();
                     inds_num=viewAnimator_save.getDisplayedChild();
                     saveModel = new GestureSaveModel(saveMethod, inds_num);
-                    Toasty.info(ncontext, "Gesture "+(inds_num+1)+" save complete", Toast.LENGTH_SHORT, true).show();
+                    Toasty.info(ncontext, "Gesture "+(inds_num)+" save complete", Toast.LENGTH_SHORT, true).show();
                     mHandler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
