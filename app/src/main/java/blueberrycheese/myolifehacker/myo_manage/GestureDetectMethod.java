@@ -37,6 +37,8 @@ public class GestureDetectMethod {
     private StringBuilder sb;
     private Handler handler;
 
+    private int mod_cnt=30;
+
     public GestureDetectMethod(ArrayList<EmgData> gesture) {
         compareGesture = gesture;
         numberSmoother = new NumberSmoother();
@@ -44,6 +46,13 @@ public class GestureDetectMethod {
     public GestureDetectMethod(Handler handler,ArrayList<EmgData> gesture){
         compareGesture = gesture;
         this.handler=handler;
+        numberSmoother = new NumberSmoother();
+    }
+
+    public GestureDetectMethod(Handler handler,ArrayList<EmgData> gesture,int mod_cnt){
+        compareGesture = gesture;
+        this.handler=handler;
+        this.mod_cnt=mod_cnt;
         numberSmoother = new NumberSmoother();
     }
 
@@ -124,7 +133,7 @@ public class GestureDetectMethod {
         //streamCount = 0;
 
         cnt++;
-        if(cnt%30==0){
+        if(cnt%mod_cnt==0){
             cnt=0;
             int result = numberSmoother.getSmoothingNumber();
             if(old_gesture_num!=result){

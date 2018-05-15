@@ -1,14 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-
+    <PreferenceCategory android:title="설정"/>
     <SwitchPreference
         android:defaultValue="true"
+        android:key="vibrate"
         android:summary="진동을 설정합니다."
-        android:title="진동"
-        android:key="vibrate"/>
+        android:title="진동" />
 
+    <ListPreference
+        android:defaultValue="1"
+        android:entries="@array/vibrate_power"
+        android:summary="강하게"
+        android:key="vibrate_power"
+        android:entryValues="@array/vibrate_power"
+        android:title="진동 세기"
+        android:dependency="vibrate"/>
 
+    <ListPreference
+        android:defaultValue="50"
+        android:entries="@array/recognizing_count"
+        android:summary="50"
+        android:key="recognizing_count"
+        android:entryValues="@array/recognizing_count"
+        android:title="제스처 인식 주기" />
 
-
+    <PreferenceCategory android:title="제스처 인식 주기는 블루투스 연결 도중에 변경 불가능 합니다."/>
 </PreferenceScreen>

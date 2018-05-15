@@ -284,8 +284,8 @@ public class GestureSaveMethod {
         if (gestureCounter == JUST_SAVE_DATA_LEN) {     //제스처count가 (지정한 저장 길이) 와 같을 때
             saveState = SaveState.Have_Saved;
             gestureCounter = 0;         // count 초기화
-            MyoDataFileReader dataFileReader = new MyoDataFileReader(TAG, FileList[num]);   // Gesture .txt 파일 저장
-            dataFileReader.saveMAX(getCompareDataList());
+//            MyoDataFileReader dataFileReader = new MyoDataFileReader(TAG, FileList[num]);   // Gesture .txt 파일 저장
+//            dataFileReader.saveMAX(getCompareDataList());
             MyoDataFileReader dataFileReader2 = new MyoDataFileReader(TAG, FileList_Raw[num]);  // Gesture _Raw.txt 파일 저장
             dataFileReader2.saveRAW_max(getRawCompareDataList());
             compareGesture = new ArrayList<EmgData>();

@@ -1,12 +1,19 @@
 package blueberrycheese.myolifehacker;
 
+
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import org.greenrobot.eventbus.Subscribe;
+
+import blueberrycheese.myolifehacker.events.ServiceEvent;
 
 
 /**
@@ -59,12 +66,16 @@ public class TabFragment2 extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
-
+    private View view;
+    Fragment fragment;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        view = inflater.inflate(R.layout.fragment_tab_fragment2, container, false);
+
+
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_tab_fragment2, container, false);
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -105,4 +116,5 @@ public class TabFragment2 extends Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
+
 }

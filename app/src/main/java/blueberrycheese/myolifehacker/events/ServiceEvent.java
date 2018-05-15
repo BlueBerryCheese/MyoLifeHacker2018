@@ -62,7 +62,16 @@ public class ServiceEvent {
         }
     }
 
-
+    public static class SettingEvent{
+        public int vibrate_p;
+        public boolean is_vibrate;
+        public int recognizing_Num;
+        public SettingEvent(int vNum,boolean is_v,int rNum){
+            this.vibrate_p = vNum;
+            is_vibrate = is_v;
+            recognizing_Num = rNum;
+        }
+    }
     ///////Test
 
     public static class DetectModel{
