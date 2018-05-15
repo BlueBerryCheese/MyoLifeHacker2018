@@ -226,89 +226,96 @@ public class MyoService extends Service {
         Log.d(TAG,"Gesture num : "+ gestureNum);
 
         if(myoApp.isUnlocked()){
-            EventBus.getDefault().post(new ServiceEvent.GestureEvent(gestureNum));
+            if(myoApp.getUnlockedGesture()==LITTLEFINGER){
+                EventBus.getDefault().post(new ServiceEvent.GestureEvent(gestureNum));
+            }else if(myoApp.getUnlockedGesture()==SCISSORS){
+                EventBus.getDefault().post(new ServiceEvent.GestureEvent_forMusic(gestureNum));
+            }
+
 //            Log.d(TAG,"Send EventBus post - Gesture num : "+ gestureNum);
-        }
+        }else{
+            switch(gestureNum) {
+                case LITTLEFINGER:
+                    smoothcount[gestureNum]++;
 
-        switch(gestureNum) {
-            case LITTLEFINGER:
-                smoothcount[gestureNum]++;
+                    if (smoothcount[gestureNum] > 2) {
+                        if(!myoApp.isUnlocked()){
+                            myoApp.unlockGesture(0);
 
-                if (smoothcount[gestureNum] > 2) {
-                    if(!myoApp.isUnlocked()){
-                        myoApp.unlockGesture(0);
+                            Handler mHandler = new Handler(Looper.getMainLooper());
+                            mHandler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    // 내용
+                                    Toasty.normal(getBaseContext(),"Gesture recognition Unlocked", Toast.LENGTH_SHORT,unlocked).show();
+                                    EventBus.getDefault().post(new ServiceEvent.myoLock_Event(!myoApp.isUnlocked()));
+                                    // EventBus.getDefault().post(new ServiceEvent.myoLock_Event(true));
+                                }
+                            }, 0);
+                            Log.d(TAG,"Unlock "+ LITTLEFINGER);
+                        }
 
-                        Handler mHandler = new Handler(Looper.getMainLooper());
-                        mHandler.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                // 내용
-                                Toasty.normal(getBaseContext(),"Gesture recognition Unlocked", Toast.LENGTH_SHORT,unlocked).show();
-                                EventBus.getDefault().post(new ServiceEvent.myoLock_Event(!myoApp.isUnlocked()));
-                               // EventBus.getDefault().post(new ServiceEvent.myoLock_Event(true));
-                            }
-                        }, 0);
-                        Log.d(TAG,"Unlock "+ LITTLEFINGER);
+                        //create runnable for lock.
+                        mHandler.postDelayed(lockRunnable, TIMETOLOCK);
+
+                        //Send Vibration Event
+                        EventBus.getDefault().post(new ServiceEvent.VibrateEvent(VIBRATION_B));
+
+                        resetSmoothCount();
+//                    smoothcount[gestureNum] = -1;
+                        mHandler.removeCallbacks(resetCountRunnable);
                     }
 
-                    //create runnable for lock.
-                    mHandler.postDelayed(lockRunnable, TIMETOLOCK);
-
-                    //Send Vibration Event
-                    EventBus.getDefault().post(new ServiceEvent.VibrateEvent(VIBRATION_B));
-
-                    resetSmoothCount();
-//                    smoothcount[gestureNum] = -1;
+                    //create runnable to reset smoothcount
                     mHandler.removeCallbacks(resetCountRunnable);
-                }
+                    mHandler.postDelayed(resetCountRunnable, TIMETOLOCK);
 
-                //create runnable to reset smoothcount
-                mHandler.removeCallbacks(resetCountRunnable);
-                mHandler.postDelayed(resetCountRunnable, TIMETOLOCK);
+                    break;
 
-                break;
+                case SCISSORS:
+                    smoothcount[gestureNum]++;
 
-            case SCISSORS:
-                smoothcount[gestureNum]++;
+                    if (smoothcount[gestureNum] > 2) {
+                        if(!myoApp.isUnlocked()){
+                            myoApp.unlockGesture(1);
+                            Handler mHandler = new Handler(Looper.getMainLooper());
+                            mHandler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    // 내용
+                                    Toasty.normal(getBaseContext(),"Gesture recognition Unlocked", Toast.LENGTH_SHORT,unlocked).show();
+                                    EventBus.getDefault().post(new ServiceEvent.myoLock_Event(!myoApp.isUnlocked()));
+                                    //EventBus.getDefault().post(new ServiceEvent.myoLock_Event(true));
+                                }
+                            }, 0);
+                            Log.d(TAG,"Unlock "+ SCISSORS);
+                        }
 
-                if (smoothcount[gestureNum] > 2) {
-                    if(!myoApp.isUnlocked()){
-                        myoApp.unlockGesture(1);
-                        Handler mHandler = new Handler(Looper.getMainLooper());
-                        mHandler.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                // 내용
-                                Toasty.normal(getBaseContext(),"Gesture recognition Unlocked", Toast.LENGTH_SHORT,unlocked).show();
-                                EventBus.getDefault().post(new ServiceEvent.myoLock_Event(!myoApp.isUnlocked()));
-                                //EventBus.getDefault().post(new ServiceEvent.myoLock_Event(true));
-                            }
-                        }, 0);
-                        Log.d(TAG,"Unlock "+ SCISSORS);
+                        //create runnable for lock.
+                        mHandler.postDelayed(lockRunnable, TIMETOLOCK);
+
+                        //Send Vibration Event
+                        EventBus.getDefault().post(new ServiceEvent.VibrateEvent(VIBRATION_B));
+
+                        resetSmoothCount();
+//                    smoothcount[gestureNum] = -1;
+
+                        mHandler.removeCallbacks(resetCountRunnable);
                     }
 
-                    //create runnable for lock.
-                    mHandler.postDelayed(lockRunnable, TIMETOLOCK);
-
-                    //Send Vibration Event
-                    EventBus.getDefault().post(new ServiceEvent.VibrateEvent(VIBRATION_B));
-
-                    resetSmoothCount();
-//                    smoothcount[gestureNum] = -1;
-
+                    //create runnable to reset smoothcount
                     mHandler.removeCallbacks(resetCountRunnable);
-                }
+                    mHandler.postDelayed(resetCountRunnable, TIMETOLOCK);
 
-                //create runnable to reset smoothcount
-                mHandler.removeCallbacks(resetCountRunnable);
-                mHandler.postDelayed(resetCountRunnable, TIMETOLOCK);
+                    break;
 
-                break;
+                default:
+                    break;
 
-            default:
-                break;
+            }
 
         }
+
 
     }
 

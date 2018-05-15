@@ -20,9 +20,18 @@ public class ServiceEvent {
 
     public static class GestureEvent_forService{
 
+            public int gestureNumber;
+
+            public GestureEvent_forService(int i_element){
+                this.gestureNumber = i_element;
+            }
+    }
+
+    public static class GestureEvent_forMusic {
+
         public int gestureNumber;
 
-        public GestureEvent_forService(int i_element){
+        public GestureEvent_forMusic(int i_element) {
             this.gestureNumber = i_element;
         }
     }
