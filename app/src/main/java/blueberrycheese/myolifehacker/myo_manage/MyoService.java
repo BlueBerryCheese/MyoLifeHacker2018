@@ -9,7 +9,11 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothManager;
 import android.content.Intent;
+
+import android.content.SharedPreferences;
+
 import android.graphics.drawable.Drawable;
+
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
@@ -19,20 +23,28 @@ import android.widget.Toast;
 
 import com.airbnb.lottie.LottieAnimationView;
 
+import com.airbnb.lottie.LottieAnimationView;
+
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import blueberrycheese.myolifehacker.MyoApp;
 import blueberrycheese.myolifehacker.R;
+
+import blueberrycheese.myolifehacker.SettingPreference;
+
 import blueberrycheese.myolifehacker.TabFragment1;
 import blueberrycheese.myolifehacker.Toasty;
+
 import blueberrycheese.myolifehacker.events.ServiceEvent;
 
 public class MyoService extends Service {
     private static final String TAG = "Myo_Service";
     //Previous SCAN_PERIOD was 5000.
     private static final long SCAN_PERIOD = 5000;
+
     private static final int TIMETOLOCK = 6000;
+
 
     private static final int VIBRATION_A = 1;
     private static final int VIBRATION_B = 2;
@@ -42,6 +54,7 @@ public class MyoService extends Service {
     Notification myNotication;
 
     BluetoothDevice bluetoothDevice;
+    private SettingPreference settingPreference;
     private Handler mHandler;
     private BluetoothGatt mBluetoothGatt;
     private MyoGattCallback mMyoCallback;
@@ -61,6 +74,7 @@ public class MyoService extends Service {
     public int[] smoothcount = new int[6];
     private final int LITTLEFINGER = 4;
     private final int SCISSORS = 5;
+
 
     public MyoService() {
     }
@@ -204,8 +218,10 @@ public class MyoService extends Service {
                     startDetectModel();
                     //Send Vibration Event
                     EventBus.getDefault().post(new ServiceEvent.VibrateEvent(VIBRATION_C));
+
                     EventBus.getDefault().postSticky(new ServiceEvent.myoConnected_Event(true));
                     //EventBus.getDefault().post(new ServiceEvent.myoLock_Event(true));
+
 
                 }
 
@@ -238,6 +254,10 @@ public class MyoService extends Service {
                     if(!myoApp.isUnlocked()){
                         myoApp.unlockGesture(0);
 
+                        Log.d(TAG,"Unlock "+ LITTLEFINGER);
+                    }
+
+
                         Handler mHandler = new Handler(Looper.getMainLooper());
                         mHandler.postDelayed(new Runnable() {
                             @Override
@@ -262,6 +282,7 @@ public class MyoService extends Service {
                     mHandler.removeCallbacks(resetCountRunnable);
                 }
 
+
                 //create runnable to reset smoothcount
                 mHandler.removeCallbacks(resetCountRunnable);
                 mHandler.postDelayed(resetCountRunnable, TIMETOLOCK);
@@ -274,6 +295,7 @@ public class MyoService extends Service {
                 if (smoothcount[gestureNum] > 2) {
                     if(!myoApp.isUnlocked()){
                         myoApp.unlockGesture(1);
+
                         Handler mHandler = new Handler(Looper.getMainLooper());
                         mHandler.postDelayed(new Runnable() {
                             @Override
@@ -284,6 +306,7 @@ public class MyoService extends Service {
                                 //EventBus.getDefault().post(new ServiceEvent.myoLock_Event(true));
                             }
                         }, 0);
+
                         Log.d(TAG,"Unlock "+ SCISSORS);
                     }
 
@@ -310,6 +333,17 @@ public class MyoService extends Service {
 
         }
 
+
+    }
+
+    public void resetSmoothCount(){
+        for(int i=0;i<smoothcount.length;i++){
+            smoothcount[i]=0;
+        }
+        Log.e(TAG,"resetSmoothCount - reset");
+    }
+
+
     }
 
     public void resetSmoothCount(){
@@ -332,8 +366,10 @@ public class MyoService extends Service {
         public void run(){
             //Lock gesture
             myoApp.lockGesture();
+
             Toasty.normal(getBaseContext(),"Time over myo Locked", Toast.LENGTH_SHORT,locked).show();
             EventBus.getDefault().post(new ServiceEvent.myoLock_Event(!myoApp.isUnlocked()));
+
             Log.e(TAG,"Lock_Runnable : Gesture locked");
         }
     };
@@ -342,7 +378,9 @@ public class MyoService extends Service {
     public void restartLockTimer(ServiceEvent.restartLockTimerEvent event){
         mHandler.removeCallbacks(lockRunnable);
         mHandler.postDelayed(lockRunnable, TIMETOLOCK);
+
       //  Toasty.normal(getBaseContext(),"Lock_Runnable : restart Lock Timer!", Toast.LENGTH_SHORT).show();
+
         Log.e(TAG,"Lock_Runnable : restart Lock Timer!");
     }
 
@@ -370,8 +408,41 @@ public class MyoService extends Service {
 
     @Subscribe
     public void vibrate(ServiceEvent.VibrateEvent event){
+
+        //savePreferences();
+        SharedPreferences pref = getSharedPreferences("power", MODE_PRIVATE);
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putString("power", "강하게");
+        editor.commit();
+        String powercheck=settingPreference.power();
+        Log.d("vibrate Test","test : "+powercheck);
+        if(powercheck==null) {
+            powercheck = pref.getString("count", "강하게");
+            Log.d("vibrate Test","test1 : "+powercheck);
+        }
+        else {
+            if (powercheck.equals("약하게"))
+                mMyoCallback.setMyoControlCommand(commandList.sendVibration(1));
+            else if (powercheck.equals("보통"))
+                mMyoCallback.setMyoControlCommand(commandList.sendVibration(2));
+            else if (powercheck.equals("강하게"))
+                mMyoCallback.setMyoControlCommand(commandList.sendVibration(3));
+//        Log.d(TAG,"powercheck =>"+powercheck);
+//       // mMyoCallback.setMyoControlCommand(commandList.sendVibration(event.vibrateNum));
+            Log.d(TAG, "Vibrate Myo - Got VibrateEvent");
+        }
+        Log.d("vibrate Test","test 3 : "+powercheck);
+    }
+
+    private void savePreferences(){
+        SharedPreferences pref = getSharedPreferences("power",MODE_PRIVATE);
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putString("Power", "강하게");
+        editor.commit();
+
         mMyoCallback.setMyoControlCommand(commandList.sendVibration(event.vibrateNum));
         Log.d(TAG,"Vibrate Myo - Got VibrateEvent");
+
     }
 //    @Subscribe(sticky = true)
 //    public void getMyoDevice_String(ServiceEvent.MyoDevice_StringEvent event){

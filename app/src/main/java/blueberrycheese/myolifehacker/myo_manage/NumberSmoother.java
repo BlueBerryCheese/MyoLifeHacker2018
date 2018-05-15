@@ -10,6 +10,7 @@ import java.util.Queue;
 
 import blueberrycheese.myolifehacker.CameraView.CameraEvent;
 import blueberrycheese.myolifehacker.MenuControl.MenuEvent;
+import blueberrycheese.myolifehacker.SettingPreference;
 import blueberrycheese.myolifehacker.SystemControl.SystemFeature;
 import blueberrycheese.myolifehacker.events.ServiceEvent;
 import blueberrycheese.myolifehacker.myo_music.Gesture.MusicEvent;
@@ -23,11 +24,14 @@ public class NumberSmoother {
     private final static int THRESHOLD_LENGTH = 20;//3
     private final static int MAX_SAVE_LENGTH=6;
     private final static int DECLINE_LENGTH = 5;
+    private static int Countcheck=0;
+    private static int CompareCountcheck=0;
     private Queue<Integer> gestureNumArray = new LinkedList<>();
     private int[] numCounter =  new int[MAX_SAVE_LENGTH];
     private int storageDataCount = 0;
 
     private SystemFeature systemFeature;
+    private SettingPreference settingPreference;
 
 
     private Context mcontext;
@@ -41,12 +45,19 @@ public class NumberSmoother {
 
 
     public void addArray(Integer gestureNum) {
+        try {
+            Countcheck = Integer.parseInt(settingPreference.count());
+            Log.d("Countcheck => ", String.valueOf(Countcheck));
+        }catch (NumberFormatException e){
+
+        }
+
         gestureNumArray.offer(gestureNum);
         if (gestureNum != -1) {
             numCounter[gestureNum]++;
         }
         storageDataCount++;
-        if (storageDataCount > SMOOTHING_LENGTH) {
+        if (storageDataCount > Countcheck) {
             int deleteNumber = gestureNumArray.peek();
             if (deleteNumber != -1) {
                 numCounter[deleteNumber]--;
@@ -65,8 +76,13 @@ public class NumberSmoother {
     }
 
     public int getSmoothingNumber() {
+        try {
+            CompareCountcheck = Integer.parseInt(settingPreference.comparecount());
+        }catch (NumberFormatException e){
+
+        }
         for (int i_element = 0; i_element < MAX_SAVE_LENGTH; i_element++) {
-            if (numCounter[i_element] >= THRESHOLD_LENGTH) {//50개중 20개이상 일치하지 않으면 불일치(인지되지 않은 제스처)
+            if (numCounter[i_element] >= CompareCountcheck) {//50개중 20개이상 일치하지 않으면 불일치(인지되지 않은 제스처)
                 Log.d("number success","number success : "+(i_element+1));
 //                gestureNumArray=new LinkedList<>();
 //                numCounter =  new int[MAX_SAVE_LENGTH];
@@ -110,8 +126,13 @@ public class NumberSmoother {
         return -1;
     }
     public int getSmoothingNumber_music() {
+        try {
+            CompareCountcheck = Integer.parseInt(settingPreference.comparecount());
+        }catch (NumberFormatException e){
+
+        }
         for (int i_element = 0; i_element < MAX_SAVE_LENGTH; i_element++) {
-            if (numCounter[i_element] >= THRESHOLD_LENGTH) {//50개중 20개이상 일치하지 않으면 불일치(인지되지 않은 제스처)
+            if (numCounter[i_element] >= CompareCountcheck) {//50개중 20개이상 일치하지 않으면 불일치(인지되지 않은 제스처)
                 Log.d("number success","number success : "+(i_element+1));
                 //gestureNumArray=new LinkedList<>();
                 //Log.d("detect_gesture","-> "+(int)(i_element+1));
