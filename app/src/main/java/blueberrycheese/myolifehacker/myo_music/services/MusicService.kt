@@ -37,6 +37,8 @@ import org.greenrobot.eventbus.ThreadMode
 import java.io.File
 import java.io.IOException
 import java.util.*
+import android.content.Context
+import blueberrycheese.myolifehacker.myo_music.activities.extensions.sendIntent
 
 class MusicService : Service(), MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener, MediaPlayer.OnCompletionListener, AudioManager.OnAudioFocusChangeListener {
     companion object {
@@ -72,7 +74,6 @@ class MusicService : Service(), MediaPlayer.OnPreparedListener, MediaPlayer.OnEr
         private val VIBRATION_B = 2
         private val VIBRATION_C = 3
         private val ADDITIONAL_DELAY = 0
-
         fun getIsPlaying() = mPlayer?.isPlaying == true
     }
 
@@ -737,8 +738,7 @@ class MusicService : Service(), MediaPlayer.OnPreparedListener, MediaPlayer.OnEr
 //                        startService(this)
 //                    }
 
-                    getIntent(PREVIOUS)
-//                    sendIntent(PLAYPAUSE)
+                    this.sendIntent(blueberrycheese.myolifehacker.myo_music.activities.helpers.PLAYPAUSE)
 
                     //Send Vibration Event
                     EventBus.getDefault().post(ServiceEvent.VibrateEvent(VIBRATION_A))
@@ -762,7 +762,8 @@ class MusicService : Service(), MediaPlayer.OnPreparedListener, MediaPlayer.OnEr
 //                        action = PREVIOUS
 //                        startService(this)
 //                    }
-                    getIntent(PREVIOUS)
+
+                    this.sendIntent(blueberrycheese.myolifehacker.myo_music.activities.helpers.PREVIOUS);
 //                    sendIntent(PREVIOUS)
 
                     //Send Vibration Event
@@ -787,7 +788,7 @@ class MusicService : Service(), MediaPlayer.OnPreparedListener, MediaPlayer.OnEr
 //                    }
 
                     //앞으로
-                    getIntent(NEXT)
+                    this.sendIntent(blueberrycheese.myolifehacker.myo_music.activities.helpers.NEXT)
 //                    sendIntent(NEXT)
 
                     //Send Vibration Event
