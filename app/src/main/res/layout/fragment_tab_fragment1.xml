@@ -6,6 +6,9 @@
     android:layout_height="match_parent"
     tools:context=".TabFragment1">
 
+
+
+
     <com.imangazaliev.circlemenu.CircleMenu
         android:id="@+id/circleMenu"
         android:layout_width="match_parent"
@@ -59,12 +62,38 @@
         <!--app:icon="@drawable/ic_edit" />-->
 
     </com.imangazaliev.circlemenu.CircleMenu>
+    <!--
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:gravity="bottom">
 
 
+
+        android:layout_gravity="bottom"
+       android:layout_marginBottom="20dp"
+        />
+
+    </LinearLayout> -->
     <!-- TODO: Update blank fragment layout -->
     <!--<TextView-->
     <!--android:layout_width="match_parent"-->
     <!--android:layout_height="match_parent"-->
     <!--android:text="@string/hello_blank_fragment" />-->
+<com.airbnb.lottie.LottieAnimationView
+android:id="@+id/lottie_lock"
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:layout_gravity="center"
+app:lottie_fileName="lock.json"
+android:layout_marginTop="270dp"/>
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/lottie_unlock"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        app:lottie_fileName="material_wave_loading.json"
+        android:layout_marginTop="270dp"/>
 
 </FrameLayout>

@@ -1,6 +1,7 @@
 package blueberrycheese.myolifehacker.myo_music.activities.activitys
 
 import android.app.Activity
+import android.app.PendingIntent.getActivity
 import android.app.SearchManager
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
@@ -11,6 +12,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.graphics.Paint
+import android.graphics.Typeface
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.media.AudioManager
@@ -30,6 +32,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.SeekBar
 import android.widget.TextView
+import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
@@ -47,10 +50,12 @@ import com.simplemobiletools.commons.models.RadioItem
 import com.simplemobiletools.commons.models.Release
 import com.simplemobiletools.commons.views.MyLinearLayoutManager
 import blueberrycheese.myolifehacker.BuildConfig
+import blueberrycheese.myolifehacker.FontConfig
 import blueberrycheese.myolifehacker.R
 import blueberrycheese.myolifehacker.R.string.playpause
 import blueberrycheese.myolifehacker.SystemControl.GestureDetectMethod_System
 import blueberrycheese.myolifehacker.SystemControl.GestureDetectModel_System
+import blueberrycheese.myolifehacker.Toasty
 import blueberrycheese.myolifehacker.events.ServiceEvent
 import blueberrycheese.myolifehacker.myo_manage.*
 import blueberrycheese.myolifehacker.myo_music.Gesture.GestureDetectMethod_Music
@@ -69,9 +74,14 @@ import blueberrycheese.myolifehacker.myo_music.activities.models.Events
 import blueberrycheese.myolifehacker.myo_music.activities.models.Playlist
 import blueberrycheese.myolifehacker.myo_music.activities.models.Song
 import blueberrycheese.myolifehacker.myo_music.activities.services.MusicService
+
 import com.airbnb.lottie.model.Font
+=
+import com.airbnb.lottie.LottieAnimationView
+
 import com.squareup.otto.Bus
 import com.squareup.otto.Subscribe
+import kotlinx.android.synthetic.main.fragment_tab_fragment1.*
 import kotlinx.android.synthetic.main.music_activity_main.*
 import kotlinx.android.synthetic.main.music_item_navigation.*
 import kotlinx.android.synthetic.main.music_widget_config.*
@@ -80,6 +90,7 @@ import org.greenrobot.eventbus.ThreadMode
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
+import java.security.cert.TrustAnchor
 import java.util.*
 import java.util.logging.Level.OFF
 
@@ -91,6 +102,12 @@ class MainActivity : SimpleActivity(), SongListListener{
     private var artView: ViewGroup? = null
     private var oldCover: Drawable? = null
 
+    private var icon_1: Drawable? = null
+    private var icon_2:Drawable? = null
+    private var icon_3:Drawable? = null
+    private var icon_4:Drawable? = null
+    private var icon_5:Drawable? = null
+    private var icon_6:Drawable? = null
     private var actionbarSize = 0
     private var topArtHeight = 0
 
@@ -104,6 +121,7 @@ class MainActivity : SimpleActivity(), SongListListener{
     /** Intent code for requesting Bluetooth enable  */
     private val REQUEST_ENABLE_BT = 1
 
+    private var myoConnection: Boolean?  = null
     private val TAG = "BLE_Myo"
     private var bluetoothDevice: BluetoothDevice? = null
     private val mHandler: Handler? = null
@@ -114,7 +132,7 @@ class MainActivity : SimpleActivity(), SongListListener{
     private val commandList = MyoCommandList()
     private var deviceName: String? = null
     internal var gestureString = arrayOf("WiFi On, Off", "Sound Mode Chnage ", "Volume Up", "Volume Down", "Brightness Up", "Brightness Down")
-
+    internal var animationView_music: LottieAnimationView? = null
     private val saveModel: GestureSaveModel? = null
     private var saveMethod: GestureSaveMethod? = null
     private var detectModel: GestureDetectModel_Music? = null
@@ -130,13 +148,53 @@ class MainActivity : SimpleActivity(), SongListListener{
     private val ADDITIONAL_DELAY = 0
     var intentFIlter = IntentFilter()
 
+    private val VIBRATION_A = 1
+    private val VIBRATION_B = 2
+    private val VIBRATION_C = 3
+    private val ADDITIONAL_DELAY = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.music_activity_main)
 
+        FontConfig.setGlobalFont(this, this!!.getWindow().getDecorView())
+        icon_1 = resources.getDrawable(R.drawable.gesture_1_w)
+        icon_2 = resources.getDrawable(R.drawable.gesture_2_w)
+        icon_3 = resources.getDrawable(R.drawable.gesture_3_w)
+        icon_4 = resources.getDrawable(R.drawable.gesture_4_w)
+        icon_5 = resources.getDrawable(R.drawable.gesture_5_w)
+        icon_6 = resources.getDrawable(R.drawable.gesture_6_w)
+      //  playlist = findViewById(R.id.playlists_list) as TextView
         appLaunched()
         isThirdPartyIntent = intent.action == Intent.ACTION_VIEW
 
+        /*
+        View view=inflater.inflate(R.layout.music_activity_playlists, parent,false)
+        Util.setGlobalFont(context, view)
+        MyViewHolder holder=new MyViewHolder(view)
+        return holder
+
+        */
+
+
+        //animationView_system.setVisibility(View.INVISIBLE)
+
+
+       // lottie_music.setVisibility(View.INVISIBLE)
+
+
+        //lottie_music.visibility(INVISIABLE)
+
+       // lottie_music!!.setVisibility(View.VISIBLE)
+        lottie_music.setVisibility(View.INVISIBLE)
+        //lottie_music.playAnimation()
+        //lottie_music.loop(true)
+
+        /*
+        animationView_music = findViewById<View>(R.id.lottie_music) as LottieAnimationView
+        animationView_music!!.playAnimation()
+        animationView_music.loop(true)
+  */
         bus = BusProvider.instance
         bus.register(this)
         initSeekbarChangeListener()
@@ -716,6 +774,26 @@ class MainActivity : SimpleActivity(), SongListListener{
         }
     }
 
+
+    // 마요 연결되어 있으면 애니메이션 재생
+    @org.greenrobot.eventbus.Subscribe(sticky = true)
+    fun getMyoDevice(event: ServiceEvent.myoConnected_Event) {
+        myoConnection = event.connection
+        Log.e("volumecircle", "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"+myoConnection)
+
+        if (myoConnection as Boolean==true) {
+            lottie_music!!.setVisibility(View.VISIBLE)
+            lottie_music!!.playAnimation()
+            lottie_music!!.loop(true)
+
+            Log.e("volumecircle", "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+        } else {
+            lottie_music!!.setVisibility(View.VISIBLE)
+            lottie_music!!.cancelAnimation()
+            Log.e("volumecircle", "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+        }
+    }
+
     private fun searchQueryChanged(text: String) {
         val filtered = songs.filter { it.artist.contains(text, true) || it.title.contains(text, true) } as ArrayList
         filtered.sortBy { !(it.artist.startsWith(text, true) || it.title.startsWith(text, true)) }
@@ -767,24 +845,6 @@ class MainActivity : SimpleActivity(), SongListListener{
 //        }
 //    }
 
-    //Detect용 추가
-
-    /** Define of BLE Callback  */
-//    override fun onLeScan(device: BluetoothDevice, rssi: Int, scanRecord: ByteArray) {
-//        var device = device
-//        Log.d(TAG, "Hello onLeSacn")
-//        device = this.bluetoothDevice!!
-//        if (deviceName == device.name) {
-//            mBluetoothAdapter?.stopLeScan(this)
-//            // Trying to connect GATT
-//            val views = HashMap<String, View>()
-//
-//            mMyoCallback = MyoGattCallback(mHandler)
-//            mBluetoothGatt = device.connectGatt(this, false, mMyoCallback)
-//            mMyoCallback?.setBluetoothGatt(mBluetoothGatt)
-//        }
-//    }
-
 
     override fun onStop() {
 //        if(HoldCheck==false){
@@ -802,46 +862,43 @@ class MainActivity : SimpleActivity(), SongListListener{
 
     }
 
-//    fun closeBLEGatt() {
-//        if (mBluetoothGatt == null) {
-//            return
-//        }
-//        mMyoCallback?.stopCallback()
-//        mBluetoothGatt?.close()
-//        mBluetoothGatt = null
-//    }
+//제스처에 따라 기능 얻어오는 곳
 //
-//    fun startSaveModel() {
-//        val model = saveModel
-//        model!!.setAction(GestureDetectSendResultAction_Music(this)) //변경
-//        GestureDetectModelManager.setCurrentModel(model)
-//    }
+//    @org.greenrobot.eventbus.Subscribe(threadMode = ThreadMode.MAIN)
+//    fun onMessageEvent(event: ServiceEvent.GestureEvent) {
 //
-//    fun startDetectModel() {
-//        val model = detectModel
-//        model!!.setAction(GestureDetectSendResultAction_Music(this))    //변경
-//        GestureDetectModelManager.setCurrentModel(model)
-//    }
+//        gestureNum = event.gestureNumber
+//        Log.d("MusicEvent", "MusicEvent Gesture num : " + event.gestureNumber)
 //
-//    fun startNopModel() {
-//        GestureDetectModelManager.setCurrentModel(NopModel())
-//    }
+//        when (gestureNum) {
+//            0 -> {
 //
-//    fun setGestureText(message: String) {
-//        mHandler!!.post(Runnable { gestureText?.setText(message) })
-//    }
+//                if (smoothcount[gestureNum] > 1) {
+//                    //intent로 Musicservice에 가서 기능 가져오기
+//                    // 멈춤,재생
+////                    Intent(this, MusicService::class.java).apply {
+////
+////                        action = PLAYPAUSE
+////                        startService(this)
+////                    }
+//                    sendIntent(PLAYPAUSE)
 //
-//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-//        super.onActivityResult(requestCode, resultCode, data)
-//        if (requestCode == REQUEST_ENABLE_BT && resultCode == Activity.RESULT_OK) {
-//            if (mHandler != null) {
-//                mHandler.postDelayed(Runnable { mBluetoothAdapter?.stopLeScan(this@MainActivity) }, SCAN_PERIOD)
+//                    //Send Vibration Event
+//                    EventBus.getDefault().post(ServiceEvent.VibrateEvent(VIBRATION_A))
+//                    //Restart lock Timer so user can use gesture continuously
+//                    EventBus.getDefault().post(ServiceEvent.restartLockTimerEvent(ADDITIONAL_DELAY))
+//
+//                    Toasty.normal(this!!, "Play/Pause", Toast.LENGTH_SHORT, icon_1).show()
+//                    smoothcount[gestureNum] = -1
+//                    resetSmoothCount()
+//                }
+//
+//                smoothcount[gestureNum]++
 //            }
-//            mBluetoothAdapter?.startLeScan(this)
-//        }
 //
-//    }
+//            1 -> {
 //
+
 //    internal var detectOn = false
 
 /*
@@ -997,4 +1054,72 @@ class MainActivity : SimpleActivity(), SongListListener{
             val i = -1
         }
     }
+
+//                if (smoothcount[gestureNum] > 1){
+//                    //이전
+////                    Intent(this, MusicService::class.java).apply {
+////
+////                        action = PREVIOUS
+////                        startService(this)
+////                    }
+//                    sendIntent(PREVIOUS)
+//
+//                    //Send Vibration Event
+//                    EventBus.getDefault().post(ServiceEvent.VibrateEvent(VIBRATION_A))
+//                    //Restart lock Timer so user can use gesture continuously
+//                    EventBus.getDefault().post(ServiceEvent.restartLockTimerEvent(ADDITIONAL_DELAY))
+//
+//                    Toasty.normal(this!!, "Previous", Toast.LENGTH_SHORT, icon_2).show()
+//                    smoothcount[gestureNum] = -1
+//                    resetSmoothCount()
+//                }
+//                smoothcount[gestureNum]++
+//            }
+//
+//            2 -> {
+//                if (smoothcount[gestureNum] > 1) {
+////                    Intent(this, MusicService::class.java).apply {
+////
+////                        action = NEXT
+////                        startService(this)
+////                    }
+//
+//                    //앞으로
+//                    sendIntent(NEXT)
+//
+//                    //Send Vibration Event
+//                    EventBus.getDefault().post(ServiceEvent.VibrateEvent(VIBRATION_A))
+//                    //Restart lock Timer so user can use gesture continuously
+//                    EventBus.getDefault().post(ServiceEvent.restartLockTimerEvent(ADDITIONAL_DELAY))
+//
+//                    Toasty.normal(this!!, "Next", Toast.LENGTH_SHORT, icon_3).show()
+//                    smoothcount[gestureNum] = -1
+//                    resetSmoothCount()
+//                }
+//                smoothcount[gestureNum]++
+//            }
+//
+//            3 -> {
+//                if (smoothcount[gestureNum] > 1) {
+//
+//
+//
+//                    smoothcount[gestureNum] = -1
+//                    resetSmoothCount()
+//                }
+//                smoothcount[gestureNum]++
+//            }
+//
+//            else -> {
+//            }
+//        }
+//    }
+//
+//    fun resetSmoothCount() {
+//
+//        for ( i in smoothcount) {
+//            val i = -1
+//        }
+//    }
+
 }

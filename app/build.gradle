@@ -54,11 +54,12 @@ dependencies {
     implementation 'com.simplemobiletools:commons:3.17.24'
     implementation 'com.squareup:otto:1.3.8'
     implementation 'com.facebook.stetho:stetho:1.5.0'
-
+    implementation 'com.airbnb.android:lottie:2.3.0'
     debugImplementation "com.squareup.leakcanary:leakcanary-android:$leakCanaryVersion"
     releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanaryVersion"
 
 
+    //noinspection GradleCompatible
     implementation "com.android.support:appcompat-v7:27.1.+"
     implementation 'com.android.support:support-v4:27.1.0'
     implementation 'com.android.support:design:27.1.0'
@@ -83,7 +84,7 @@ dependencies {
     implementation 'com.github.ibosong.CommentGallery:frescozoomablelib:1.0.1'
     implementation 'com.github.ibosong.CommentGallery:largeimagegallerylib:1.0.1'
     implementation 'com.github.ibosong.CommentGallery:commentgallerylib:1.0.1'
-
+    implementation 'com.github.GrenderG:Toasty:1.3.0'
 }
 
 Properties props = new Properties()

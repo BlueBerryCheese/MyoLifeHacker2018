@@ -1,5 +1,6 @@
 package blueberrycheese.myolifehacker;
 
+import android.animation.Animator;
 import android.app.Activity;
 import android.app.FragmentTransaction;
 import android.bluetooth.BluetoothAdapter;
@@ -8,6 +9,7 @@ import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCallback;
 import android.bluetooth.BluetoothManager;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -18,7 +20,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.content.Intent;
+import android.view.animation.Animation;
 import android.widget.Button;
+import android.widget.Toast;
 
 
 import com.imangazaliev.circlemenu.CircleMenu;
@@ -50,7 +54,7 @@ import blueberrycheese.myolifehacker.myo_manage.GestureSaveModel;
 import blueberrycheese.myolifehacker.myo_manage.IGestureDetectModel;
 import blueberrycheese.myolifehacker.myo_manage.MyoCommandList;
 import blueberrycheese.myolifehacker.myo_manage.MyoGattCallback;
-
+import com.airbnb.lottie.LottieAnimationView;
 import static android.content.Context.BLUETOOTH_SERVICE;
 
 /**
@@ -68,6 +72,12 @@ public class TabFragment1 extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private static final long SCAN_PERIOD = 5000;
+
+    private static final int VIBRATION_A = 1;
+    private static final int VIBRATION_B = 2;
+    private static final int VIBRATION_C = 3;
+    private static final int ADDITIONAL_DELAY = 0;
+
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -77,6 +87,7 @@ public class TabFragment1 extends Fragment {
     private CircleMenuButton circleMenuButton_camera;
     private CircleMenuButton circleMenuButton_music ;
     private CircleMenuButton circleMenuButton_gallery;
+    private Button next_;
     private Handler mHandler;
     private BluetoothAdapter mBluetoothAdapter;
     private BluetoothGatt mBluetoothGatt;
@@ -85,12 +96,17 @@ public class TabFragment1 extends Fragment {
     private Activity mactivity;
     private BluetoothDevice device;
     private OnFragmentInteractionListener mListener;
+    private MyoApp myoApp = null;
     String deviceName;
-
+    private Drawable icon_1,icon_2,icon_3,icon_4,icon_5,icon_6;
     private GestureSaveModel saveModel;
     private GestureSaveMethod   saveMethod;
     private GestureDetectModel_Menu detectModel;
     private GestureDetectMethod_Menu detectMethod;
+    private LottieAnimationView animationView_main_lock;
+    private LottieAnimationView animationView_main_unlock;
+    private boolean myoConnection;
+    private boolean first=true;
 
     int[] smoothcount = new int[6];
     private int gestureNum = -1;
@@ -124,7 +140,13 @@ public class TabFragment1 extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-
+        FontConfig.setGlobalFont(getActivity(),getActivity().getWindow().getDecorView());
+        icon_1 = getResources().getDrawable(R.drawable.gesture_1_w);
+        icon_2 = getResources().getDrawable(R.drawable.gesture_2_w);
+        icon_3 = getResources().getDrawable(R.drawable.gesture_3_w);
+        icon_4 = getResources().getDrawable(R.drawable.gesture_4_w);
+        icon_5 = getResources().getDrawable(R.drawable.gesture_5_w);
+        icon_6 = getResources().getDrawable(R.drawable.gesture_6_w);
 
     }
     public Button btn_hello;
@@ -140,24 +162,94 @@ public class TabFragment1 extends Fragment {
         //Main CirecleMenu 관련
         circleMenu = (CircleMenu) view.findViewById(R.id.circleMenu);
         circleMenuButton_music = (CircleMenuButton)view.findViewById(R.id.music);
-
         circleMenuButton_volume = (CircleMenuButton)view.findViewById(R.id.volume);
         circleMenuButton_camera = (CircleMenuButton)view.findViewById(R.id.camera_button);
         circleMenuButton_gallery = (CircleMenuButton)view.findViewById(R.id.gallery_button);
-
 //        circleMenu.setBackgroundColor(getResources().getColor(R.color.FontColor));
+        animationView_main_lock = (LottieAnimationView) view.findViewById(R.id.lottie_lock);
+        animationView_main_unlock = (LottieAnimationView) view.findViewById(R.id.lottie_unlock);
+
+
+        //final LottieAnimationView animationView = (LottieAnimationView) view.findViewById(R.id.lottie);
+  /*      animationView_main.addAnimatorListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+               //animationView.playAnimation();
+                animationView_main.loop(true);
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+               // animationView.setVisibility(view.GONE);
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+        });
+*/
+        /*
+        btn_im.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //animationView.setAnimation("timer.json");
+
+                animationView.cancelAnimation();
+            }    });
+
+
+        btn_im2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                animationView.setVisibility(View.VISIBLE);
+                animationView.playAnimation();
+            }    });
+        btn_im3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                animationView.setVisibility(View.GONE);
+            }    });
+            */
+        //animationView.setAnimation(View.INVISIBLE);
+       // animationView.setVisibility(view.GONE);
+       // animationView.setAnimation("timer.json");
+       // animationView.loop(true);
+        //animationView.setAnimation("cup_game_loader_2.json");
+
+       // animationView.cancelAnimation();
+
+        animationView_main_unlock.setVisibility(View.INVISIBLE);
+        animationView_main_lock.setVisibility(View.INVISIBLE);
 
 
         circleMenu.setOnItemClickListener(new CircleMenu.OnItemClickListener() {
             @Override
             public void onItemClick(CircleMenuButton menuButton) {
                 int viewId = menuButton.getId(); // 클릭한 메뉴 id를 가져온 후 switch 문 으로
+               // animationView.setVisibility(view.INVISIBLE);
+                //animationView.setAnimation("cup_game_loader_2.json");
+                //animationView.playAnimation();
+               // animationView.loop(true);
+               // animationView.cancelAnimation();
+
+
                 switch(viewId){
                     case R.id.camera_button:
                         Log.d("cameracircle","cameraclicked");
                         Intent intent = new Intent(getActivity().getApplicationContext(), CameraActivity.class);
 //                        intent.putExtra("bluetoothDevice", device);
                         startActivity(intent);
+                        Toasty.normal(getContext(),"Open Camera",Toast.LENGTH_SHORT).show();
+                        //Toasty.info(getContext(),"Time over myo Locked", Toast.LENGTH_SHORT,icon_1).show();
+                        //Toasty.normal(getContext(),"Open camera",Toast.LENGTH_SHORT).show();
+                       // animationView.cancelAnimation();
+                       // animationView.setVisibility(View.GONE);
                         break;
                     case R.id.volume:
                         Log.d("volumecircle", "volume_clicked");
@@ -165,18 +257,30 @@ public class TabFragment1 extends Fragment {
                         Intent intent2 = new Intent(getActivity().getApplicationContext(), SystemControlActivity.class);
                         intent2.putExtra("bluetoothDevice", device);
                         startActivity(intent2);
+                        //Toasty.success(getContext(), "Open interior function", Toast.LENGTH_SHORT, true).show();
+                        Toasty.normal(getContext(),"Open interior function",Toast.LENGTH_SHORT).show();
+                        //animationView.cancelAnimation();
+                       // animationView.setVisibility(View.GONE);
                         break;
                     case R.id.music:
                         Log.d("music_circle","music_clicked");
                         Intent intent3 = new Intent(getActivity().getApplicationContext(), blueberrycheese.myolifehacker.myo_music.activities.activitys.MainActivity.class);
                         intent3.putExtra("bluetoothDevice", device);
                         startActivity(intent3);
+                        //Toasty.success(getContext(), "Open music", Toast.LENGTH_SHORT, true).show();
+                        Toasty.normal(getContext(),"Open music",Toast.LENGTH_SHORT).show();
+                       // animationView.cancelAnimation();
+                       // animationView.setVisibility(View.GONE);
                         break;
                     case R.id.gallery_button:
                         Log.d("gallerycircle","galleryclicked");
                         Intent intent4 = new Intent(getActivity().getApplicationContext(), GalleryActivity.class);
                         intent4.putExtra("bluetoothDevice", device);
                         startActivity(intent4);
+                        //Toasty.success(getContext(), "Open gallery", Toast.LENGTH_SHORT, true).show();
+                        Toasty.normal(getContext(),"Open gallery",Toast.LENGTH_SHORT).show();
+                        //animationView.cancelAnimation();
+                        //animationView.setVisibility(View.GONE);
                         break;
                     default:
                         break;
@@ -328,11 +432,98 @@ public class TabFragment1 extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
 
+    // 마요 잠기면 애니메이션 재생
+    @Subscribe
+    public void getMyoDevice(ServiceEvent.myoLock_Event event) {
+        myoConnection = event.lock;
+        if(myoConnection) {
+          //  animationView_main.cancelAnimation();
+          //  animationView_main.clearAnimation();
+          //  animationView_main.setAnimation("lock.json");
+            animationView_main_lock.playAnimation();
+            animationView_main_lock.loop(true);
+            animationView_main_lock.setVisibility(View.VISIBLE);
+            animationView_main_unlock.setVisibility(View.INVISIBLE);
+        }
+        else {
+          //  animationView_main.cancelAnimation();
+           // animationView_main.clearAnimation();
+            //animationView_main_unlock.setAnimation("material_wave_loading.json");
+            animationView_main_unlock.playAnimation();
+            animationView_main_unlock.loop(true);
+            animationView_main_unlock.setVisibility(View.VISIBLE);
+            animationView_main_lock.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    // 마요 연결되어 있으면 애니메이션 재생
+    @Subscribe(sticky = true)
+    public void getMyoDevice(ServiceEvent.myoConnected_Event event) {
+        myoConnection = event.connection;
+        myoApp = (MyoApp) getActivity().getApplicationContext();
+        if(myoConnection) {
+            if(first) {
+                animationView_main_lock.playAnimation();
+                animationView_main_lock.loop(true);
+                animationView_main_lock.setVisibility(View.VISIBLE);
+                first=false;
+            }
+
+            /*
+            //Log.d("MenuEvent","MenuEvent Gesture num============================ : "+myoApp.isUnlocked());
+              if(myoApp.isUnlocked()) {
+                  Log.e("MenuEvent","MenuEvent Gesture num============================  UNLOck: "+myoApp.isUnlocked());
+                //  animationView_main.cancelAnimation();
+                animationView_main.clearAnimation();
+                animationView_main.setAnimation("material_wave_loading.json");
+                animationView_main.playAnimation();
+                animationView_main.loop(true);
+                animationView_main.setVisibility(View.VISIBLE);
+            } else {
+
+                  Log.e("MenuEvent","MenuEvent Gesture num============================  LOck: "+myoApp.isUnlocked());
+              //    animationView_main.cancelAnimation();
+               animationView_main.clearAnimation();
+                animationView_main.setAnimation("lock.json");
+                animationView_main.playAnimation();
+                animationView_main.loop(true);
+                animationView_main.setVisibility(View.VISIBLE);
+            }*/
+
+
+        }
+        else {
+            animationView_main_lock.cancelAnimation();
+            animationView_main_unlock.cancelAnimation();
+            animationView_main_lock.setVisibility(View.INVISIBLE);
+            animationView_main_unlock.setVisibility(View.INVISIBLE);
+        }
+    }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(ServiceEvent.GestureEvent event) {
         gestureNum = event.gestureNumber;
-        Log.d("MenuEvent","MenuEvent Gesture num : "+event.gestureNumber);
+        /*
+        if(myoApp.isUnlocked()) {
+            Log.e("MenuEvent","MenuEvent Gesture num============================  UNLOck: "+myoApp.isUnlocked());
+            //  animationView_main.cancelAnimation();
+            animationView_main.clearAnimation();
+            animationView_main.setAnimation("material_wave_loading.json");
+            animationView_main.playAnimation();
+            animationView_main.loop(true);
+            animationView_main.setVisibility(View.VISIBLE);
+        } else {
 
+            Log.e("MenuEvent","MenuEvent Gesture num============================  LOck: "+myoApp.isUnlocked());
+            //    animationView_main.cancelAnimation();
+            animationView_main.clearAnimation();
+            animationView_main.setAnimation("lock.json");
+            animationView_main.playAnimation();
+            animationView_main.loop(true);
+            animationView_main.setVisibility(View.VISIBLE);
+        }
+        */
+        Log.d("MenuEvent","MenuEvent Gesture num : "+event.gestureNumber);
         switch(gestureNum){
             case 0 :
                 if(smoothcount[gestureNum]>1) {
@@ -340,8 +531,16 @@ public class TabFragment1 extends Fragment {
                     circleMenu.toggle();
                     circleMenu.onOpenAnimationEnd();
 
+                    //Send Vibration Event
+                    EventBus.getDefault().post(new ServiceEvent.VibrateEvent(VIBRATION_A));
+                    //Restart lock Timer so user can use gesture continuously
+                    EventBus.getDefault().post(new ServiceEvent.restartLockTimerEvent(ADDITIONAL_DELAY));
+
                     smoothcount[gestureNum]=-1;
                     resetSmoothCount();
+                   // Toasty.success(getContext(), "Open menu", Toast.LENGTH_SHORT, false).show();
+                    Toasty.normal(getContext(),"Open menu",Toast.LENGTH_SHORT, icon_1).show();
+
                 }
                 smoothcount[gestureNum]++;
 
@@ -351,8 +550,17 @@ public class TabFragment1 extends Fragment {
                 if(smoothcount[gestureNum]>1) {
                     circleMenu.onSelectAnimationStart(circleMenuButton_volume);
                     circleMenu.onSelectAnimationEnd(circleMenuButton_volume);
-                    smoothcount[gestureNum]=-1;
+
+                    //Send Vibration Event
+
+                    EventBus.getDefault().post(new ServiceEvent.VibrateEvent(VIBRATION_A));
+                    //Restart lock Timer so user can use gesture continuously
+                    EventBus.getDefault().post(new ServiceEvent.restartLockTimerEvent(ADDITIONAL_DELAY));
+
                     resetSmoothCount();
+                    smoothcount[gestureNum]=-1;
+
+                    Toasty.normal(getContext(),"Open nterior function",Toast.LENGTH_SHORT, icon_2).show();
                 }
                 smoothcount[gestureNum]++;
                 break;
@@ -362,11 +570,17 @@ public class TabFragment1 extends Fragment {
                     circleMenu.onSelectAnimationStart(circleMenuButton_camera);
                     circleMenu.onSelectAnimationEnd(circleMenuButton_camera);
 
-                    smoothcount[gestureNum]=-1;
+                    //Send Vibration Event
+
+                    EventBus.getDefault().post(new ServiceEvent.VibrateEvent(VIBRATION_A));
+                    //Restart lock Timer so user can use gesture continuously
+                    EventBus.getDefault().post(new ServiceEvent.restartLockTimerEvent(ADDITIONAL_DELAY));
+
                     resetSmoothCount();
+                    smoothcount[gestureNum]=-1;
+                    Toasty.normal(getContext(),"Open camera",Toast.LENGTH_SHORT, icon_3).show();
                 }
                 smoothcount[gestureNum]++;
-
                 break;
 
             case 3 :
@@ -374,9 +588,15 @@ public class TabFragment1 extends Fragment {
                     circleMenu.onSelectAnimationStart(circleMenuButton_gallery);
                     circleMenu.onSelectAnimationEnd(circleMenuButton_gallery);
 
+                    //Send Vibration Event
 
-                    smoothcount[gestureNum]=-1;
+                    EventBus.getDefault().post(new ServiceEvent.VibrateEvent(VIBRATION_A));
+                    //Restart lock Timer so user can use gesture continuously
+                    EventBus.getDefault().post(new ServiceEvent.restartLockTimerEvent(ADDITIONAL_DELAY));
+
                     resetSmoothCount();
+                    smoothcount[gestureNum]=-1;
+                    Toasty.normal(getContext(),"Open gallery",Toast.LENGTH_SHORT, icon_4).show();
                 }
                 smoothcount[gestureNum]++;
                 break;
@@ -385,9 +605,15 @@ public class TabFragment1 extends Fragment {
                 circleMenu.onSelectAnimationStart(circleMenuButton_music);
                 circleMenu.onSelectAnimationEnd(circleMenuButton_music);
 
+                //Send Vibration Event
 
-                smoothcount[gestureNum]=-1;
+                EventBus.getDefault().post(new ServiceEvent.VibrateEvent(VIBRATION_A));
+                //Restart lock Timer so user can use gesture continuously
+                EventBus.getDefault().post(new ServiceEvent.restartLockTimerEvent(ADDITIONAL_DELAY));
+
                 resetSmoothCount();
+                smoothcount[gestureNum]=-1;
+                Toasty.normal(getContext(),"Open music",Toast.LENGTH_SHORT, icon_5).show();
             }
                 smoothcount[gestureNum]++;
                 break;
@@ -395,11 +621,12 @@ public class TabFragment1 extends Fragment {
                 break;
 
         }
+        //Log.e("Hello",smoothcount[0]+" " + smoothcount[1]+" " + smoothcount[2]+" " + smoothcount[3]);
     }
-//TODO: smoothCount 처음엔 0으로 초기화될텐데 reset할땐 -1로 하면 초반 첫 제스처의 경우는 0에서 2가면 동작하고 나머지는 -1에서 2가면 동작하는 차이가 발생.
+
     public void resetSmoothCount(){
-        for(int i : smoothcount){
-            i = -1;
+        for(int i=0;i<smoothcount.length;i++){
+            smoothcount[i]=0;
         }
     }
 }

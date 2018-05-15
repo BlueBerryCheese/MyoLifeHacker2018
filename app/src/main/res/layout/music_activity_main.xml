@@ -214,7 +214,13 @@
         android:padding="@dimen/activity_margin"
         android:text="@string/add_folder_to_playlist"
         android:textSize="@dimen/bigger_text_size"/>
-
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/lottie_music"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:lottie_fileName="material_wave_loading.json"
+        android:gravity="center"
+        android:layout_marginTop="500dp"/>
 
 
 </RelativeLayout>

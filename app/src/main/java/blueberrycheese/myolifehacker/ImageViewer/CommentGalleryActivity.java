@@ -1,11 +1,15 @@
 package blueberrycheese.myolifehacker.ImageViewer;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
 import android.view.WindowManager;
+import android.widget.Toast;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.bosong.commentgallerylib.CommentGallery;
 import com.bosong.commentgallerylib.CommentGalleryContainer;
 
@@ -14,9 +18,19 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import blueberrycheese.myolifehacker.R;
+import blueberrycheese.myolifehacker.Toasty;
 import blueberrycheese.myolifehacker.events.ServiceEvent;
 
 public class CommentGalleryActivity extends AppCompatActivity {
+    private static final int VIBRATION_A = 1;
+    private static final int VIBRATION_B = 2;
+    private static final int VIBRATION_C = 3;
+
+    private static final int ADDITIONAL_DELAY = 5000;
+
+    private LottieAnimationView animationView_gallery_picture;
+    private Drawable icon_1,icon_2,icon_3,icon_4,icon_5,icon_6;
+    private boolean myoConnection;
     private int numCounter = 0;
     private CommentGallery mGallery;
     int[] smoothcount = new int[6];
@@ -33,6 +47,16 @@ public class CommentGalleryActivity extends AppCompatActivity {
                 getIntent().getExtras().getInt(GalleryActivity.CLICK_INDEX));
         numCounter = getIntent().getExtras().getInt(GalleryActivity.CLICK_INDEX);
         max_size = getIntent().getExtras().getInt(GalleryActivity.LIST_SIZE);
+        Log.d("commentGalleryActivity",numCounter+""+max_size);
+
+        icon_1 = getResources().getDrawable(R.drawable.gesture_1_w);
+        icon_2 = getResources().getDrawable(R.drawable.gesture_2_w);
+        icon_3 = getResources().getDrawable(R.drawable.gesture_3_w);
+        icon_4 = getResources().getDrawable(R.drawable.gesture_4_w);
+        icon_5 = getResources().getDrawable(R.drawable.gesture_5_w);
+        icon_6 = getResources().getDrawable(R.drawable.gesture_6_w);
+        animationView_gallery_picture = (LottieAnimationView) findViewById(R.id.lottie_gallery_picture);
+        animationView_gallery_picture.setVisibility(View.INVISIBLE);
 
     }
     @Override
@@ -55,6 +79,21 @@ public class CommentGalleryActivity extends AppCompatActivity {
         overridePendingTransition(0, 0);
     }
 
+    // 마요 연결되어 있으면 애니메이션 재생
+    @Subscribe(sticky = true)
+    public void getMyoDevice(ServiceEvent.myoConnected_Event event) {
+        myoConnection = event.connection;
+        if(myoConnection) {
+            animationView_gallery_picture.playAnimation();
+            animationView_gallery_picture.loop(true);
+            animationView_gallery_picture.setVisibility(View.VISIBLE);
+        }
+        else {
+            animationView_gallery_picture.cancelAnimation();
+            animationView_gallery_picture.setVisibility(View.INVISIBLE);
+        }
+    }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(ServiceEvent.GestureEvent event) {
         gestureNum = event.gestureNumber;
@@ -67,24 +106,20 @@ public class CommentGalleryActivity extends AppCompatActivity {
 //                }
 //                smoothcount[gestureNum]++;
 
+                smoothcount[gestureNum]++;
+                if(smoothcount[gestureNum]>1) {
+                    numCounter--;
+                    mGallery.setData((CommentGalleryContainer) getIntent().getSerializableExtra(GalleryActivity.COMMENT_LIST),numCounter);
+                    resetSmoothCount();
+                    finish();
+                    Toasty.normal(getBaseContext(),"Close picture", Toast.LENGTH_SHORT, icon_1).show();
+                }
+
                 break;
 
             case 1 :
 
-                if(numCounter>=max_size){
-                    numCounter=0;
-                }
-                if(smoothcount[gestureNum]>1) {
-                    numCounter++;
-                    mGallery.setData((CommentGalleryContainer) getIntent().getSerializableExtra(GalleryActivity.COMMENT_LIST),numCounter);
-                    resetSmoothCount();
-                }
                 smoothcount[gestureNum]++;
-
-                break;
-
-            case 2 :
-
                 if(numCounter<0){
                     numCounter=max_size-1;
                 }
@@ -93,7 +128,32 @@ public class CommentGalleryActivity extends AppCompatActivity {
                     mGallery.setData((CommentGalleryContainer) getIntent().getSerializableExtra(GalleryActivity.COMMENT_LIST),numCounter);
                     resetSmoothCount();
                 }
+                //Send Vibration Event
+                EventBus.getDefault().post(new ServiceEvent.VibrateEvent(VIBRATION_A));
+                //Restart lock Timer so user can use gesture continuously
+                EventBus.getDefault().post(new ServiceEvent.restartLockTimerEvent(ADDITIONAL_DELAY));
+                Toasty.normal(getBaseContext(),"Previous picture", Toast.LENGTH_SHORT, icon_2).show();
+
+
+                break;
+
+            case 2 :
+
                 smoothcount[gestureNum]++;
+                if(numCounter>=max_size){
+                    numCounter=0;
+                }
+                if(smoothcount[gestureNum]>1) {
+                    numCounter++;
+                    mGallery.setData((CommentGalleryContainer) getIntent().getSerializableExtra(GalleryActivity.COMMENT_LIST),numCounter);
+                    resetSmoothCount();
+                }
+                //Send Vibration Event
+                EventBus.getDefault().post(new ServiceEvent.VibrateEvent(VIBRATION_A));
+                //Restart lock Timer so user can use gesture continuously
+                EventBus.getDefault().post(new ServiceEvent.restartLockTimerEvent(ADDITIONAL_DELAY));
+                Toasty.normal(getBaseContext(),"Next Picture", Toast.LENGTH_SHORT, icon_3).show();
+
                 break;
 
             case 3 :
@@ -107,8 +167,8 @@ public class CommentGalleryActivity extends AppCompatActivity {
     }
 
     public void resetSmoothCount(){
-        for(int i : smoothcount){
-            i = -1;
+        for(int i=0;i<smoothcount.length;i++){
+            smoothcount[i]=0;
         }
     }
 }

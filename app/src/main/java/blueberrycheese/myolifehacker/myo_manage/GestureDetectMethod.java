@@ -12,6 +12,7 @@ import java.util.ArrayList;
  * ver 1.1 Manhattan, Norm-3 distance, Weight Ratio, CorrelationEfficient detect Method
  * ver 2.0 K-Means++ Clustering Algorithm Apply(2018-03-21)
  * ver 2.1 Speed improvement(2018-04-07)
+ * ver 2.2 NO ACTION EMG threshold added
  */
 
 public class GestureDetectMethod {
@@ -20,7 +21,7 @@ public class GestureDetectMethod {
     private final static Double THRESHOLD = 0.01;
     private final static int KMEANS_K = 128;    //sampling한 KMEANS_K의 갯수
     private final static String FileList_kmeans = "KMEANS_DATA.dat";    //적용되는 KMEANS_DATA파일 우리가 생성함
-
+    private static int NOACTIONEMG = 5;
 
     private final ArrayList<EmgData> compareGesture;
 
@@ -35,6 +36,7 @@ public class GestureDetectMethod {
     private double[] maxData = new double[8];
     private StringBuilder sb;
     private Handler handler;
+
     public GestureDetectMethod(ArrayList<EmgData> gesture) {
         compareGesture = gesture;
         numberSmoother = new NumberSmoother();
@@ -94,25 +96,31 @@ public class GestureDetectMethod {
 
         detect_distance = 100000.0;
         detect_Num = -1;
-        Log.e("detect_gesture",""+streamingMaxData.getElement(0)+","+streamingMaxData.getElement(1)+","+streamingMaxData.getElement(2)+","
+        Log.d("detect_gesture",""+streamingMaxData.getElement(0)+","+streamingMaxData.getElement(1)+","+streamingMaxData.getElement(2)+","
                 +streamingMaxData.getElement(3)+","+streamingMaxData.getElement(4)+","+streamingMaxData.getElement(5)+","+streamingMaxData.getElement(6)+","
                 +streamingMaxData.getElement(7)+",");
+        double sum_emg = 0.0;
+        for(int element=0;element<8;element++)
+            sum_emg += streamingMaxData.getElement(element);
+        sum_emg /=8;
+        if(sum_emg>NOACTIONEMG) {
 
-        for (int i_gesture = 0;i_gesture < COMPARE_NUM*KMEANS_K ;i_gesture++) {
+            for (int i_gesture = 0; i_gesture < COMPARE_NUM * KMEANS_K; i_gesture++) {
 
-            EmgData compData = compareGesture.get(i_gesture);
-            double distance = dist(streamingMaxData, compData);     //Calculate Euclidean distance to compare similarity
+                EmgData compData = compareGesture.get(i_gesture);
+                double distance = dist(streamingMaxData, compData);     //Calculate Euclidean distance to compare similarity
 
-            if (detect_distance >= distance) {
-                detect_distance = distance;
+                if (detect_distance >= distance) {
+                    detect_distance = distance;
 //                Log.d("detect_gesture",(int)i_gesture+"distance ("+distance+") -> "+(int)(i_gesture/KMEANS_K));
-                detect_Num = (int)(i_gesture/KMEANS_K);
+                    detect_Num = (int) (i_gesture / KMEANS_K);
 
+                }
             }
-        }
 
-        Log.d("detect_gesture","distance ("+detect_distance+") -> "+(int)(detect_Num));
-        numberSmoother.addArray((Integer) (detect_Num));
+            Log.d("detect_gesture", "distance (" + detect_distance + ") -> " + (int) (detect_Num));
+            numberSmoother.addArray((Integer) (detect_Num));
+        }
         //streamCount = 0;
 
         cnt++;

@@ -5,7 +5,6 @@
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-
     android:background="@color/BackgroundColor">
 
     <TextView
@@ -16,7 +15,7 @@
         android:background="@color/FontColor"
         android:textColor="@color/BackgroundColor"
         android:textAlignment="center"
-
+        android:gravity="center"
         android:text="Hello?"
         android:textSize="20dp"/>
     <ScrollView
@@ -32,4 +31,12 @@
 
             />
     </ScrollView>
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/lottie_gallery"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:lottie_fileName="material_wave_loading.json"
+        android:gravity="center"
+        android:layout_marginTop="550dp"/>
 </RelativeLayout>
+

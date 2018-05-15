@@ -21,9 +21,11 @@ import com.simplemobiletools.commons.extensions.*
 import com.simplemobiletools.commons.helpers.PERMISSION_WRITE_STORAGE
 import com.simplemobiletools.commons.helpers.isOreoPlus
 import blueberrycheese.myolifehacker.R
+import blueberrycheese.myolifehacker.events.ServiceEvent
 import blueberrycheese.myolifehacker.myo_music.activities.activitys.MainActivity
 import blueberrycheese.myolifehacker.myo_music.activities.extensions.config
 import blueberrycheese.myolifehacker.myo_music.activities.extensions.dbHelper
+import blueberrycheese.myolifehacker.myo_music.activities.extensions.sendIntent
 import blueberrycheese.myolifehacker.myo_music.activities.helpers.*
 import blueberrycheese.myolifehacker.myo_music.activities.models.Events
 import blueberrycheese.myolifehacker.myo_music.activities.models.Song
@@ -31,6 +33,8 @@ import blueberrycheese.myolifehacker.myo_music.activities.receivers.ControlActio
 import blueberrycheese.myolifehacker.myo_music.activities.receivers.HeadsetPlugReceiver
 import blueberrycheese.myolifehacker.myo_music.activities.receivers.RemoteControlReceiver
 import com.squareup.otto.Bus
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.ThreadMode
 import java.io.File
 import java.io.IOException
 import java.util.*
@@ -63,6 +67,13 @@ class MusicService : Service(), MediaPlayer.OnPreparedListener, MediaPlayer.OnEr
         private var isServiceInitialized = false
         private var prevAudioFocusState = 0
 
+        private var gestureNum = -1
+        internal var smoothcount = IntArray(6)
+        private val VIBRATION_A = 1
+        private val VIBRATION_B = 2
+        private val VIBRATION_C = 3
+        private val ADDITIONAL_DELAY = 0
+
         fun getIsPlaying() = mPlayer?.isPlaying == true
     }
 
@@ -88,9 +99,15 @@ class MusicService : Service(), MediaPlayer.OnPreparedListener, MediaPlayer.OnEr
         } else {
             mBus!!.post(Events.NoStoragePermission())
         }
+
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this)
+            Log.e(TAG,"EventBus registered")
+        }
     }
 
     override fun onDestroy() {
+        EventBus.getDefault().unregister(this)
         super.onDestroy()
         destroyPlayer()
     }
@@ -700,4 +717,114 @@ class MusicService : Service(), MediaPlayer.OnPreparedListener, MediaPlayer.OnEr
         mPlayer!!.seekTo(newProgress)
         resumeSong()
     }
+
+    //제스처에 따라 기능 얻어오는 곳
+
+    @org.greenrobot.eventbus.Subscribe(threadMode = ThreadMode.MAIN)
+    fun onGestureEvent(event: ServiceEvent.GestureEvent) {
+
+        gestureNum = event.gestureNumber
+        Log.d("MusicEvent", "MusicEvent Gesture num : " + event.gestureNumber)
+
+        when (gestureNum) {
+            0 -> {
+                smoothcount[gestureNum]++
+                if (smoothcount[gestureNum] > 2) {
+                    //intent로 Musicservice에 가서 기능 가져오기
+                    // 멈춤,재생
+//                    Intent(this, MusicService::class.java).apply {
+//
+//                        action = PLAYPAUSE
+//                        startService(this)
+//                    }
+
+                    this.sendIntent(blueberrycheese.myolifehacker.myo_music.activities.helpers.PLAYPAUSE)
+//                    sendIntent(PLAYPAUSE)
+
+                    //Send Vibration Event
+                    EventBus.getDefault().post(ServiceEvent.VibrateEvent(VIBRATION_A))
+                    //Restart lock Timer so user can use gesture continuously
+                    EventBus.getDefault().post(ServiceEvent.restartLockTimerEvent(ADDITIONAL_DELAY))
+
+//                    Toasty.normal(this!!, "Play/Pause", Toast.LENGTH_SHORT, icon_1).show()
+//                    smoothcount[gestureNum] = -1
+                    resetSmoothCount()
+                }
+
+
+            }
+
+            1 -> {
+                smoothcount[gestureNum]++
+                if (smoothcount[gestureNum] > 2){
+                    //이전
+//                    Intent(this, MusicService::class.java).apply {
+//
+//                        action = PREVIOUS
+//                        startService(this)
+//                    }
+                    this.sendIntent(blueberrycheese.myolifehacker.myo_music.activities.helpers.PREVIOUS)
+//                    sendIntent(PREVIOUS)
+
+                    //Send Vibration Event
+                    EventBus.getDefault().post(ServiceEvent.VibrateEvent(VIBRATION_A))
+                    //Restart lock Timer so user can use gesture continuously
+                    EventBus.getDefault().post(ServiceEvent.restartLockTimerEvent(ADDITIONAL_DELAY))
+
+//                    Toasty.normal(this!!, "Previous", Toast.LENGTH_SHORT, icon_2).show()
+//                    smoothcount[gestureNum] = -1
+                    resetSmoothCount()
+                }
+
+            }
+
+            2 -> {
+                smoothcount[gestureNum]++
+                if (smoothcount[gestureNum] > 2) {
+//                    Intent(this, MusicService::class.java).apply {
+//
+//                        action = NEXT
+//                        startService(this)
+//                    }
+
+                    //앞으로
+                    this.sendIntent(blueberrycheese.myolifehacker.myo_music.activities.helpers.NEXT)
+//                    sendIntent(NEXT)
+
+                    //Send Vibration Event
+                    EventBus.getDefault().post(ServiceEvent.VibrateEvent(VIBRATION_A))
+                    //Restart lock Timer so user can use gesture continuously
+                    EventBus.getDefault().post(ServiceEvent.restartLockTimerEvent(ADDITIONAL_DELAY))
+
+//                    Toasty.normal(this!!, "Next", Toast.LENGTH_SHORT, icon_3).show()
+//                    smoothcount[gestureNum] = -1
+                    resetSmoothCount()
+                }
+
+            }
+
+            3 -> {
+                smoothcount[gestureNum]++
+                if (smoothcount[gestureNum] > 2) {
+
+
+
+//                    smoothcount[gestureNum] = -1
+                    resetSmoothCount()
+                }
+
+            }
+
+            else -> {
+            }
+        }
+    }
+
+    fun resetSmoothCount() {
+
+        for (i in smoothcount.indices) {
+            smoothcount[i] = 0
+        }
+    }
+
 }

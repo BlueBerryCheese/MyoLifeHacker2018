@@ -31,7 +31,7 @@ public class GestureSaveMethod {
     private final static int COMPARE_NUM = 6;       //제스처 갯수
     private final static int SAVE_DATA_LENGTH = 5;      // 세이브 할 데이터 갯수
     private final static int AVERAGING_LENGTH = 10;
-    private final static int READING_LENGTH = 1000;  // 안드로이드에 저장되있는 파일의 길이
+    private final static int READING_LENGTH = 10000;  // 안드로이드에 저장되있는 파일의 길이
     private final static int JUST_SAVE_DATA_LEN = 5;    // 세이브 할 데이터 갯수
    // private final static int JUST_SAVE_DATA_LEN = 5;
 
@@ -339,6 +339,9 @@ public class GestureSaveMethod {
         compareGesture.add(tempData);
         maxDataList = new ArrayList<>();
     }
+
+    public void gestureNumberPickerChanged()  { gestureCounter=0;
+        compareGesture = new ArrayList<EmgData>();}
 
     public SaveState getSaveState() {
         return saveState;
