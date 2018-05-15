@@ -2,9 +2,13 @@ package blueberrycheese.myolifehacker.events;
 
 import android.bluetooth.BluetoothDevice;
 
+import blueberrycheese.myolifehacker.MyoApp;
 import blueberrycheese.myolifehacker.myo_manage.IGestureDetectModel;
 
+
+
 public class ServiceEvent {
+    private MyoApp myoApp_ = null;
     public static class MyoDeviceEvent{
 
         public BluetoothDevice MyoDevice;
@@ -16,9 +20,18 @@ public class ServiceEvent {
 
     public static class GestureEvent_forService{
 
+            public int gestureNumber;
+
+            public GestureEvent_forService(int i_element){
+                this.gestureNumber = i_element;
+            }
+    }
+
+    public static class GestureEvent_forMusic {
+
         public int gestureNumber;
 
-        public GestureEvent_forService(int i_element){
+        public GestureEvent_forMusic(int i_element) {
             this.gestureNumber = i_element;
         }
     }
@@ -62,6 +75,7 @@ public class ServiceEvent {
         }
     }
 
+
     public static class SettingEvent{
         public int vibrate_p;
         public boolean is_vibrate;
@@ -72,6 +86,16 @@ public class ServiceEvent {
             recognizing_Num = rNum;
         }
     }
+
+
+    public static class myoLock_Event{
+        public boolean lock;
+        public myoLock_Event(boolean flag){
+            this.lock = flag ;
+        }
+    }
+
+
     ///////Test
 
     public static class DetectModel{

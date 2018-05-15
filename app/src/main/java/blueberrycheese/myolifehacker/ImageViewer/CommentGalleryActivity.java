@@ -1,11 +1,15 @@
 package blueberrycheese.myolifehacker.ImageViewer;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
 import android.view.WindowManager;
+import android.widget.Toast;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.bosong.commentgallerylib.CommentGallery;
 import com.bosong.commentgallerylib.CommentGalleryContainer;
 
@@ -13,7 +17,9 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import blueberrycheese.myolifehacker.MyoApp;
 import blueberrycheese.myolifehacker.R;
+import blueberrycheese.myolifehacker.Toasty;
 import blueberrycheese.myolifehacker.events.ServiceEvent;
 
 public class CommentGalleryActivity extends AppCompatActivity {
@@ -23,6 +29,12 @@ public class CommentGalleryActivity extends AppCompatActivity {
 
     private static final int ADDITIONAL_DELAY = 5000;
 
+    private MyoApp myoApp = null;
+    private LottieAnimationView animationView_gallery_picture_lock;
+    private LottieAnimationView animationView_gallery_picture_unlock;
+    private boolean first=true;
+    private Drawable icon_1,icon_2,icon_3,icon_4,icon_5,icon_6;
+    private boolean myoConnection;
     private int numCounter = 0;
     private CommentGallery mGallery;
     int[] smoothcount = new int[6];
@@ -40,6 +52,18 @@ public class CommentGalleryActivity extends AppCompatActivity {
         numCounter = getIntent().getExtras().getInt(GalleryActivity.CLICK_INDEX);
         max_size = getIntent().getExtras().getInt(GalleryActivity.LIST_SIZE);
         Log.d("commentGalleryActivity",numCounter+""+max_size);
+
+        icon_1 = getResources().getDrawable(R.drawable.gesture_1_w);
+        icon_2 = getResources().getDrawable(R.drawable.gesture_2_w);
+        icon_3 = getResources().getDrawable(R.drawable.gesture_3_w);
+        icon_4 = getResources().getDrawable(R.drawable.gesture_4_w);
+        icon_5 = getResources().getDrawable(R.drawable.gesture_5_w);
+        icon_6 = getResources().getDrawable(R.drawable.gesture_6_w);
+        animationView_gallery_picture_lock = (LottieAnimationView) findViewById(R.id.lottie_gallery_picture_lock);
+        animationView_gallery_picture_unlock = (LottieAnimationView) findViewById(R.id.lottie_gallery_picture_unlock);
+       animationView_gallery_picture_lock.setVisibility(View.INVISIBLE);
+        animationView_gallery_picture_unlock.setVisibility(View.INVISIBLE);
+
     }
     @Override
     protected void onResume() {
@@ -61,6 +85,56 @@ public class CommentGalleryActivity extends AppCompatActivity {
         overridePendingTransition(0, 0);
     }
 
+    // 마요 잠기면 애니메이션 재생
+    @Subscribe
+    public void getMyoDevice(ServiceEvent.myoLock_Event event) {
+        myoConnection = event.lock;
+        if(myoConnection) {
+            //  animationView_main.cancelAnimation();
+            //  animationView_main.clearAnimation();
+            //  animationView_main.setAnimation("lock.json");
+            animationView_gallery_picture_lock.playAnimation();
+            animationView_gallery_picture_lock.loop(true);
+            animationView_gallery_picture_lock.setVisibility(View.VISIBLE);
+            animationView_gallery_picture_unlock.setVisibility(View.INVISIBLE);
+        }
+        else {
+            //  animationView_main.cancelAnimation();
+            // animationView_main.clearAnimation();
+            //animationView_main_unlock.setAnimation("material_wave_loading.json");
+            animationView_gallery_picture_unlock.playAnimation();
+            animationView_gallery_picture_unlock.loop(true);
+            animationView_gallery_picture_unlock.setVisibility(View.VISIBLE);
+            animationView_gallery_picture_lock.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    // 마요 연결되어 있으면 애니메이션 재생
+    @Subscribe(sticky = true)
+    public void getMyoDevice(ServiceEvent.myoConnected_Event event) {
+        myoConnection = event.connection;
+        myoApp = (MyoApp) getApplication().getApplicationContext();
+        if(myoConnection) {
+            if(first && !myoApp.isUnlocked()) {
+                animationView_gallery_picture_lock.playAnimation();
+                animationView_gallery_picture_lock.loop(true);
+                animationView_gallery_picture_lock.setVisibility(View.VISIBLE);
+                first=false;
+            }else if(first && myoApp.isUnlocked()) {
+                animationView_gallery_picture_unlock.playAnimation();
+                animationView_gallery_picture_unlock.loop(true);
+                animationView_gallery_picture_unlock.setVisibility(View.VISIBLE);
+                first=false;
+            }
+        }
+        else {
+            animationView_gallery_picture_lock.cancelAnimation();
+            animationView_gallery_picture_unlock.cancelAnimation();
+            animationView_gallery_picture_lock.setVisibility(View.INVISIBLE);
+            animationView_gallery_picture_unlock.setVisibility(View.INVISIBLE);
+        }
+    }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(ServiceEvent.GestureEvent event) {
         gestureNum = event.gestureNumber;
@@ -79,6 +153,7 @@ public class CommentGalleryActivity extends AppCompatActivity {
                     mGallery.setData((CommentGalleryContainer) getIntent().getSerializableExtra(GalleryActivity.COMMENT_LIST),numCounter);
                     resetSmoothCount();
                     finish();
+                    Toasty.normal(getBaseContext(),"Close picture", Toast.LENGTH_SHORT, icon_1).show();
                 }
 
                 break;
@@ -98,6 +173,7 @@ public class CommentGalleryActivity extends AppCompatActivity {
                 EventBus.getDefault().post(new ServiceEvent.VibrateEvent(VIBRATION_A));
                 //Restart lock Timer so user can use gesture continuously
                 EventBus.getDefault().post(new ServiceEvent.restartLockTimerEvent(ADDITIONAL_DELAY));
+                Toasty.normal(getBaseContext(),"Previous picture", Toast.LENGTH_SHORT, icon_2).show();
 
 
                 break;
@@ -117,6 +193,7 @@ public class CommentGalleryActivity extends AppCompatActivity {
                 EventBus.getDefault().post(new ServiceEvent.VibrateEvent(VIBRATION_A));
                 //Restart lock Timer so user can use gesture continuously
                 EventBus.getDefault().post(new ServiceEvent.restartLockTimerEvent(ADDITIONAL_DELAY));
+                Toasty.normal(getBaseContext(),"Next Picture", Toast.LENGTH_SHORT, icon_3).show();
 
                 break;
 

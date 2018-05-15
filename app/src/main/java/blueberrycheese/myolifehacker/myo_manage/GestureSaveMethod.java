@@ -32,6 +32,8 @@ public class GestureSaveMethod {
     private final static int SAVE_DATA_LENGTH = 5;      // 세이브 할 데이터 갯수
     private final static int AVERAGING_LENGTH = 10;
     private final static int READING_LENGTH = 10000;  // 안드로이드에 저장되있는 파일의 길이
+    private final static double PERSONAL_LENGTH=2500;
+    private final static int DATA_PEOPLE = 4;
     private final static int JUST_SAVE_DATA_LEN = 5;    // 세이브 할 데이터 갯수
    // private final static int JUST_SAVE_DATA_LEN = 5;
 
@@ -45,7 +47,8 @@ public class GestureSaveMethod {
     private int dataCounter = 0;
     private int gestureCounter = 0;
     private int save_index = 0;     //
-    private  int count_adap=0;
+    private int count_adap=0;
+    private double adp_max_index=0;
     private final static int KMEANS_K = 128;       // K-means의 k값
     private final static String FileList_kmeans = "KMEANS_DATA.dat";
     private final static String FileList[] = {"Gesture1.txt", "Gesture2.txt", "Gesture3.txt", "Gesture4.txt", "Gesture5.txt", "Gesture6.txt"};
@@ -118,17 +121,38 @@ public class GestureSaveMethod {
                         Log.e(TAG, e.getMessage());
                     }
                     ////////////////////////////////
-                    count_adap=0; // 안드로이드 파일쪽 count세는 변수
+                   // count_adap=0; // 안드로이드 파일쪽 count세는 변수
                     // 안드로이드 파일내 txt 가져옴.
                     // 가져올 때 (안드로이드 파일 길이 지정 값* 몇 %나 불러올건지) && 끝까지 불러옴
-                    while (READING_LENGTH*percent>count_adap && ((line = bufferedReader.readLine()) != null)) {
-                        stringTokenizer = new StringTokenizer(line, ",");
-                        double[] emgDat = new double[8];
-                        for (int k = 0; k < 8; k++) {
-                            emgDat[k] = Double.parseDouble(stringTokenizer.nextToken());
+                    for(int adp_index=0; adp_index<DATA_PEOPLE; adp_index++) {
+                        count_adap = 0; // 안드로이드 파일쪽 count세는 변수
+                        adp_max_index = PERSONAL_LENGTH * percent;
+                        Log.e(TAG, "반복 횟수 :" + adp_index + 1);
+                        Log.e(TAG, "adp_max_index================ " + count_adap);
+                        while (adp_max_index > count_adap && ((line = bufferedReader.readLine()) != null)) {
+                            stringTokenizer = new StringTokenizer(line, ",");
+                            double[] emgDat = new double[8];
+                            for (int k = 0; k < 8; k++) {
+                                emgDat[k] = Double.parseDouble(stringTokenizer.nextToken());
+                            }
+                            doublePointList.add(new DoublePoint(emgDat));
+                            //Log.e(TAG, "Loading txt size is================ " + doublePointList.size());
+                            //Log.e(TAG, "Loading txt size is===================== " + count_adap);
+                            count_adap++;
                         }
-                        doublePointList.add(new DoublePoint(emgDat));
-                        count_adap++;
+                        //  Log.e(TAG, "PERSONAL_LENGTH*(adp_index+1)================ " + PERSONAL_LENGTH*(adp_index+1));
+                        Log.e(TAG, "PERSONAL_LENGTH*(adp_index+1)================ " + count_adap);
+                        while (PERSONAL_LENGTH > count_adap && ((line = bufferedReader.readLine()) != null)) {
+                            stringTokenizer = new StringTokenizer(line, ",");
+                            double[] emgDat = new double[8];
+                            for (int k = 0; k < 8; k++) {
+                                emgDat[k] = Double.parseDouble(stringTokenizer.nextToken());
+                            }
+                            //  Log.e(TAG, "adp_max_index================!!!!!!! " + count_adap);
+                            count_adap++;
+                        }
+                        //   Log.e(TAG, "PERSONAL_LENGTH*(adp_index+1)================ " + PERSONAL_LENGTH*(adp_index+1));
+                        Log.e(TAG, "PERSONAL_LENGTH*(adp_index+1)================ " + count_adap);
                     }
                     streamReader.close();
                     bufferedReader.close();

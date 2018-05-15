@@ -22,7 +22,6 @@ public class MyoApp extends Application {
     private boolean unlockDefault = false;
     private boolean unlockMusic = false;
 
-
     public void unlockGesture(int g){
         Log.e(TAG, "Gesture unlocked");
         if(g == 0 && !unlockDefault){
@@ -45,12 +44,21 @@ public class MyoApp extends Application {
         }
     }
 
+    public int getUnlockedGesture(){
+        if(unlockDefault){
+            return 4;
+        }else if(unlockMusic){
+            return 5;
+        }else {
+            return -1;
+        }
+    }
+
     @Override
     public void onCreate(){
         super.onCreate();
 
         //<----For ImageViewr - Gllaery
-        Log.e(TAG, "Test onCreate()");
         FLog.setMinimumLoggingLevel(FLog.VERBOSE);
         Set<RequestListener> listeners = new HashSet<>();
         listeners.add(new RequestLoggingListener());

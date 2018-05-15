@@ -242,11 +242,27 @@
         android:text="Connect Myo "
         android:layout_alignParentBottom="true"
         android:textStyle="bold" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
     <com.airbnb.lottie.LottieAnimationView
-        android:id="@+id/lottie_system"
+        android:id="@+id/lottie_system_lock"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        app:lottie_fileName="lock.json"
+        android:layout_marginBottom="120dp"/>
+    </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/lottie_system_unlock"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
         app:lottie_fileName="material_wave_loading.json"
-        android:gravity="center"
-        android:layout_marginTop="550dp"/>
+        android:layout_marginBottom="20dp"/>
+    </LinearLayout>
+
 </RelativeLayout>
