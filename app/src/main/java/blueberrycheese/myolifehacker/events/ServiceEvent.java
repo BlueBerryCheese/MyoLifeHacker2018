@@ -2,9 +2,13 @@ package blueberrycheese.myolifehacker.events;
 
 import android.bluetooth.BluetoothDevice;
 
+import blueberrycheese.myolifehacker.MyoApp;
 import blueberrycheese.myolifehacker.myo_manage.IGestureDetectModel;
 
+
+
 public class ServiceEvent {
+    private MyoApp myoApp_ = null;
     public static class MyoDeviceEvent{
 
         public BluetoothDevice MyoDevice;
@@ -62,6 +66,13 @@ public class ServiceEvent {
         }
     }
 
+
+    public static class myoLock_Event{
+        public boolean lock;
+        public myoLock_Event(boolean flag){
+            this.lock = flag ;
+        }
+    }
 
     ///////Test
 

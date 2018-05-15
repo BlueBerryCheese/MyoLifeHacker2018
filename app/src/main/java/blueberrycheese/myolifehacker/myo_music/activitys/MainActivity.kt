@@ -258,9 +258,9 @@ class MainActivity : SimpleActivity(), SongListListener{
 
     override fun onResume() {
         super.onResume()
-//        if (!EventBus.getDefault().isRegistered(this)) {
-//            EventBus.getDefault().register(this)
-//        }
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this)
+        }
         if (storedTextColor != config.textColor) {
             updateAlbumCover()
         }
@@ -802,7 +802,7 @@ class MainActivity : SimpleActivity(), SongListListener{
 
 
     override fun onStop() {
-//        EventBus.getDefault().unregister(this)
+        EventBus.getDefault().unregister(this)
         super.onStop()
         searchMenuItem?.collapseActionView()
         //this.closeBLEGatt()

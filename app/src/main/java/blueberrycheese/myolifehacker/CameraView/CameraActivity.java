@@ -47,6 +47,7 @@ import java.io.FileOutputStream;
 import java.util.HashMap;
 
 import blueberrycheese.myolifehacker.FontConfig;
+import blueberrycheese.myolifehacker.MyoApp;
 import blueberrycheese.myolifehacker.R;
 import blueberrycheese.myolifehacker.Toasty;
 import blueberrycheese.myolifehacker.events.ServiceEvent;
@@ -73,10 +74,12 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
     private boolean mCapturingPicture;
     private boolean mCapturingVideo;
 
+    private MyoApp myoApp = null;
     // To show stuff in the callback
     private Size mCaptureNativeSize;
     private long mCaptureTime;
-    private LottieAnimationView animationView_camera;
+    private LottieAnimationView animationView_camera_lock;
+    private LottieAnimationView animationView_camera_unlock;
     boolean videoRecording = false;
     private Drawable icon_1,icon_2,icon_3,icon_4,icon_5,icon_6;
 
@@ -85,7 +88,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
     private static final int VIBRATION_C = 3;
 
     private static final int ADDITIONAL_DELAY = 5000;
-
+    private boolean first=true;
     private boolean myoConnection;
 
     private static final String TAG = "CameraActivity";
@@ -133,8 +136,10 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         findViewById(R.id.capturePhoto).setOnClickListener(this);
         findViewById(R.id.captureVideo).setOnClickListener(this);
         findViewById(R.id.toggleCamera).setOnClickListener(this);
-        animationView_camera = (LottieAnimationView) findViewById(R.id.lottie_camera);
-        animationView_camera.setVisibility(View.INVISIBLE);
+        animationView_camera_lock = (LottieAnimationView) findViewById(R.id.lottie_camera_lock);
+        animationView_camera_unlock = (LottieAnimationView) findViewById(R.id.lottie_camera_unlock);
+        animationView_camera_lock.setVisibility(View.INVISIBLE);
+        animationView_camera_unlock.setVisibility(View.INVISIBLE);
         controlPanel = findViewById(R.id.controls);
         ViewGroup group = (ViewGroup) controlPanel.getChildAt(0);
         Control[] controls = Control.values();
@@ -381,6 +386,56 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         }
     }
 
+    // 마요 잠기면 애니메이션 재생
+    @Subscribe
+    public void getMyoDevice(ServiceEvent.myoLock_Event event) {
+        myoConnection = event.lock;
+        if(myoConnection) {
+            //  animationView_main.cancelAnimation();
+            //  animationView_main.clearAnimation();
+            //  animationView_main.setAnimation("lock.json");
+            animationView_camera_lock.playAnimation();
+            animationView_camera_lock.loop(true);
+            animationView_camera_lock.setVisibility(View.VISIBLE);
+            animationView_camera_unlock.setVisibility(View.INVISIBLE);
+        }
+        else {
+            //  animationView_main.cancelAnimation();
+            // animationView_main.clearAnimation();
+            //animationView_main_unlock.setAnimation("material_wave_loading.json");
+            animationView_camera_unlock.playAnimation();
+            animationView_camera_unlock.loop(true);
+            animationView_camera_unlock.setVisibility(View.VISIBLE);
+            animationView_camera_lock.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    // 마요 연결되어 있으면 애니메이션 재생
+    @Subscribe(sticky = true)
+    public void getMyoDevice(ServiceEvent.myoConnected_Event event) {
+        myoConnection = event.connection;
+        myoApp = (MyoApp) getApplication().getApplicationContext();
+        if(myoConnection) {
+            if(first && !myoApp.isUnlocked()) {
+                animationView_camera_lock.playAnimation();
+                animationView_camera_lock.loop(true);
+                animationView_camera_lock.setVisibility(View.VISIBLE);
+                first=false;
+            }else if(first && myoApp.isUnlocked()) {
+                animationView_camera_unlock.playAnimation();
+                animationView_camera_unlock.loop(true);
+                animationView_camera_unlock.setVisibility(View.VISIBLE);
+                first=false;
+            }
+        }
+        else {
+            animationView_camera_lock.cancelAnimation();
+            animationView_camera_unlock.cancelAnimation();
+            animationView_camera_lock.setVisibility(View.INVISIBLE);
+            animationView_camera_unlock.setVisibility(View.INVISIBLE);
+        }
+    }
+/*
     @Subscribe(sticky = true)
     public void getMyoDevice(ServiceEvent.myoConnected_Event event) {
         myoConnection = event.connection;
@@ -394,7 +449,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
             animationView_camera.setVisibility(View.INVISIBLE);
         }
     }
-
+*/
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onGestureEvent(ServiceEvent.GestureEvent event) {
         gestureNum = event.gestureNumber;
