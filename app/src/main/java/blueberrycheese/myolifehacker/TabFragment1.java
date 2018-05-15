@@ -9,6 +9,7 @@ import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCallback;
 import android.bluetooth.BluetoothManager;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -71,6 +72,12 @@ public class TabFragment1 extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private static final long SCAN_PERIOD = 5000;
+
+    private static final int VIBRATION_A = 1;
+    private static final int VIBRATION_B = 2;
+    private static final int VIBRATION_C = 3;
+    private static final int ADDITIONAL_DELAY = 0;
+
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -89,15 +96,17 @@ public class TabFragment1 extends Fragment {
     private Activity mactivity;
     private BluetoothDevice device;
     private OnFragmentInteractionListener mListener;
+    private MyoApp myoApp = null;
     String deviceName;
-    private Button btn_im,btn_im2,btn_im3;
-
+    private Drawable icon_1,icon_2,icon_3,icon_4,icon_5,icon_6;
     private GestureSaveModel saveModel;
     private GestureSaveMethod   saveMethod;
     private GestureDetectModel_Menu detectModel;
     private GestureDetectMethod_Menu detectMethod;
-
-
+    private LottieAnimationView animationView_main_lock;
+    private LottieAnimationView animationView_main_unlock;
+    private boolean myoConnection;
+    private boolean first=true;
 
     int[] smoothcount = new int[6];
     private int gestureNum = -1;
@@ -132,6 +141,13 @@ public class TabFragment1 extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
         FontConfig.setGlobalFont(getActivity(),getActivity().getWindow().getDecorView());
+        icon_1 = getResources().getDrawable(R.drawable.gesture_1_w);
+        icon_2 = getResources().getDrawable(R.drawable.gesture_2_w);
+        icon_3 = getResources().getDrawable(R.drawable.gesture_3_w);
+        icon_4 = getResources().getDrawable(R.drawable.gesture_4_w);
+        icon_5 = getResources().getDrawable(R.drawable.gesture_5_w);
+        icon_6 = getResources().getDrawable(R.drawable.gesture_6_w);
+
     }
     public Button btn_hello;
     @Override
@@ -150,17 +166,16 @@ public class TabFragment1 extends Fragment {
         circleMenuButton_camera = (CircleMenuButton)view.findViewById(R.id.camera_button);
         circleMenuButton_gallery = (CircleMenuButton)view.findViewById(R.id.gallery_button);
 //        circleMenu.setBackgroundColor(getResources().getColor(R.color.FontColor));
-        btn_im = (Button)view.findViewById(R.id.btnin);
-        btn_im2 = (Button)view.findViewById(R.id.btnin_2);
-        btn_im3 = (Button)view.findViewById(R.id.btnin_3);
+        animationView_main_lock = (LottieAnimationView) view.findViewById(R.id.lottie_lock);
+        animationView_main_unlock = (LottieAnimationView) view.findViewById(R.id.lottie_unlock);
 
 
-        final LottieAnimationView animationView = (LottieAnimationView) view.findViewById(R.id.lottie);
-        animationView.addAnimatorListener(new Animator.AnimatorListener() {
+        //final LottieAnimationView animationView = (LottieAnimationView) view.findViewById(R.id.lottie);
+  /*      animationView_main.addAnimatorListener(new Animator.AnimatorListener() {
             @Override
             public void onAnimationStart(Animator animation) {
                //animationView.playAnimation();
-                animationView.loop(true);
+                animationView_main.loop(true);
             }
 
             @Override
@@ -178,7 +193,8 @@ public class TabFragment1 extends Fragment {
 
             }
         });
-
+*/
+        /*
         btn_im.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -199,7 +215,7 @@ public class TabFragment1 extends Fragment {
             public void onClick(View v) {
                 animationView.setVisibility(View.GONE);
             }    });
-        animationView.playAnimation();
+            */
         //animationView.setAnimation(View.INVISIBLE);
        // animationView.setVisibility(view.GONE);
        // animationView.setAnimation("timer.json");
@@ -208,8 +224,9 @@ public class TabFragment1 extends Fragment {
 
        // animationView.cancelAnimation();
 
-        animationView.setVisibility(View.VISIBLE);
-        animationView.playAnimation();
+        animationView_main_unlock.setVisibility(View.INVISIBLE);
+        animationView_main_lock.setVisibility(View.INVISIBLE);
+
 
         circleMenu.setOnItemClickListener(new CircleMenu.OnItemClickListener() {
             @Override
@@ -221,13 +238,16 @@ public class TabFragment1 extends Fragment {
                // animationView.loop(true);
                // animationView.cancelAnimation();
 
+
                 switch(viewId){
                     case R.id.camera_button:
                         Log.d("cameracircle","cameraclicked");
                         Intent intent = new Intent(getActivity().getApplicationContext(), CameraActivity.class);
 //                        intent.putExtra("bluetoothDevice", device);
                         startActivity(intent);
-                        Toasty.success(getContext(), "Open camera", Toast.LENGTH_SHORT, false).show();
+                        Toasty.normal(getContext(),"Open Camera",Toast.LENGTH_SHORT).show();
+                        //Toasty.info(getContext(),"Time over myo Locked", Toast.LENGTH_SHORT,icon_1).show();
+                        //Toasty.normal(getContext(),"Open camera",Toast.LENGTH_SHORT).show();
                        // animationView.cancelAnimation();
                        // animationView.setVisibility(View.GONE);
                         break;
@@ -237,7 +257,8 @@ public class TabFragment1 extends Fragment {
                         Intent intent2 = new Intent(getActivity().getApplicationContext(), SystemControlActivity.class);
                         intent2.putExtra("bluetoothDevice", device);
                         startActivity(intent2);
-                        Toasty.success(getContext(), "Open interior function", Toast.LENGTH_SHORT, false).show();
+                        //Toasty.success(getContext(), "Open interior function", Toast.LENGTH_SHORT, true).show();
+                        Toasty.normal(getContext(),"Open interior function",Toast.LENGTH_SHORT).show();
                         //animationView.cancelAnimation();
                        // animationView.setVisibility(View.GONE);
                         break;
@@ -246,7 +267,8 @@ public class TabFragment1 extends Fragment {
                         Intent intent3 = new Intent(getActivity().getApplicationContext(), blueberrycheese.myolifehacker.myo_music.activities.activitys.MainActivity.class);
                         intent3.putExtra("bluetoothDevice", device);
                         startActivity(intent3);
-                        Toasty.success(getContext(), "Open music", Toast.LENGTH_SHORT, false).show();
+                        //Toasty.success(getContext(), "Open music", Toast.LENGTH_SHORT, true).show();
+                        Toasty.normal(getContext(),"Open music",Toast.LENGTH_SHORT).show();
                        // animationView.cancelAnimation();
                        // animationView.setVisibility(View.GONE);
                         break;
@@ -255,7 +277,8 @@ public class TabFragment1 extends Fragment {
                         Intent intent4 = new Intent(getActivity().getApplicationContext(), GalleryActivity.class);
                         intent4.putExtra("bluetoothDevice", device);
                         startActivity(intent4);
-                        Toasty.success(getContext(), "Open gallery", Toast.LENGTH_SHORT, false).show();
+                        //Toasty.success(getContext(), "Open gallery", Toast.LENGTH_SHORT, true).show();
+                        Toasty.normal(getContext(),"Open gallery",Toast.LENGTH_SHORT).show();
                         //animationView.cancelAnimation();
                         //animationView.setVisibility(View.GONE);
                         break;
@@ -409,11 +432,98 @@ public class TabFragment1 extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
 
+    // 마요 잠기면 애니메이션 재생
+    @Subscribe
+    public void getMyoDevice(ServiceEvent.myoLock_Event event) {
+        myoConnection = event.lock;
+        if(myoConnection) {
+          //  animationView_main.cancelAnimation();
+          //  animationView_main.clearAnimation();
+          //  animationView_main.setAnimation("lock.json");
+            animationView_main_lock.playAnimation();
+            animationView_main_lock.loop(true);
+            animationView_main_lock.setVisibility(View.VISIBLE);
+            animationView_main_unlock.setVisibility(View.INVISIBLE);
+        }
+        else {
+          //  animationView_main.cancelAnimation();
+           // animationView_main.clearAnimation();
+            //animationView_main_unlock.setAnimation("material_wave_loading.json");
+            animationView_main_unlock.playAnimation();
+            animationView_main_unlock.loop(true);
+            animationView_main_unlock.setVisibility(View.VISIBLE);
+            animationView_main_lock.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    // 마요 연결되어 있으면 애니메이션 재생
+    @Subscribe(sticky = true)
+    public void getMyoDevice(ServiceEvent.myoConnected_Event event) {
+        myoConnection = event.connection;
+        myoApp = (MyoApp) getActivity().getApplicationContext();
+        if(myoConnection) {
+            if(first) {
+                animationView_main_lock.playAnimation();
+                animationView_main_lock.loop(true);
+                animationView_main_lock.setVisibility(View.VISIBLE);
+                first=false;
+            }
+
+            /*
+            //Log.d("MenuEvent","MenuEvent Gesture num============================ : "+myoApp.isUnlocked());
+              if(myoApp.isUnlocked()) {
+                  Log.e("MenuEvent","MenuEvent Gesture num============================  UNLOck: "+myoApp.isUnlocked());
+                //  animationView_main.cancelAnimation();
+                animationView_main.clearAnimation();
+                animationView_main.setAnimation("material_wave_loading.json");
+                animationView_main.playAnimation();
+                animationView_main.loop(true);
+                animationView_main.setVisibility(View.VISIBLE);
+            } else {
+
+                  Log.e("MenuEvent","MenuEvent Gesture num============================  LOck: "+myoApp.isUnlocked());
+              //    animationView_main.cancelAnimation();
+               animationView_main.clearAnimation();
+                animationView_main.setAnimation("lock.json");
+                animationView_main.playAnimation();
+                animationView_main.loop(true);
+                animationView_main.setVisibility(View.VISIBLE);
+            }*/
+
+
+        }
+        else {
+            animationView_main_lock.cancelAnimation();
+            animationView_main_unlock.cancelAnimation();
+            animationView_main_lock.setVisibility(View.INVISIBLE);
+            animationView_main_unlock.setVisibility(View.INVISIBLE);
+        }
+    }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(ServiceEvent.GestureEvent event) {
         gestureNum = event.gestureNumber;
-        Log.d("MenuEvent","MenuEvent Gesture num : "+event.gestureNumber);
+        /*
+        if(myoApp.isUnlocked()) {
+            Log.e("MenuEvent","MenuEvent Gesture num============================  UNLOck: "+myoApp.isUnlocked());
+            //  animationView_main.cancelAnimation();
+            animationView_main.clearAnimation();
+            animationView_main.setAnimation("material_wave_loading.json");
+            animationView_main.playAnimation();
+            animationView_main.loop(true);
+            animationView_main.setVisibility(View.VISIBLE);
+        } else {
 
+            Log.e("MenuEvent","MenuEvent Gesture num============================  LOck: "+myoApp.isUnlocked());
+            //    animationView_main.cancelAnimation();
+            animationView_main.clearAnimation();
+            animationView_main.setAnimation("lock.json");
+            animationView_main.playAnimation();
+            animationView_main.loop(true);
+            animationView_main.setVisibility(View.VISIBLE);
+        }
+        */
+        Log.d("MenuEvent","MenuEvent Gesture num : "+event.gestureNumber);
         switch(gestureNum){
             case 0 :
                 if(smoothcount[gestureNum]>1) {
@@ -422,11 +532,15 @@ public class TabFragment1 extends Fragment {
                     circleMenu.onOpenAnimationEnd();
 
                     //Send Vibration Event
-                    EventBus.getDefault().post(new ServiceEvent.VibrateEvent());
+                    EventBus.getDefault().post(new ServiceEvent.VibrateEvent(VIBRATION_A));
+                    //Restart lock Timer so user can use gesture continuously
+                    EventBus.getDefault().post(new ServiceEvent.restartLockTimerEvent(ADDITIONAL_DELAY));
 
                     smoothcount[gestureNum]=-1;
                     resetSmoothCount();
-                    Toasty.success(getContext(), "Open menu", Toast.LENGTH_SHORT, false).show();
+                   // Toasty.success(getContext(), "Open menu", Toast.LENGTH_SHORT, false).show();
+                    Toasty.normal(getContext(),"Open menu",Toast.LENGTH_SHORT, icon_1).show();
+
                 }
                 smoothcount[gestureNum]++;
 
@@ -436,11 +550,17 @@ public class TabFragment1 extends Fragment {
                 if(smoothcount[gestureNum]>1) {
                     circleMenu.onSelectAnimationStart(circleMenuButton_volume);
                     circleMenu.onSelectAnimationEnd(circleMenuButton_volume);
+
                     //Send Vibration Event
-                    EventBus.getDefault().post(new ServiceEvent.VibrateEvent());
-                    smoothcount[gestureNum]=-1;
+
+                    EventBus.getDefault().post(new ServiceEvent.VibrateEvent(VIBRATION_A));
+                    //Restart lock Timer so user can use gesture continuously
+                    EventBus.getDefault().post(new ServiceEvent.restartLockTimerEvent(ADDITIONAL_DELAY));
+
                     resetSmoothCount();
-                    Toasty.success(getContext(), "Open interior function", Toast.LENGTH_SHORT, false).show();
+                    smoothcount[gestureNum]=-1;
+
+                    Toasty.normal(getContext(),"Open nterior function",Toast.LENGTH_SHORT, icon_2).show();
                 }
                 smoothcount[gestureNum]++;
                 break;
@@ -449,12 +569,16 @@ public class TabFragment1 extends Fragment {
                 if(smoothcount[gestureNum]>1) {
                     circleMenu.onSelectAnimationStart(circleMenuButton_camera);
                     circleMenu.onSelectAnimationEnd(circleMenuButton_camera);
-                    //Send Vibration Event
-                    EventBus.getDefault().post(new ServiceEvent.VibrateEvent());
 
-                    smoothcount[gestureNum]=-1;
+                    //Send Vibration Event
+
+                    EventBus.getDefault().post(new ServiceEvent.VibrateEvent(VIBRATION_A));
+                    //Restart lock Timer so user can use gesture continuously
+                    EventBus.getDefault().post(new ServiceEvent.restartLockTimerEvent(ADDITIONAL_DELAY));
+
                     resetSmoothCount();
-                    Toasty.success(getContext(), "Open camera", Toast.LENGTH_SHORT, false).show();
+                    smoothcount[gestureNum]=-1;
+                    Toasty.normal(getContext(),"Open camera",Toast.LENGTH_SHORT, icon_3).show();
                 }
                 smoothcount[gestureNum]++;
                 break;
@@ -465,11 +589,14 @@ public class TabFragment1 extends Fragment {
                     circleMenu.onSelectAnimationEnd(circleMenuButton_gallery);
 
                     //Send Vibration Event
-                    EventBus.getDefault().post(new ServiceEvent.VibrateEvent());
 
-                    smoothcount[gestureNum]=-1;
+                    EventBus.getDefault().post(new ServiceEvent.VibrateEvent(VIBRATION_A));
+                    //Restart lock Timer so user can use gesture continuously
+                    EventBus.getDefault().post(new ServiceEvent.restartLockTimerEvent(ADDITIONAL_DELAY));
+
                     resetSmoothCount();
-                    Toasty.success(getContext(), "Open gallery", Toast.LENGTH_SHORT, false).show();
+                    smoothcount[gestureNum]=-1;
+                    Toasty.normal(getContext(),"Open gallery",Toast.LENGTH_SHORT, icon_4).show();
                 }
                 smoothcount[gestureNum]++;
                 break;
@@ -479,11 +606,14 @@ public class TabFragment1 extends Fragment {
                 circleMenu.onSelectAnimationEnd(circleMenuButton_music);
 
                 //Send Vibration Event
-                EventBus.getDefault().post(new ServiceEvent.VibrateEvent());
 
-                smoothcount[gestureNum]=-1;
+                EventBus.getDefault().post(new ServiceEvent.VibrateEvent(VIBRATION_A));
+                //Restart lock Timer so user can use gesture continuously
+                EventBus.getDefault().post(new ServiceEvent.restartLockTimerEvent(ADDITIONAL_DELAY));
+
                 resetSmoothCount();
-                Toasty.success(getContext(), "Open music", Toast.LENGTH_SHORT, false).show();
+                smoothcount[gestureNum]=-1;
+                Toasty.normal(getContext(),"Open music",Toast.LENGTH_SHORT, icon_5).show();
             }
                 smoothcount[gestureNum]++;
                 break;
@@ -491,11 +621,12 @@ public class TabFragment1 extends Fragment {
                 break;
 
         }
+        //Log.e("Hello",smoothcount[0]+" " + smoothcount[1]+" " + smoothcount[2]+" " + smoothcount[3]);
     }
-//TODO: smoothCount 처음엔 0으로 초기화될텐데 reset할땐 -1로 하면 초반 첫 제스처의 경우는 0에서 2가면 동작하고 나머지는 -1에서 2가면 동작하는 차이가 발생.
+
     public void resetSmoothCount(){
-        for(int i : smoothcount){
-            i = -1;
+        for(int i=0;i<smoothcount.length;i++){
+            smoothcount[i]=0;
         }
     }
 }

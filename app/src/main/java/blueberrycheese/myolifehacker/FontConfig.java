@@ -22,7 +22,7 @@ public class FontConfig {
                     View v = vg.getChildAt(i);
                     if (v instanceof TextView) {
                         ((TextView) v).setTypeface(Typeface.createFromAsset(
-                                context.getAssets(), "BMYEONSUNG_ttf.ttf"));
+                                context.getAssets(), "yun_340.ttf"));
                     }
                     setGlobalFont(context, v);
                 }
