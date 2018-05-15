@@ -6,8 +6,10 @@ import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothGatt
 import android.bluetooth.BluetoothManager
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.graphics.Paint
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
@@ -67,10 +69,12 @@ import blueberrycheese.myolifehacker.myo_music.activities.models.Events
 import blueberrycheese.myolifehacker.myo_music.activities.models.Playlist
 import blueberrycheese.myolifehacker.myo_music.activities.models.Song
 import blueberrycheese.myolifehacker.myo_music.activities.services.MusicService
+import com.airbnb.lottie.model.Font
 import com.squareup.otto.Bus
 import com.squareup.otto.Subscribe
 import kotlinx.android.synthetic.main.music_activity_main.*
 import kotlinx.android.synthetic.main.music_item_navigation.*
+import kotlinx.android.synthetic.main.music_widget_config.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.ThreadMode
 import java.io.File
@@ -119,6 +123,12 @@ class MainActivity : SimpleActivity(), SongListListener{
     internal var dttButton: Button?=null
     internal var smoothcount = IntArray(6)
     lateinit var bus: Bus
+    private var HoldCheck = true
+    private val VIBRATION_A = 1
+    private val VIBRATION_B = 2
+    private val VIBRATION_C = 3
+    private val ADDITIONAL_DELAY = 0
+    var intentFIlter = IntentFilter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -143,6 +153,14 @@ class MainActivity : SimpleActivity(), SongListListener{
                 toast(R.string.no_storage_permissions)
             }
         }
+
+
+//        intentFIlter.addAction(Intent.ACTION_SCREEN_OFF);
+//        intentFIlter.addAction(Intent.ACTION_SCREEN_ON);
+
+
+
+
 
         shuffle_btn.setOnClickListener { toggleShuffle() }
         previous_btn.setOnClickListener { sendIntent(PREVIOUS) }
@@ -173,6 +191,25 @@ class MainActivity : SimpleActivity(), SongListListener{
             }
         }
 
+//        var screenOnOffBroadcastReceiver: BroadcastReceiver = object : BroadcastReceiver() {
+//            val ScreenOff = "android.intent.action.SCREEN_OFF"
+//            val ScreenOn = "android.intent.action.SCREEN_ON"
+//
+//            override fun onReceive(context: Context, intent: Intent) {
+//                if (intent.action == ScreenOff) {
+//                    Log.d("HoldCheck","off")
+//                    HoldCheck = false
+//
+//                }
+//                if (intent.action == ScreenOn) {
+//                    Log.d("HoldCheck","on")
+//                    HoldCheck = true
+//                }
+//            }
+//        }
+//        registerReceiver(screenOnOffBroadcastReceiver,intentFIlter);
+
+
         //Detect용
         //gestureText = findViewById(R.id.MusicActivityGesture) as TextView
 
@@ -200,6 +237,10 @@ class MainActivity : SimpleActivity(), SongListListener{
 //        }
 //        //dttButton = findViewById(R.id.dttButton_music) as Butto
     }
+
+
+
+
 
     override fun onResume() {
         super.onResume()
@@ -246,6 +287,7 @@ class MainActivity : SimpleActivity(), SongListListener{
     }*/
 
     override fun onDestroy() {
+        EventBus.getDefault().unregister(this)
         super.onDestroy()
         bus.unregister(this)
 
@@ -745,10 +787,18 @@ class MainActivity : SimpleActivity(), SongListListener{
 
 
     override fun onStop() {
-        EventBus.getDefault().unregister(this)
+//        if(HoldCheck==false){
+//            if (!EventBus.getDefault().isRegistered(this)) {
+//                EventBus.getDefault().register(this)
+//            }
+//            }
+//            else
+                EventBus.getDefault().unregister(this)
         super.onStop()
         searchMenuItem?.collapseActionView()
         //this.closeBLEGatt()
+
+
 
     }
 
@@ -845,6 +895,7 @@ class MainActivity : SimpleActivity(), SongListListener{
 
     @org.greenrobot.eventbus.Subscribe(threadMode = ThreadMode.MAIN)
     fun onMessageEvent(event: ServiceEvent.GestureEvent) {
+        var Flag: Boolean = blueberrycheese.myolifehacker.SettingPreference.flag()
 
         gestureNum = event.gestureNumber
         Log.d("MusicEvent", "MusicEvent Gesture num : " + event.gestureNumber)
@@ -860,11 +911,19 @@ class MainActivity : SimpleActivity(), SongListListener{
 //                        action = PLAYPAUSE
 //                        startService(this)
 //                    }
+
+
+                    //Send Vibration Event
+                    if(Flag==true)
+                        EventBus.getDefault().post(ServiceEvent.VibrateEvent(VIBRATION_A))
                     sendIntent(PLAYPAUSE)
+                    //Restart lock Timer so user can use gesture continuously
+                    EventBus.getDefault().post(ServiceEvent.restartLockTimerEvent(ADDITIONAL_DELAY))
 
                     smoothcount[gestureNum] = -1
                     resetSmoothCount()
                 }
+
                 smoothcount[gestureNum]++
             }
 
@@ -877,7 +936,15 @@ class MainActivity : SimpleActivity(), SongListListener{
 //                        action = PREVIOUS
 //                        startService(this)
 //                    }
+
+
+                    //Send Vibration Event
+                    if(Flag==true)
+                        EventBus.getDefault().post(ServiceEvent.VibrateEvent(VIBRATION_A))
                     sendIntent(PREVIOUS)
+                    //Restart lock Timer so user can use gesture continuously
+                    EventBus.getDefault().post(ServiceEvent.restartLockTimerEvent(ADDITIONAL_DELAY))
+
                     smoothcount[gestureNum] = -1
                     resetSmoothCount()
                 }
@@ -891,8 +958,17 @@ class MainActivity : SimpleActivity(), SongListListener{
 //                        action = NEXT
 //                        startService(this)
 //                    }
+
                     //앞으로
+
+
+                    //Send Vibration Event
+                    if(Flag==true)
+                        EventBus.getDefault().post(ServiceEvent.VibrateEvent(VIBRATION_A))
                     sendIntent(NEXT)
+                    //Restart lock Timer so user can use gesture continuously
+                    EventBus.getDefault().post(ServiceEvent.restartLockTimerEvent(ADDITIONAL_DELAY))
+
                     smoothcount[gestureNum] = -1
                     resetSmoothCount()
                 }

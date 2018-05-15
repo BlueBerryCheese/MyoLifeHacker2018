@@ -5,6 +5,11 @@
     android:layout_height="match_parent"
     tools:context=".TabFragment2">
 
+    <include
+        layout="@layout/activity_setting"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
     <!--<TextView-->
         <!--android:layout_width="match_parent"-->
         <!--android:layout_height="match_parent"-->
