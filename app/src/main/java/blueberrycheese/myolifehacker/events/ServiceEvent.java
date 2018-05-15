@@ -39,7 +39,6 @@ public class ServiceEvent {
 
     public static class VibrateEvent{
         public int vibrateNum;
-
         public VibrateEvent(int vNum){
             this.vibrateNum = vNum;
         }
@@ -60,7 +59,6 @@ public class ServiceEvent {
         }
     }
 
-
     public static class myoConnected_Event{
         public boolean connection;
         public myoConnected_Event(boolean flag){
@@ -75,7 +73,6 @@ public class ServiceEvent {
             this.lock = flag ;
         }
     }
-
 
     ///////Test
 

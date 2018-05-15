@@ -2,42 +2,13 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
 
-    <EditTextPreference
-        android:defaultValue="Default value"
-        android:key="edit_text_preference_1"
-        android:selectAllOnFocus="true"
-        android:singleLine="true"
-        />
     <SwitchPreference
         android:defaultValue="true"
-        android:key="vibrate"
         android:summary="진동을 설정합니다."
-        android:title="진동" />
+        android:title="진동"
+        android:key="vibrate"/>
 
-    <ListPreference
-        android:defaultValue="1"
-        android:entries="@array/power"
-        android:summary="강하게"
-        android:key="power"
-        android:entryValues="@array/power"
-        android:title="진동 세기"
-        android:dependency="vibrate"/>
 
-    <ListPreference
-    android:defaultValue="50"
-    android:entries="@array/count"
-    android:summary="50"
-    android:key="count"
-    android:entryValues="@array/count"
-    android:title="제스처 개수" />
-
-    <ListPreference
-        android:defaultValue="30"
-        android:entries="@array/comparecount"
-        android:summary="30"
-        android:key="comparecount"
-        android:entryValues="@array/comparecount"
-        android:title="비교할 제스처 개수" />
 
 
 </PreferenceScreen>
