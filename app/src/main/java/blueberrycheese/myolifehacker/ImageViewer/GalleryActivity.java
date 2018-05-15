@@ -27,6 +27,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import blueberrycheese.myolifehacker.FontConfig;
+import blueberrycheese.myolifehacker.MyoApp;
 import blueberrycheese.myolifehacker.R;
 import blueberrycheese.myolifehacker.Toasty;
 import blueberrycheese.myolifehacker.events.ServiceEvent;
@@ -36,12 +37,15 @@ public class GalleryActivity extends AppCompatActivity {
     public static final String COMMENT_LIST = "COMMENT_LIST";
     public static final String LIST_SIZE = "LIST_SIZE";
     private static final String SAMPLE_COMMENT = "";
-    private LottieAnimationView animationView_gallery;
+    private LottieAnimationView animationView_gallery_lock;
+    private LottieAnimationView animationView_gallery_unlock;
     private static final int VIBRATION_A = 1;
     private static final int VIBRATION_B = 2;
     private static final int VIBRATION_C = 3;
     private static final int ADDITIONAL_DELAY = 0;
 
+    private boolean first=true;   ///////
+    private MyoApp myoApp = null;
     private boolean myoConnection;
     private CommentImageGrid mCommentGrid;
     private TextView img_pager;
@@ -106,8 +110,11 @@ public class GalleryActivity extends AppCompatActivity {
         icon_6 = getResources().getDrawable(R.drawable.gesture_6_w);
 
         FontConfig.setGlobalFont(this,getWindow().getDecorView());
-        animationView_gallery = (LottieAnimationView) findViewById(R.id.lottie_gallery);
-        animationView_gallery.setVisibility(View.INVISIBLE);
+        animationView_gallery_lock = (LottieAnimationView) findViewById(R.id.lottie_gallery_lock);
+        animationView_gallery_unlock = (LottieAnimationView) findViewById(R.id.lottie_gallery_unlock);
+
+        animationView_gallery_lock.setVisibility(View.INVISIBLE);
+       animationView_gallery_unlock.setVisibility(View.INVISIBLE);
 
         post_postionNum=positionNum;
         mCommentGrid.setOnItemClickLisener(new CommentImageGrid.OnItemClickListener() {
@@ -143,18 +150,53 @@ public class GalleryActivity extends AppCompatActivity {
 //        this.closeBLEGatt();
     }
 
+    // 마요 잠기면 애니메이션 재생
+    @Subscribe
+    public void getMyoDevice(ServiceEvent.myoLock_Event event) {
+        myoConnection = event.lock;
+        if(myoConnection) {
+            //  animationView_main.cancelAnimation();
+            //  animationView_main.clearAnimation();
+            //  animationView_main.setAnimation("lock.json");
+            animationView_gallery_lock.playAnimation();
+            animationView_gallery_lock.loop(true);
+            animationView_gallery_lock.setVisibility(View.VISIBLE);
+            animationView_gallery_unlock.setVisibility(View.INVISIBLE);
+        }
+        else {
+            //  animationView_main.cancelAnimation();
+            // animationView_main.clearAnimation();
+            //animationView_main_unlock.setAnimation("material_wave_loading.json");
+            animationView_gallery_unlock.playAnimation();
+            animationView_gallery_unlock.loop(true);
+            animationView_gallery_unlock.setVisibility(View.VISIBLE);
+            animationView_gallery_lock.setVisibility(View.INVISIBLE);
+        }
+    }
+
     // 마요 연결되어 있으면 애니메이션 재생
     @Subscribe(sticky = true)
     public void getMyoDevice(ServiceEvent.myoConnected_Event event) {
         myoConnection = event.connection;
+        myoApp = (MyoApp) getApplication().getApplicationContext();
         if(myoConnection) {
-            animationView_gallery.playAnimation();
-            animationView_gallery.loop(true);
-            animationView_gallery.setVisibility(View.VISIBLE);
+            if(first && !myoApp.isUnlocked()) {
+                animationView_gallery_lock.playAnimation();
+                animationView_gallery_lock.loop(true);
+                animationView_gallery_lock.setVisibility(View.VISIBLE);
+                first=false;
+            }else if(first && myoApp.isUnlocked()) {
+                animationView_gallery_unlock.playAnimation();
+                animationView_gallery_unlock.loop(true);
+                animationView_gallery_unlock.setVisibility(View.VISIBLE);
+                first=false;
+            }
         }
         else {
-            animationView_gallery.cancelAnimation();
-            animationView_gallery.setVisibility(View.INVISIBLE);
+            animationView_gallery_lock.cancelAnimation();
+            animationView_gallery_unlock.cancelAnimation();
+            animationView_gallery_lock.setVisibility(View.INVISIBLE);
+            animationView_gallery_unlock.setVisibility(View.INVISIBLE);
         }
     }
 

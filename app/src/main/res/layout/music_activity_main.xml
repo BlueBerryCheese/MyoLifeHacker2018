@@ -214,13 +214,26 @@
         android:padding="@dimen/activity_margin"
         android:text="@string/add_folder_to_playlist"
         android:textSize="@dimen/bigger_text_size"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
     <com.airbnb.lottie.LottieAnimationView
-        android:id="@+id/lottie_music"
+        android:id="@+id/lottie_music_lock"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        app:lottie_fileName="lock.json"
+        android:layout_marginBottom="120dp"/>
+    </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/lottie_music_unlock"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
         app:lottie_fileName="material_wave_loading.json"
-        android:gravity="center"
-        android:layout_marginTop="500dp"/>
-
-
+        android:layout_marginBottom="20dp"/>
+    </LinearLayout>
 </RelativeLayout>

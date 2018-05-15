@@ -31,6 +31,9 @@ import android.widget.Button
 import android.widget.SeekBar
 import android.widget.TextView
 import android.widget.Toast
+import blueberrycheese.myolifehacker.*
+import blueberrycheese.myolifehacker.R.id.lottie_music_lock
+import blueberrycheese.myolifehacker.R.id.lottie_music_unlock
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
@@ -104,6 +107,7 @@ class MainActivity : SimpleActivity(), SongListListener{
     private var actionbarSize = 0
     private var topArtHeight = 0
 
+    private var myoApp: MyoApp? = null
     private var storedTextColor = 0
     private var storedShowAlbumCover = true
 
@@ -125,7 +129,9 @@ class MainActivity : SimpleActivity(), SongListListener{
     private val commandList = MyoCommandList()
     private var deviceName: String? = null
     internal var gestureString = arrayOf("WiFi On, Off", "Sound Mode Chnage ", "Volume Up", "Volume Down", "Brightness Up", "Brightness Down")
-    internal var animationView_music: LottieAnimationView? = null
+    internal var animationView_music_lock: LottieAnimationView? = null
+    internal var animationView_music_unlock: LottieAnimationView? = null
+    private var first = true
     private val saveModel: GestureSaveModel? = null
     private var saveMethod: GestureSaveMethod? = null
     private var detectModel: GestureDetectModel_Music? = null
@@ -173,7 +179,11 @@ class MainActivity : SimpleActivity(), SongListListener{
         //lottie_music.visibility(INVISIABLE)
 
        // lottie_music!!.setVisibility(View.VISIBLE)
-        lottie_music.setVisibility(View.INVISIBLE)
+
+        //========================================================================
+        lottie_music_lock.setVisibility(View.INVISIBLE)
+        lottie_music_unlock.setVisibility(View.INVISIBLE)
+
         //lottie_music.playAnimation()
         //lottie_music.loop(true)
 
@@ -730,22 +740,51 @@ class MainActivity : SimpleActivity(), SongListListener{
     }
 
 
+    // 마요 잠기면 애니메이션 재생
+    @org.greenrobot.eventbus.Subscribe
+    fun getMyoDevice(event: ServiceEvent.myoLock_Event) {
+        myoConnection = event.lock
+        if (myoConnection as Boolean) {
+            //  animationView_main.cancelAnimation();
+            //  animationView_main.clearAnimation();
+            //  animationView_main.setAnimation("lock.json");
+            lottie_music_lock.playAnimation()
+            lottie_music_lock.loop(true)
+            lottie_music_lock.setVisibility(View.VISIBLE)
+            lottie_music_unlock.setVisibility(View.INVISIBLE)
+        } else {
+            //  animationView_main.cancelAnimation();
+            // animationView_main.clearAnimation();
+            //animationView_main_unlock.setAnimation("material_wave_loading.json");
+            lottie_music_unlock.playAnimation()
+            lottie_music_unlock.loop(true)
+            lottie_music_unlock.setVisibility(View.VISIBLE)
+            lottie_music_lock.setVisibility(View.INVISIBLE)
+        }
+    }
+
     // 마요 연결되어 있으면 애니메이션 재생
     @org.greenrobot.eventbus.Subscribe(sticky = true)
     fun getMyoDevice(event: ServiceEvent.myoConnected_Event) {
         myoConnection = event.connection
-        Log.e("volumecircle", "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"+myoConnection)
-
-        if (myoConnection as Boolean==true) {
-            lottie_music!!.setVisibility(View.VISIBLE)
-            lottie_music!!.playAnimation()
-            lottie_music!!.loop(true)
-
-            Log.e("volumecircle", "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+        myoApp = application.applicationContext as MyoApp
+        if (myoConnection as Boolean) {
+            if (first && !myoApp!!.isUnlocked()) {
+                lottie_music_lock.playAnimation()
+                lottie_music_lock.loop(true)
+                lottie_music_lock.setVisibility(View.VISIBLE)
+                first = false
+            } else if (first && myoApp!!.isUnlocked()) {
+                lottie_music_unlock.playAnimation()
+                lottie_music_unlock.loop(true)
+                lottie_music_unlock.setVisibility(View.VISIBLE)
+                first = false
+            }
         } else {
-            lottie_music!!.setVisibility(View.VISIBLE)
-            lottie_music!!.cancelAnimation()
-            Log.e("volumecircle", "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+            lottie_music_lock.cancelAnimation()
+            lottie_music_unlock.cancelAnimation()
+            lottie_music_lock.setVisibility(View.INVISIBLE)
+            lottie_music_unlock.setVisibility(View.INVISIBLE)
         }
     }
 
@@ -808,6 +847,14 @@ class MainActivity : SimpleActivity(), SongListListener{
         //this.closeBLEGatt()
 
     }
+
+    @org.greenrobot.eventbus.Subscribe(threadMode = ThreadMode.MAIN)
+    fun onGestureEvent(event: ServiceEvent.GestureEvent) {
+        EventBus.getDefault().post(ServiceEvent.GestureEvent_forMusic(event.gestureNumber))
+        Log.d(TAG, "Music activity sending gesture : " + event.gestureNumber + " to MusicService")
+    }
+
+
 
 //제스처에 따라 기능 얻어오는 곳
 //

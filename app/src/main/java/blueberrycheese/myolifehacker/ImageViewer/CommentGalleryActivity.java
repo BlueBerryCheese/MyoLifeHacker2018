@@ -17,6 +17,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import blueberrycheese.myolifehacker.MyoApp;
 import blueberrycheese.myolifehacker.R;
 import blueberrycheese.myolifehacker.Toasty;
 import blueberrycheese.myolifehacker.events.ServiceEvent;
@@ -28,7 +29,10 @@ public class CommentGalleryActivity extends AppCompatActivity {
 
     private static final int ADDITIONAL_DELAY = 5000;
 
-    private LottieAnimationView animationView_gallery_picture;
+    private MyoApp myoApp = null;
+    private LottieAnimationView animationView_gallery_picture_lock;
+    private LottieAnimationView animationView_gallery_picture_unlock;
+    private boolean first=true;
     private Drawable icon_1,icon_2,icon_3,icon_4,icon_5,icon_6;
     private boolean myoConnection;
     private int numCounter = 0;
@@ -55,8 +59,10 @@ public class CommentGalleryActivity extends AppCompatActivity {
         icon_4 = getResources().getDrawable(R.drawable.gesture_4_w);
         icon_5 = getResources().getDrawable(R.drawable.gesture_5_w);
         icon_6 = getResources().getDrawable(R.drawable.gesture_6_w);
-        animationView_gallery_picture = (LottieAnimationView) findViewById(R.id.lottie_gallery_picture);
-        animationView_gallery_picture.setVisibility(View.INVISIBLE);
+        animationView_gallery_picture_lock = (LottieAnimationView) findViewById(R.id.lottie_gallery_picture_lock);
+        animationView_gallery_picture_unlock = (LottieAnimationView) findViewById(R.id.lottie_gallery_picture_unlock);
+       animationView_gallery_picture_lock.setVisibility(View.INVISIBLE);
+        animationView_gallery_picture_unlock.setVisibility(View.INVISIBLE);
 
     }
     @Override
@@ -79,18 +85,53 @@ public class CommentGalleryActivity extends AppCompatActivity {
         overridePendingTransition(0, 0);
     }
 
+    // 마요 잠기면 애니메이션 재생
+    @Subscribe
+    public void getMyoDevice(ServiceEvent.myoLock_Event event) {
+        myoConnection = event.lock;
+        if(myoConnection) {
+            //  animationView_main.cancelAnimation();
+            //  animationView_main.clearAnimation();
+            //  animationView_main.setAnimation("lock.json");
+            animationView_gallery_picture_lock.playAnimation();
+            animationView_gallery_picture_lock.loop(true);
+            animationView_gallery_picture_lock.setVisibility(View.VISIBLE);
+            animationView_gallery_picture_unlock.setVisibility(View.INVISIBLE);
+        }
+        else {
+            //  animationView_main.cancelAnimation();
+            // animationView_main.clearAnimation();
+            //animationView_main_unlock.setAnimation("material_wave_loading.json");
+            animationView_gallery_picture_unlock.playAnimation();
+            animationView_gallery_picture_unlock.loop(true);
+            animationView_gallery_picture_unlock.setVisibility(View.VISIBLE);
+            animationView_gallery_picture_lock.setVisibility(View.INVISIBLE);
+        }
+    }
+
     // 마요 연결되어 있으면 애니메이션 재생
     @Subscribe(sticky = true)
     public void getMyoDevice(ServiceEvent.myoConnected_Event event) {
         myoConnection = event.connection;
+        myoApp = (MyoApp) getApplication().getApplicationContext();
         if(myoConnection) {
-            animationView_gallery_picture.playAnimation();
-            animationView_gallery_picture.loop(true);
-            animationView_gallery_picture.setVisibility(View.VISIBLE);
+            if(first && !myoApp.isUnlocked()) {
+                animationView_gallery_picture_lock.playAnimation();
+                animationView_gallery_picture_lock.loop(true);
+                animationView_gallery_picture_lock.setVisibility(View.VISIBLE);
+                first=false;
+            }else if(first && myoApp.isUnlocked()) {
+                animationView_gallery_picture_unlock.playAnimation();
+                animationView_gallery_picture_unlock.loop(true);
+                animationView_gallery_picture_unlock.setVisibility(View.VISIBLE);
+                first=false;
+            }
         }
         else {
-            animationView_gallery_picture.cancelAnimation();
-            animationView_gallery_picture.setVisibility(View.INVISIBLE);
+            animationView_gallery_picture_lock.cancelAnimation();
+            animationView_gallery_picture_unlock.cancelAnimation();
+            animationView_gallery_picture_lock.setVisibility(View.INVISIBLE);
+            animationView_gallery_picture_unlock.setVisibility(View.INVISIBLE);
         }
     }
 

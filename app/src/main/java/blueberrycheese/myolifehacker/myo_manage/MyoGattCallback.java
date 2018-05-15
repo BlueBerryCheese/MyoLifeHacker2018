@@ -336,6 +336,7 @@ public class MyoGattCallback extends BluetoothGattCallback {
             if (systemTime_ms > last_send_never_sleep_time_ms + NEVER_SLEEP_SEND_TIME) {
                 // set Myo [Never Sleep Mode]
                 setMyoControlCommand(commandList.sendUnSleep());
+                Log.e(TAG,"Sent unsleep command to Myo");
                 last_send_never_sleep_time_ms = systemTime_ms;
             }
         }

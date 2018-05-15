@@ -721,7 +721,7 @@ class MusicService : Service(), MediaPlayer.OnPreparedListener, MediaPlayer.OnEr
     //제스처에 따라 기능 얻어오는 곳
 
     @org.greenrobot.eventbus.Subscribe(threadMode = ThreadMode.MAIN)
-    fun onGestureEvent(event: ServiceEvent.GestureEvent) {
+    fun onGestureEvent(event: ServiceEvent.GestureEvent_forMusic) {
 
         gestureNum = event.gestureNumber
         Log.d("MusicEvent", "MusicEvent Gesture num : " + event.gestureNumber)

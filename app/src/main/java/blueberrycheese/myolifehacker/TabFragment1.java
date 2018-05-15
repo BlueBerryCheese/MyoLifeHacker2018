@@ -432,23 +432,18 @@ public class TabFragment1 extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
 
+
     // 마요 잠기면 애니메이션 재생
     @Subscribe
     public void getMyoDevice(ServiceEvent.myoLock_Event event) {
         myoConnection = event.lock;
         if(myoConnection) {
-          //  animationView_main.cancelAnimation();
-          //  animationView_main.clearAnimation();
-          //  animationView_main.setAnimation("lock.json");
             animationView_main_lock.playAnimation();
             animationView_main_lock.loop(true);
             animationView_main_lock.setVisibility(View.VISIBLE);
             animationView_main_unlock.setVisibility(View.INVISIBLE);
         }
         else {
-          //  animationView_main.cancelAnimation();
-           // animationView_main.clearAnimation();
-            //animationView_main_unlock.setAnimation("material_wave_loading.json");
             animationView_main_unlock.playAnimation();
             animationView_main_unlock.loop(true);
             animationView_main_unlock.setVisibility(View.VISIBLE);
@@ -468,29 +463,6 @@ public class TabFragment1 extends Fragment {
                 animationView_main_lock.setVisibility(View.VISIBLE);
                 first=false;
             }
-
-            /*
-            //Log.d("MenuEvent","MenuEvent Gesture num============================ : "+myoApp.isUnlocked());
-              if(myoApp.isUnlocked()) {
-                  Log.e("MenuEvent","MenuEvent Gesture num============================  UNLOck: "+myoApp.isUnlocked());
-                //  animationView_main.cancelAnimation();
-                animationView_main.clearAnimation();
-                animationView_main.setAnimation("material_wave_loading.json");
-                animationView_main.playAnimation();
-                animationView_main.loop(true);
-                animationView_main.setVisibility(View.VISIBLE);
-            } else {
-
-                  Log.e("MenuEvent","MenuEvent Gesture num============================  LOck: "+myoApp.isUnlocked());
-              //    animationView_main.cancelAnimation();
-               animationView_main.clearAnimation();
-                animationView_main.setAnimation("lock.json");
-                animationView_main.playAnimation();
-                animationView_main.loop(true);
-                animationView_main.setVisibility(View.VISIBLE);
-            }*/
-
-
         }
         else {
             animationView_main_lock.cancelAnimation();
