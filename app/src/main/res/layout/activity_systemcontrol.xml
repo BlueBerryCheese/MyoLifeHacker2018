@@ -243,19 +243,10 @@
         android:layout_alignParentBottom="true"
         android:textStyle="bold" />
     <com.airbnb.lottie.LottieAnimationView
-        android:id="@+id/lottie_system_lock"
+        android:id="@+id/lottie_system"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        app:lottie_fileName="lock.json"
-        android:layout_marginTop="650dp"/>
-    <com.airbnb.lottie.LottieAnimationView
-        android:id="@+id/lottie_system_unlock"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
         app:lottie_fileName="material_wave_loading.json"
+        android:gravity="center"
         android:layout_marginTop="550dp"/>
-
-
 </RelativeLayout>

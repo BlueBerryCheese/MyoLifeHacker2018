@@ -39,7 +39,6 @@ import java.util.HashMap;
 import blueberrycheese.myolifehacker.FontConfig;
 import blueberrycheese.myolifehacker.ImageViewer.CommentGalleryActivity;
 import blueberrycheese.myolifehacker.ImageViewer.GalleryActivity;
-import blueberrycheese.myolifehacker.MyoApp;
 import blueberrycheese.myolifehacker.R;
 
 import blueberrycheese.myolifehacker.events.ServiceEvent;
@@ -67,7 +66,6 @@ public class SystemControlActivity extends AppCompatActivity {
     private static final int VIBRATION_C = 3;
     private static final int ADDITIONAL_DELAY = 0;
 
-    private MyoApp myoApp = null;  ////
     private BluetoothDevice bluetoothDevice;
     private Handler mHandler;
     private BluetoothAdapter mBluetoothAdapter;
@@ -78,14 +76,12 @@ public class SystemControlActivity extends AppCompatActivity {
     private MyoCommandList commandList = new MyoCommandList();
     private String deviceName;
     String[] gestureString = {"WiFi On, Off", "Sound Mode Chnage ", "Volume Up", "Volume Down", "Brightness Up", "Brightness Down"};
-    private LottieAnimationView animationView_system_lock;  ////
-    private LottieAnimationView animationView_system_unlock;  ////
+    private LottieAnimationView animationView_system;
     private GestureSaveModel saveModel;
     private GestureSaveMethod saveMethod;
     private GestureDetectModel_System detectModel;
     private GestureDetectMethod_System detectMethod;
 
-    private boolean first=true;   ///////
     private boolean myoConnection;
     private Button Option1;
     private Button Option2;
@@ -124,10 +120,8 @@ public class SystemControlActivity extends AppCompatActivity {
 
 
         FontConfig.setGlobalFont(this,getWindow().getDecorView());
-        animationView_system_lock = (LottieAnimationView) findViewById(R.id.lottie_system_lock);   /////
-        animationView_system_unlock = (LottieAnimationView) findViewById(R.id.lottie_system_unlock);   ///////
-        animationView_system_lock.setVisibility(View.INVISIBLE);                            //////
-        animationView_system_unlock.setVisibility(View.INVISIBLE);                          //////
+        animationView_system = (LottieAnimationView) findViewById(R.id.lottie_system);
+        animationView_system.setVisibility(View.INVISIBLE);
       //  final LottieAnimationView animationView_system = (LottieAnimationView) findViewById(R.id.lottie);
       //  animationView_system
         //startNopModel() will setCurrentModel to another model so Service's gesture detect model won't work! - So I commented out
@@ -261,53 +255,18 @@ public class SystemControlActivity extends AppCompatActivity {
 //        }
     }
 
-    // 마요 잠기면 애니메이션 재생
-    @Subscribe
-    public void getMyoDevice(ServiceEvent.myoLock_Event event) {
-        myoConnection = event.lock;
-        if(myoConnection) {
-            //  animationView_main.cancelAnimation();
-            //  animationView_main.clearAnimation();
-            //  animationView_main.setAnimation("lock.json");
-            animationView_system_lock.playAnimation();
-            animationView_system_lock.loop(true);
-            animationView_system_lock.setVisibility(View.VISIBLE);
-            animationView_system_unlock.setVisibility(View.INVISIBLE);
-        }
-        else {
-            //  animationView_main.cancelAnimation();
-            // animationView_main.clearAnimation();
-            //animationView_main_unlock.setAnimation("material_wave_loading.json");
-            animationView_system_unlock.playAnimation();
-            animationView_system_unlock.loop(true);
-            animationView_system_unlock.setVisibility(View.VISIBLE);
-            animationView_system_lock.setVisibility(View.INVISIBLE);
-        }
-    }
-
     // 마요 연결되어 있으면 애니메이션 재생
     @Subscribe(sticky = true)
     public void getMyoDevice(ServiceEvent.myoConnected_Event event) {
         myoConnection = event.connection;
-        myoApp = (MyoApp) getApplication().getApplicationContext();
         if(myoConnection) {
-            if(first && !myoApp.isUnlocked()) {
-                animationView_system_lock.playAnimation();
-                animationView_system_lock.loop(true);
-                animationView_system_lock.setVisibility(View.VISIBLE);
-                first=false;
-            }else if(first && myoApp.isUnlocked()) {
-                animationView_system_unlock.playAnimation();
-                animationView_system_unlock.loop(true);
-                animationView_system_unlock.setVisibility(View.VISIBLE);
-                first=false;
-            }
+            animationView_system.playAnimation();
+            animationView_system.loop(true);
+            animationView_system.setVisibility(View.VISIBLE);
         }
         else {
-            animationView_system_lock.cancelAnimation();
-            animationView_system_unlock.cancelAnimation();
-            animationView_system_lock.setVisibility(View.INVISIBLE);
-            animationView_system_unlock.setVisibility(View.INVISIBLE);
+            animationView_system.cancelAnimation();
+            animationView_system.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -321,6 +280,9 @@ public class SystemControlActivity extends AppCompatActivity {
         EventBus.getDefault().post(new ServiceEvent.restartLockTimerEvent(ADDITIONAL_DELAY));
 
         systemFeature.function(gestureNum);
+        animationView_system.playAnimation();
+        animationView_system.loop(true);
+        animationView_system.setVisibility(View.VISIBLE);
         mHandler.post(new Runnable() {
             @Override
             public void run() {

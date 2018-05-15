@@ -25,7 +25,6 @@ import blueberrycheese.myolifehacker.events.ServiceEvent
 import blueberrycheese.myolifehacker.myo_music.activities.activitys.MainActivity
 import blueberrycheese.myolifehacker.myo_music.activities.extensions.config
 import blueberrycheese.myolifehacker.myo_music.activities.extensions.dbHelper
-import blueberrycheese.myolifehacker.myo_music.activities.extensions.sendIntent
 import blueberrycheese.myolifehacker.myo_music.activities.helpers.*
 import blueberrycheese.myolifehacker.myo_music.activities.models.Events
 import blueberrycheese.myolifehacker.myo_music.activities.models.Song
@@ -738,7 +737,7 @@ class MusicService : Service(), MediaPlayer.OnPreparedListener, MediaPlayer.OnEr
 //                        startService(this)
 //                    }
 
-                    this.sendIntent(blueberrycheese.myolifehacker.myo_music.activities.helpers.PLAYPAUSE)
+                    getIntent(PREVIOUS)
 //                    sendIntent(PLAYPAUSE)
 
                     //Send Vibration Event
@@ -763,9 +762,7 @@ class MusicService : Service(), MediaPlayer.OnPreparedListener, MediaPlayer.OnEr
 //                        action = PREVIOUS
 //                        startService(this)
 //                    }
-                    this.sendIntent(blueberrycheese.myolifehacker.myo_music.activities.helpers.PREVIOUS)
-
-                    this.sendIntent(blueberrycheese.myolifehacker.myo_music.activities.helpers.PREVIOUS);
+                    getIntent(PREVIOUS)
 //                    sendIntent(PREVIOUS)
 
                     //Send Vibration Event

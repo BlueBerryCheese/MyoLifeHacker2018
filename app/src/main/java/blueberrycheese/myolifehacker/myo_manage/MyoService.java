@@ -24,7 +24,6 @@ import org.greenrobot.eventbus.Subscribe;
 
 import blueberrycheese.myolifehacker.MyoApp;
 import blueberrycheese.myolifehacker.R;
-import blueberrycheese.myolifehacker.TabFragment1;
 import blueberrycheese.myolifehacker.Toasty;
 import blueberrycheese.myolifehacker.events.ServiceEvent;
 
@@ -61,6 +60,7 @@ public class MyoService extends Service {
     public int[] smoothcount = new int[6];
     private final int LITTLEFINGER = 4;
     private final int SCISSORS = 5;
+
 
     public MyoService() {
     }
@@ -205,8 +205,6 @@ public class MyoService extends Service {
                     //Send Vibration Event
                     EventBus.getDefault().post(new ServiceEvent.VibrateEvent(VIBRATION_C));
                     EventBus.getDefault().postSticky(new ServiceEvent.myoConnected_Event(true));
-                    //EventBus.getDefault().post(new ServiceEvent.myoLock_Event(true));
-
                 }
 
                 if (saveMethod.getSaveState() == GestureSaveMethod.SaveState.Have_Saved) {
@@ -244,8 +242,6 @@ public class MyoService extends Service {
                             public void run() {
                                 // 내용
                                 Toasty.normal(getBaseContext(),"Gesture recognition Unlocked", Toast.LENGTH_SHORT,unlocked).show();
-                                EventBus.getDefault().post(new ServiceEvent.myoLock_Event(!myoApp.isUnlocked()));
-                               // EventBus.getDefault().post(new ServiceEvent.myoLock_Event(true));
                             }
                         }, 0);
                         Log.d(TAG,"Unlock "+ LITTLEFINGER);
@@ -280,8 +276,6 @@ public class MyoService extends Service {
                             public void run() {
                                 // 내용
                                 Toasty.normal(getBaseContext(),"Gesture recognition Unlocked", Toast.LENGTH_SHORT,unlocked).show();
-                                EventBus.getDefault().post(new ServiceEvent.myoLock_Event(!myoApp.isUnlocked()));
-                                //EventBus.getDefault().post(new ServiceEvent.myoLock_Event(true));
                             }
                         }, 0);
                         Log.d(TAG,"Unlock "+ SCISSORS);
@@ -333,7 +327,6 @@ public class MyoService extends Service {
             //Lock gesture
             myoApp.lockGesture();
             Toasty.normal(getBaseContext(),"Time over myo Locked", Toast.LENGTH_SHORT,locked).show();
-            EventBus.getDefault().post(new ServiceEvent.myoLock_Event(!myoApp.isUnlocked()));
             Log.e(TAG,"Lock_Runnable : Gesture locked");
         }
     };
