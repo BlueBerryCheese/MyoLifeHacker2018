@@ -82,10 +82,18 @@
     <!--android:layout_height="match_parent"-->
     <!--android:text="@string/hello_blank_fragment" />-->
 <com.airbnb.lottie.LottieAnimationView
-android:id="@+id/lottie"
+android:id="@+id/lottie_lock"
 android:layout_width="match_parent"
 android:layout_height="wrap_content"
 android:layout_gravity="center"
-app:lottie_fileName="material_wave_loading.json"
+app:lottie_fileName="lock.json"
 android:layout_marginTop="270dp"/>
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/lottie_unlock"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        app:lottie_fileName="material_wave_loading.json"
+        android:layout_marginTop="270dp"/>
+
 </FrameLayout>

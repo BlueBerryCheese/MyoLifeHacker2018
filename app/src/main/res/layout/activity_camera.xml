@@ -237,11 +237,20 @@ android:layout_height="match_parent"
 
     </LinearLayout>
     <com.airbnb.lottie.LottieAnimationView
-        android:id="@+id/lottie_camera"
+        android:id="@+id/lottie_camera_lock"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        app:lottie_fileName="lock.json"
+        android:layout_marginTop="500dp"/>
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/lottie_camera_unlock"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
         app:lottie_fileName="material_wave_loading.json"
         android:layout_marginTop="500dp"/>
+
 <!-- Edit -->
 <android.support.v4.widget.NestedScrollView
     android:id="@+id/controls"

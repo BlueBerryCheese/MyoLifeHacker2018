@@ -22,7 +22,6 @@ public class MyoApp extends Application {
     private boolean unlockDefault = false;
     private boolean unlockMusic = false;
 
-
     public void unlockGesture(int g){
         Log.e(TAG, "Gesture unlocked");
         if(g == 0 && !unlockDefault){
