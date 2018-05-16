@@ -1,5 +1,6 @@
 package blueberrycheese.myolifehacker.CameraView;
 
+import android.graphics.drawable.Drawable;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.util.Log;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.otaliastudios.cameraview.AspectRatio;
 import com.otaliastudios.cameraview.CameraUtils;
@@ -24,6 +26,7 @@ import java.io.FileOutputStream;
 import java.lang.ref.WeakReference;
 
 import blueberrycheese.myolifehacker.R;
+import blueberrycheese.myolifehacker.Toasty;
 import blueberrycheese.myolifehacker.events.ServiceEvent;
 
 
@@ -33,6 +36,7 @@ public class PicturePreviewActivity extends AppCompatActivity {
     private static final int VIBRATION_A = 1;
     private static final int VIBRATION_B = 2;
     private static final int VIBRATION_C = 3;
+    private Drawable icon_1,icon_2,icon_3,icon_4,icon_5,icon_6;
 
     private int gestureNum = -1;
     int[] smoothcount = new int[6];
@@ -64,6 +68,14 @@ public class PicturePreviewActivity extends AppCompatActivity {
             finish();
             return;
         }
+
+        icon_1 = getResources().getDrawable(R.drawable.gesture_1_w);
+        icon_2 = getResources().getDrawable(R.drawable.gesture_2_w);
+        icon_3 = getResources().getDrawable(R.drawable.gesture_3_w);
+        icon_4 = getResources().getDrawable(R.drawable.gesture_4_w);
+        icon_5 = getResources().getDrawable(R.drawable.gesture_5_w);
+        icon_6 = getResources().getDrawable(R.drawable.gesture_6_w);
+
 
         CameraUtils.decodeBitmap(b, 1000, 1000, new CameraUtils.BitmapCallback() {
             @Override
@@ -132,6 +144,7 @@ public class PicturePreviewActivity extends AppCompatActivity {
                     //Restart lock Timer so user can use gesture continuously
                     EventBus.getDefault().post(new ServiceEvent.restartLockTimerEvent(ADDITIONAL_DELAY));
                     finish();
+                    Toasty.normal(getBaseContext(),"Capture Photo", Toast.LENGTH_SHORT, icon_1).show();
                     smoothcount[gestureNum]=-1;
                     resetSmoothCount();
                 }

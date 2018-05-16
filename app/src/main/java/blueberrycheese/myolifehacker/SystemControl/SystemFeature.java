@@ -27,6 +27,7 @@ public class SystemFeature {
     int currentBrightness;
     int BrightnessDiff = 5;
     int old_pos = -1;
+
     public SystemFeature(Context mContext){
         this.mContext = mContext;
         wifiManager = (WifiManager) mContext.getSystemService(Context.WIFI_SERVICE);
@@ -68,6 +69,7 @@ public class SystemFeature {
 
         switch(poseNum){
             case 0:
+                /*
                 if(smoothcount[poseNum]>3) {
                     if(!wifiManager.isWifiEnabled()){
                         WifiEnable();
@@ -81,9 +83,54 @@ public class SystemFeature {
                     //Wifi On off
                     smoothcount[poseNum]=-1;
                     resetSmoothCount();
-
                 }
                 smoothcount[poseNum]++;
+                */
+
+
+
+                //Brightness down
+                if(smoothcount[poseNum]>1){
+                    currentBrightness = Settings.System.getInt(cResolver, Settings.System.SCREEN_BRIGHTNESS,0
+                    );
+                    Settings.System.putInt(cResolver, Settings.System.SCREEN_BRIGHTNESS_MODE, Settings.System.SCREEN_BRIGHTNESS_MODE_MANUAL);
+                    Settings.System.putInt(cResolver, Settings.System.SCREEN_BRIGHTNESS, ((currentBrightness - BrightnessDiff)<20)?currentBrightness:currentBrightness - BrightnessDiff);
+                    Toasty.normal(mContext,"Bright down", Toast.LENGTH_SHORT, icon_1).show();
+                    resetSmoothCount();
+                    smoothcount[poseNum]=-1;
+                }
+                smoothcount[poseNum]++;
+
+                /*
+                //Sound on off vibration
+                if(smoothcount[poseNum]>3) {
+                    switch(audioManager.getRingerMode()){
+                        case AudioManager.RINGER_MODE_NORMAL:
+                            audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+                            Toasty.normal(mContext,"Silent Mode", Toast.LENGTH_SHORT, icon_1).show();
+                            //Toast.makeText(mContext,"RingerModeSilent",Toast.LENGTH_LONG).show();
+                            break;
+                        case AudioManager.RINGER_MODE_SILENT:
+                            audioManager.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
+                            Toasty.normal(mContext,"Vibrate Mode", Toast.LENGTH_SHORT, icon_1).show();
+                            //Toast.makeText(mContext,"RingerModeVibrate",Toast.LENGTH_LONG).show();
+                            break;
+                        case AudioManager.RINGER_MODE_VIBRATE:
+                            audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
+                            Toasty.normal(mContext,"Normal Mode", Toast.LENGTH_SHORT, icon_1).show();
+                            //Toast.makeText(mContext,"RingerModeNormal",Toast.LENGTH_LONG).show();
+                            break;
+                        default:
+                            audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
+                            Toasty.normal(mContext,"Normal Mode", Toast.LENGTH_SHORT, icon_1).show();
+                            //Toast.makeText(mContext,"RingerModeNormal",Toast.LENGTH_LONG).show();
+                            break;
+                    }
+                    resetSmoothCount();
+                    smoothcount[poseNum]=-1;
+                }
+                smoothcount[poseNum]++;
+                */
             break;
             case 1:
                 //Volume Down
@@ -106,6 +153,7 @@ public class SystemFeature {
                 smoothcount[poseNum]++;
                 break;
             case 3:
+                /*
                 //Sound on off vibration
                 if(smoothcount[poseNum]>3) {
                     switch(audioManager.getRingerMode()){
@@ -135,7 +183,7 @@ public class SystemFeature {
                 }
                 smoothcount[poseNum]++;
                 break;
-            case 4:
+                */
                 //Brightness up
                 if(smoothcount[poseNum]>1){
                     currentBrightness = Settings.System.getInt(cResolver, Settings.System.SCREEN_BRIGHTNESS,0
@@ -143,18 +191,16 @@ public class SystemFeature {
                     Settings.System.putInt(cResolver, Settings.System.SCREEN_BRIGHTNESS_MODE, Settings.System.SCREEN_BRIGHTNESS_MODE_MANUAL);
                     Settings.System.putInt(cResolver, Settings.System.SCREEN_BRIGHTNESS, ((currentBrightness + BrightnessDiff)>95)?currentBrightness:currentBrightness + BrightnessDiff);
                     resetSmoothCount();
-                    Toasty.normal(mContext,"Bright up", Toast.LENGTH_SHORT, icon_5).show();
+                    Toasty.normal(mContext,"Bright up", Toast.LENGTH_SHORT, icon_4).show();
                 }
                 smoothcount[poseNum]++;
                 break;
+            case 4:
+
+                break;
             case 5:
-                //Brightness down
-                if(smoothcount[poseNum]>1){
-                    currentBrightness = Settings.System.getInt(cResolver, Settings.System.SCREEN_BRIGHTNESS,0
-                    );
-                    Settings.System.putInt(cResolver, Settings.System.SCREEN_BRIGHTNESS_MODE, Settings.System.SCREEN_BRIGHTNESS_MODE_MANUAL);
-                    Settings.System.putInt(cResolver, Settings.System.SCREEN_BRIGHTNESS, ((currentBrightness - BrightnessDiff)<20)?currentBrightness:currentBrightness - BrightnessDiff);
-                    Toasty.normal(mContext,"Bright down", Toast.LENGTH_SHORT, icon_6).show();
+                if(smoothcount[poseNum]>3){
+                    Toasty.normal(mContext,"Go Back", Toast.LENGTH_SHORT, icon_6).show();
                     resetSmoothCount();
                     smoothcount[poseNum]=-1;
                 }

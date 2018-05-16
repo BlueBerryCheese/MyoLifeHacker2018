@@ -6,6 +6,7 @@ import android.content.*
 import android.database.Cursor
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.drawable.Drawable
 import android.media.AudioManager
 import android.media.AudioManager.*
 import android.media.MediaMetadataRetriever
@@ -17,10 +18,12 @@ import android.os.PowerManager
 import android.provider.MediaStore
 import android.support.v4.app.NotificationCompat
 import android.util.Log
+import android.widget.Toast
 import com.simplemobiletools.commons.extensions.*
 import com.simplemobiletools.commons.helpers.PERMISSION_WRITE_STORAGE
 import com.simplemobiletools.commons.helpers.isOreoPlus
 import blueberrycheese.myolifehacker.R
+import blueberrycheese.myolifehacker.Toasty
 import blueberrycheese.myolifehacker.events.ServiceEvent
 import blueberrycheese.myolifehacker.myo_music.activities.activitys.MainActivity
 import blueberrycheese.myolifehacker.myo_music.activities.extensions.config
@@ -74,6 +77,13 @@ class MusicService : Service(), MediaPlayer.OnPreparedListener, MediaPlayer.OnEr
         private val VIBRATION_C = 3
         private val ADDITIONAL_DELAY = 0
 
+        private var icon_1:Drawable? = null
+        private var icon_2:Drawable? = null
+        private var icon_3:Drawable? = null
+        private var icon_4:Drawable? = null
+        private var icon_5:Drawable? = null
+        private var icon_6:Drawable? = null
+
         fun getIsPlaying() = mPlayer?.isPlaying == true
     }
 
@@ -84,6 +94,14 @@ class MusicService : Service(), MediaPlayer.OnPreparedListener, MediaPlayer.OnEr
             mBus = BusProvider.instance
             mBus!!.register(this)
         }
+
+
+        icon_1 = resources.getDrawable(R.drawable.gesture_1_w)
+        icon_2 = resources.getDrawable(R.drawable.gesture_2_w)
+        icon_3 = resources.getDrawable(R.drawable.gesture_3_w)
+        icon_4 = resources.getDrawable(R.drawable.gesture_4_w)
+        icon_5 = resources.getDrawable(R.drawable.gesture_5_w)
+        icon_6 = resources.getDrawable(R.drawable.gesture_6_w)
 
         mCoverArtHeight = resources.getDimension(R.dimen.top_art_height).toInt()
         mProgressHandler = Handler()
@@ -746,7 +764,7 @@ class MusicService : Service(), MediaPlayer.OnPreparedListener, MediaPlayer.OnEr
                     //Restart lock Timer so user can use gesture continuously
                     EventBus.getDefault().post(ServiceEvent.restartLockTimerEvent(ADDITIONAL_DELAY))
 
-//                    Toasty.normal(this!!, "Play/Pause", Toast.LENGTH_SHORT, icon_1).show()
+                    Toasty.normal(this!!, "Play/Pause", Toast.LENGTH_SHORT, icon_1).show()
 //                    smoothcount[gestureNum] = -1
                     resetSmoothCount()
                 }
@@ -771,7 +789,7 @@ class MusicService : Service(), MediaPlayer.OnPreparedListener, MediaPlayer.OnEr
                     //Restart lock Timer so user can use gesture continuously
                     EventBus.getDefault().post(ServiceEvent.restartLockTimerEvent(ADDITIONAL_DELAY))
 
-//                    Toasty.normal(this!!, "Previous", Toast.LENGTH_SHORT, icon_2).show()
+                    Toasty.normal(this!!, "Previous", Toast.LENGTH_SHORT, icon_2).show()
 //                    smoothcount[gestureNum] = -1
                     resetSmoothCount()
                 }
@@ -796,7 +814,7 @@ class MusicService : Service(), MediaPlayer.OnPreparedListener, MediaPlayer.OnEr
                     //Restart lock Timer so user can use gesture continuously
                     EventBus.getDefault().post(ServiceEvent.restartLockTimerEvent(ADDITIONAL_DELAY))
 
-//                    Toasty.normal(this!!, "Next", Toast.LENGTH_SHORT, icon_3).show()
+                    Toasty.normal(this!!, "Next", Toast.LENGTH_SHORT, icon_3).show()
 //                    smoothcount[gestureNum] = -1
                     resetSmoothCount()
                 }

@@ -126,7 +126,7 @@ android:layout_height="match_parent"
             android:layout_gravity="bottom"
             android:background="#ffffff"
             android:orientation="horizontal"
-            android:weightSum="12">
+            android:weightSum="18">
 
             <LinearLayout
                 android:id="@+id/gesturelinearlayout1"
@@ -143,7 +143,7 @@ android:layout_height="match_parent"
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:layout_weight="7"
-                    android:src="@drawable/gesture_fist" />
+                    android:src="@drawable/gesture_1_nb" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -169,7 +169,7 @@ android:layout_height="match_parent"
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:layout_weight="7"
-                    android:src="@drawable/gesture_spread" />
+                    android:src="@drawable/gesture_4_nb" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -195,7 +195,7 @@ android:layout_height="match_parent"
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:layout_weight="7"
-                    android:src="@drawable/gesture_wavein" />
+                    android:src="@drawable/gesture_2_nb" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -221,7 +221,7 @@ android:layout_height="match_parent"
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:layout_weight="7"
-                    android:src="@drawable/gesture_waveout" />
+                    android:src="@drawable/gesture_3_nb" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -231,7 +231,53 @@ android:layout_height="match_parent"
                     android:text="Grid Toggle" />
 
             </LinearLayout>
+            <LinearLayout
+                android:id="@+id/gesturelinearlayout5"
+                android:layout_width="0dp"
+                android:layout_height="64dp"
+                android:layout_gravity="bottom"
+                android:layout_weight="3"
+                android:background="#ffffff"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:weightSum="10">
 
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="7"
+                    android:src="@drawable/gesture_6_nb" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="3"
+                    android:gravity="center"
+                    android:text="Go Back" />
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/gesturelinearlayout6"
+                android:layout_width="0dp"
+                android:layout_height="64dp"
+                android:layout_gravity="bottom"
+                android:layout_weight="3"
+                android:background="#ffffff"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:weightSum="10">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="7"
+                    android:src="@drawable/gesture_5_nb" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="3"
+                    android:gravity="center"
+                    android:text="Hold" />
+            </LinearLayout>
 
         </LinearLayout>
 

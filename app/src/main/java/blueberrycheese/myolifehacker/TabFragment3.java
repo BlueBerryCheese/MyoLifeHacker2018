@@ -514,10 +514,9 @@ public class TabFragment3 extends Fragment {
                     //saveMethod.setState(GestureSaveMethod.SaveState.Now_Saving);
                     //dialog= new LoadingDialog().setProgress(mactivity);
                     //ProgressDialog dialog = ProgressDialog.show(DialogSam)
+                    /*
                     dialog= ProgressDialog.show(getContext(), "","Loading, Please Wait..",true,true);
                     dialog.show();  // 로딩이미지 표현.
-
-
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
@@ -529,7 +528,7 @@ public class TabFragment3 extends Fragment {
                             dialog.dismiss();
                         }
                     },1000);
-
+*/
                     Toasty.error(ncontext, "Please delete model first", Toast.LENGTH_LONG,true).show();
                 } else if (saveMethod.getSaveState() == GestureSaveMethod.SaveState.Not_Saved || saveMethod.getSaveState() == GestureSaveMethod.SaveState.Now_Saving) {
                     saveMethod.setState(GestureSaveMethod.SaveState.Now_Saving);
@@ -547,6 +546,7 @@ public class TabFragment3 extends Fragment {
                                 //startSaveModel();
                             }
                             dialog.dismiss();
+                            Toasty.info(ncontext,  "Model creation complete", Toast.LENGTH_SHORT, true).show();
                         }
                     },2000);
                     saveMethod.setState(GestureSaveMethod.SaveState.Have_Saved);
@@ -556,7 +556,6 @@ public class TabFragment3 extends Fragment {
 
                     //   startSaveModel();
                     textView_tutorial.setText("제스처가 준비되었습니다. \n원하는 기능을 사용하는 데 제스처를 사용할 수 있습니다.");
-                    Toasty.info(ncontext,  "Model creation complete", Toast.LENGTH_SHORT, true).show();
                 }
             }
         });

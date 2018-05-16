@@ -9,7 +9,7 @@
 
     <RelativeLayout
         android:id="@+id/art_holder"
-        android:layout_width="294dp"
+        android:layout_width="274dp"
         android:layout_height="@dimen/top_art_height"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true">
@@ -26,82 +26,107 @@
     </RelativeLayout>
 
     <RelativeLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="@dimen/top_art_height"
         android:layout_toRightOf="@id/art_holder">
         <!--Gesture 안내 표시용 Layout-->
         <LinearLayout
-            android:id="@+id/maingesturelinearlayout"
+            android:id="@+id/gesture_Linear_1"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/top_art_height"
-
-
-            android:layout_gravity="bottom"
-            android:orientation="vertical"
-            android:weightSum="12">
-
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
             <LinearLayout
-                android:id="@+id/gesturelinearlayout1"
-                android:layout_width="64dp"
-                android:layout_height="64dp"
-                android:layout_gravity="bottom"
+                android:id="@+id/maingesturelinearlayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="6">
 
-                android:layout_weight="3"
-                android:background="#ffffff"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:weightSum="10">
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="2dp"
-                    android:layout_weight="7"
-                    android:src="@drawable/gesture_fist" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="0dp"
+                <LinearLayout
+                    android:id="@+id/gesturelinearlayout1"
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
                     android:layout_weight="3"
+                    android:background="#ffffff"
                     android:gravity="center"
-                    android:text="play/pause"
-                    android:textSize="9sp" />
+                    android:orientation="vertical"
+                    android:weightSum="10">
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="2dp"
+                        android:layout_weight="7"
+                        android:src="@drawable/gesture_1_nb" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="0dp"
+                        android:layout_weight="3"
+                        android:gravity="center"
+                        android:text="play/pause"
+                        android:textSize="9sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/gesturelinearlayout2"
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:layout_weight="3"
+                    android:background="#ffffff"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:weightSum="10">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="2dp"
+                        android:layout_weight="7"
+                        android:src="@drawable/gesture_2_nb" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="0dp"
+                        android:layout_weight="3"
+                        android:gravity="center"
+                        android:text="previous"
+                        android:textSize="9sp" />
+                </LinearLayout>
 
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/gesturelinearlayout2"
-                android:layout_width="64dp"
-                android:layout_height="64dp"
-                android:layout_gravity="bottom"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:weightSum="6">
 
-                android:layout_weight="3"
-                android:background="#ffffff"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:weightSum="10">
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="2dp"
-                    android:layout_weight="7"
-                    android:src="@drawable/gesture_wavein" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="0dp"
-                    android:layout_weight="3"
-                    android:gravity="center"
-                    android:text="previous"
-                    android:textSize="9sp" />
-
-            </LinearLayout>
-
-            <LinearLayout
+                <LinearLayout
                 android:id="@+id/gesturelinearlayout3"
                 android:layout_width="64dp"
                 android:layout_height="64dp"
-                android:layout_gravity="bottom"
+                android:layout_weight="3"
+                android:background="#ffffff"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:weightSum="10">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="2dp"
+                    android:layout_weight="7"
+                    android:src="@drawable/gesture_3_nb" />
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="3"
+                    android:gravity="center"
+                    android:text="Next"
+                    android:textSize="9sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/gesturelinearlayout4"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
                 android:layout_weight="3"
                 android:background="#ffffff"
                 android:gravity="center"
@@ -110,19 +135,85 @@
 
                 <ImageView
                     android:layout_width="wrap_content"
-                    android:layout_height="0dp"
+                    android:layout_height="2dp"
                     android:layout_weight="7"
-                    android:src="@drawable/gesture_waveout" />
+                    android:src="@drawable/gesture_4_nb" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:layout_weight="3"
                     android:gravity="center"
-                    android:text="next"
+                    android:text="Go Back"
                     android:textSize="9sp" />
+                </LinearLayout>
 
             </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="6">
+
+
+                <LinearLayout
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:layout_weight="3"
+                    android:background="#ffffff"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:weightSum="10">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="2dp"
+                        android:layout_weight="7"
+                        android:src="@drawable/gesture_6_nb" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="0dp"
+                        android:layout_weight="3"
+                        android:gravity="center"
+                        android:text="Hold"
+                        android:textSize="9sp" />
+                    >
+
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/gesturelinearlayout5"
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:layout_weight="3"
+                    android:background="#ffffff"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:weightSum="10">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="2dp"
+                        android:layout_weight="7"
+                        android:src="@drawable/gesture_5_nb" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="0dp"
+                        android:layout_weight="3"
+                        android:gravity="center"
+                        android:text="Music Hold"
+                        android:textSize="8sp" />
+
+                </LinearLayout>
+
+
+
+
+            </LinearLayout>
+
+
+
 
         </LinearLayout>
 

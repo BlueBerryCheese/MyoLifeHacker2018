@@ -160,6 +160,11 @@ public class SystemControlActivity extends AppCompatActivity {
 
 
     }
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(0, 0);
+    }
 
     @Override
     protected void onResume() {
@@ -326,27 +331,34 @@ public class SystemControlActivity extends AppCompatActivity {
             public void run() {
                 switch (gestureNum){
                     case 0:
-                        emgDataText.setText("Wifi ON/OFF");
+                        gestureText.setText("Screen darker");
+                        emgDataText.setText("Screen darker");
                         break;
                     case 1:
-                        emgDataText.setText("Volume UP");
-                        break;
-                    case 2:
+                        gestureText.setText("Volume Down");
                         emgDataText.setText("Volume Down");
                         break;
-                    case 3:
-                        emgDataText.setText("Sound-Vibrate");
+                    case 2:
+                        gestureText.setText("Volume Up");
+                        emgDataText.setText("Volume Up");
                         break;
-                    case 4:
+                    case 3:
+                        gestureText.setText("Screen Brighter");
                         emgDataText.setText("Screen Brighter");
                         break;
+                    case 4:
+                        gestureText.setText("Hold");
+                        emgDataText.setText("Hold");
+                        break;
                     case 5:
-                        emgDataText.setText("Screen darker");
+                        gestureText.setText("Go Back");
+                        emgDataText.setText("Go Back");
+                        finish();
                         break;
                     default:
                         break;
                 }
-                gestureText.setText(gestureNum+" detect!!");
+              //  gestureText.setText(gestureNum+1+" detect!!");
             }
         });
     }

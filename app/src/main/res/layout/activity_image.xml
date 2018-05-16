@@ -7,6 +7,8 @@
     android:layout_height="match_parent"
     android:background="@android:color/transparent">
 
+
+
     <com.bosong.commentgallerylib.CommentGallery
         android:id="@+id/comment_gallery"
         android:layout_width="0dp"
@@ -17,7 +19,157 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="0.0"
+        android:layout_weight="10.05"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+    <!--Gesture 안내 표시용 Layout-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+    <LinearLayout
+        android:id="@+id/maingesturelinearlayout_gallery"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:layout_gravity="bottom"
+        android:background="#ffffff"
+        android:orientation="horizontal"
+        android:layout_weight="0.1"
+        android:weightSum="15"
+        >
+
+        <LinearLayout
+            android:id="@+id/gesturelinearlayout1_gallery"
+            android:layout_width="0dp"
+            android:layout_height="64dp"
+            android:layout_gravity="bottom"
+            android:layout_weight="3"
+            android:background="#ffffff"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:weightSum="10">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="7"
+                android:src="@drawable/gesture_1_nb" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="3"
+                android:gravity="center"
+                android:text="Select" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/gesturelinearlayout2_gallery"
+            android:layout_width="0dp"
+            android:layout_height="64dp"
+            android:layout_gravity="bottom"
+            android:layout_weight="3"
+            android:background="#ffffff"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:weightSum="10">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="7"
+                android:scaleType="fitCenter"
+                android:src="@drawable/gesture_3_nb" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="3"
+                android:gravity="center"
+                android:text="Next" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/gesturelinearlayout3_gallery"
+            android:layout_width="0dp"
+            android:layout_height="64dp"
+            android:layout_gravity="bottom"
+            android:layout_weight="3"
+            android:background="#ffffff"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:weightSum="10">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="7"
+                android:src="@drawable/gesture_2_nb" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="3"
+                android:gravity="center"
+                android:text="Previous" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/gesturelinearlayout4_gallery"
+            android:layout_width="0dp"
+            android:layout_height="64dp"
+            android:layout_gravity="bottom"
+            android:layout_weight="3"
+            android:background="#ffffff"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:weightSum="10">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="7"
+                android:src="@drawable/gesture_6_nb" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="3"
+                android:gravity="center"
+                android:text="Go Back" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/gesturelinearlayout5_gallery"
+            android:layout_width="0dp"
+            android:layout_height="64dp"
+            android:layout_gravity="bottom"
+            android:layout_weight="3"
+            android:background="#ffffff"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:weightSum="10">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="7"
+                android:src="@drawable/gesture_5_nb" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="3"
+                android:gravity="center"
+                android:text="Hold" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+
+
+
+
+            </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -29,7 +181,12 @@
             app:lottie_fileName="lock.json"
             android:layout_marginBottom="120dp"/>
     </LinearLayout>
+
+
+
+    </LinearLayout>
         <LinearLayout
+
             android:layout_width="match_parent"
             android:layout_height="match_parent">
         <com.airbnb.lottie.LottieAnimationView

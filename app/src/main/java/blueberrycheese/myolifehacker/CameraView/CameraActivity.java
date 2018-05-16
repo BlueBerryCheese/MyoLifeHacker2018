@@ -565,7 +565,8 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
 //                    smoothcount[gestureNum]=-1;
                     resetSmoothCount();
                 }
-
+            case 5:
+                finish();
                 break;
 
             default :
