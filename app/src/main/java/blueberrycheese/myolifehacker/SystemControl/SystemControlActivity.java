@@ -99,6 +99,7 @@ public class SystemControlActivity extends AppCompatActivity {
     private Context mContext;
     int[] smoothcount = new int[6];
     int gestureNum = -1;
+    private static final int CURRENT_ACTIVITY = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -172,9 +173,15 @@ public class SystemControlActivity extends AppCompatActivity {
         if(!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this);
         }
+
+        //Post event to notify that user's watching the activity.
+        EventBus.getDefault().postSticky(new ServiceEvent.currentActivity_Event(CURRENT_ACTIVITY));
     }
     @Override
     public void onStop(){
+        //Post event to notify that user's leaving the activity.
+        EventBus.getDefault().postSticky(new ServiceEvent.currentActivity_Event(-1));
+
         EventBus.getDefault().unregister(this);
         super.onStop();
 //        this.closeBLEGatt();
@@ -195,18 +202,18 @@ public class SystemControlActivity extends AppCompatActivity {
 //            mMyoCallback.setBluetoothGatt(mBluetoothGatt);
 //        }
 //    }
-    public void onClickEMG(Context context) {
-        if (mBluetoothGatt == null || !mMyoCallback.setMyoControlCommand(commandList.sendEmgOnly())) {
-            Log.d(TAG,"False EMG");
-        } else {
-            saveMethod  = new GestureSaveMethod(-1, context,1);
-            if (saveMethod.getSaveState() == GestureSaveMethod.SaveState.Have_Saved) {
-                gestureText.setText("DETECT Ready");
-            } else {
-                gestureText.setText("Teach me \'Gesture\'");
-            }
-        }
-    }
+//    public void onClickEMG(Context context) {
+//        if (mBluetoothGatt == null || !mMyoCallback.setMyoControlCommand(commandList.sendEmgOnly())) {
+//            Log.d(TAG,"False EMG");
+//        } else {
+//            saveMethod  = new GestureSaveMethod(-1, context,1);
+//            if (saveMethod.getSaveState() == GestureSaveMethod.SaveState.Have_Saved) {
+//                gestureText.setText("DETECT Ready");
+//            } else {
+//                gestureText.setText("Teach me \'Gesture\'");
+//            }
+//        }
+//    }
 
 //    public void onClickDetect() {
 //        if (saveMethod.getSaveState() == GestureSaveMethod.SaveState.Have_Saved) {
@@ -219,27 +226,27 @@ public class SystemControlActivity extends AppCompatActivity {
 //        }
 //    }
 
-    public void closeBLEGatt() {
-        if (mBluetoothGatt == null) {
-            return;
-        }
-        mMyoCallback.stopCallback();
-        mBluetoothGatt.close();
-        mBluetoothGatt = null;
-    }
+//    public void closeBLEGatt() {
+//        if (mBluetoothGatt == null) {
+//            return;
+//        }
+//        mMyoCallback.stopCallback();
+//        mBluetoothGatt.close();
+//        mBluetoothGatt = null;
+//    }
 
-    public void startSaveModel() {
-        IGestureDetectModel model = saveModel;
-        model.setAction(new GestureDetectSendResultAction_System(this)); //변경
-        GestureDetectModelManager.setCurrentModel(model);
-    }
-
-    public void startDetectModel() {
-        IGestureDetectModel model = detectModel;
-        model.setAction(new GestureDetectSendResultAction_System(this));    //변경
-        GestureDetectModelManager.setCurrentModel(model);
-    }
-
+//    public void startSaveModel() {
+//        IGestureDetectModel model = saveModel;
+//        model.setAction(new GestureDetectSendResultAction_System(this)); //변경
+//        GestureDetectModelManager.setCurrentModel(model);
+//    }
+//
+//    public void startDetectModel() {
+//        IGestureDetectModel model = detectModel;
+//        model.setAction(new GestureDetectSendResultAction_System(this));    //변경
+//        GestureDetectModelManager.setCurrentModel(model);
+//    }
+//
     public void startNopModel() {
         GestureDetectModelManager.setCurrentModel(new NopModel());
     }

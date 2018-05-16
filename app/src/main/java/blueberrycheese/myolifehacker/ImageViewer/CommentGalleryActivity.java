@@ -40,6 +40,8 @@ public class CommentGalleryActivity extends AppCompatActivity {
     int[] smoothcount = new int[6];
     private int gestureNum = -1;
     private int max_size=0;
+    private static final int CURRENT_ACTIVITY = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,9 +73,14 @@ public class CommentGalleryActivity extends AppCompatActivity {
         if(!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this);
         }
+        //Post event to notify that user's watching the activity.
+        EventBus.getDefault().postSticky(new ServiceEvent.currentActivity_Event(CURRENT_ACTIVITY));
     }
     @Override
     public void onStop(){
+        //Post event to notify that user's leaving the activity.
+        EventBus.getDefault().postSticky(new ServiceEvent.currentActivity_Event(-1));
+
         EventBus.getDefault().unregister(this);
         super.onStop();
 //        this.closeBLEGatt();
@@ -146,6 +153,10 @@ public class CommentGalleryActivity extends AppCompatActivity {
 //                    mGallery.setData((CommentGalleryContainer) getIntent().getSerializableExtra(GalleryActivity.COMMENT_LIST),numCounter)
 //                }
 //                smoothcount[gestureNum]++;
+                //Send Vibration Event
+                EventBus.getDefault().post(new ServiceEvent.VibrateEvent(VIBRATION_A));
+                //Restart lock Timer so user can use gesture continuously
+                EventBus.getDefault().post(new ServiceEvent.restartLockTimerEvent(ADDITIONAL_DELAY));
 
                 smoothcount[gestureNum]++;
                 if(smoothcount[gestureNum]>1) {

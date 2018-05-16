@@ -60,6 +60,13 @@ public class ServiceEvent {
         }
     }
 
+    public static class currentActivity_Event{
+        public int currentActivity;
+        public currentActivity_Event(int currentActivity){
+            this.currentActivity = currentActivity;
+        }
+    }
+
     public static class setDetectModel_Event{
         public int set;
 

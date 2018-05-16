@@ -40,6 +40,7 @@ public class PicturePreviewActivity extends AppCompatActivity {
 
     private int gestureNum = -1;
     int[] smoothcount = new int[6];
+    private static final int CURRENT_ACTIVITY = 2;
 
     private static WeakReference<byte[]> image;
 
@@ -169,10 +170,14 @@ public class PicturePreviewActivity extends AppCompatActivity {
         if(!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this);
         }
+        //Post event to notify that user's watching the activity.
+        EventBus.getDefault().postSticky(new ServiceEvent.currentActivity_Event(CURRENT_ACTIVITY));
     }
 
     @Override
     public void onStop(){
+        //Post event to notify that user's leaving the activity.
+        EventBus.getDefault().postSticky(new ServiceEvent.currentActivity_Event(-1));
         EventBus.getDefault().unregister(this);
         super.onStop();
 

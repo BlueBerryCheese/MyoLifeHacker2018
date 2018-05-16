@@ -90,6 +90,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
     private static final int ADDITIONAL_DELAY = 5000;
     private boolean first=true;
     private boolean myoConnection;
+    private static final int CURRENT_ACTIVITY = 0;
 
     private static final String TAG = "CameraActivity";
 //    private Handler mHandler;
@@ -300,6 +301,8 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         if(!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this);
         }
+        //Post event to notify that user's watching the activity.
+        EventBus.getDefault().postSticky(new ServiceEvent.currentActivity_Event(CURRENT_ACTIVITY));
         camera.start();
         camera.setSessionType(SessionType.PICTURE);
 
@@ -339,6 +342,8 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
 
     @Override
     public void onStop(){
+        //Post event to notify that user's leaving the activity.
+        EventBus.getDefault().postSticky(new ServiceEvent.currentActivity_Event(-1));
         EventBus.getDefault().unregister(this);
         super.onStop();
 //        this.closeBLEGatt();
@@ -566,7 +571,17 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
                     resetSmoothCount();
                 }
             case 5:
-                finish();
+                smoothcount[gestureNum]++;
+                if(smoothcount[gestureNum]>1) {
+                    //Send Vibration Event
+                    EventBus.getDefault().post(new ServiceEvent.VibrateEvent(VIBRATION_A));
+                    //Restart lock Timer so user can use gesture continuously
+                    EventBus.getDefault().post(new ServiceEvent.restartLockTimerEvent(ADDITIONAL_DELAY));
+                    finish();
+                    resetSmoothCount();
+//                    Toasty.normal(getBaseContext(),"Capture Photo", Toast.LENGTH_SHORT, icon_1).show();
+                }
+
                 break;
 
             default :
