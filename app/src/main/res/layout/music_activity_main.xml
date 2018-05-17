@@ -176,7 +176,7 @@
                         android:layout_height="0dp"
                         android:layout_weight="3"
                         android:gravity="center"
-                        android:text="Hold"
+                        android:text="Unlock"
                         android:textSize="9sp" />
                     >
 
@@ -202,7 +202,7 @@
                         android:layout_height="0dp"
                         android:layout_weight="3"
                         android:gravity="center"
-                        android:text="Music Hold"
+                        android:text="Music Unlock"
                         android:textSize="8sp" />
 
                 </LinearLayout>

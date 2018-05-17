@@ -9,7 +9,7 @@
         android:title="진동" />
 
     <ListPreference
-        android:defaultValue="1"
+        android:defaultValue="강하게"
         android:entries="@array/vibrate_power"
         android:summary="강하게"
         android:key="vibrate_power"

@@ -110,6 +110,7 @@ public class TabFragment1 extends Fragment {
     private boolean myoConnection;
     private boolean first=true;
 
+
     int[] smoothcount = new int[6];
     private int gestureNum = -1;
 
@@ -155,7 +156,6 @@ public class TabFragment1 extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
 
         view = inflater.inflate(R.layout.fragment_tab_fragment1, container, false);
         mHandler = new Handler();
@@ -518,7 +518,6 @@ public class TabFragment1 extends Fragment {
                     resetSmoothCount();
                    // Toasty.success(getContext(), "Open menu", Toast.LENGTH_SHORT, false).show();
                     Toasty.normal(getContext(),"Open menu",Toast.LENGTH_SHORT, icon_1).show();
-
                 }
                 smoothcount[gestureNum]++;
 

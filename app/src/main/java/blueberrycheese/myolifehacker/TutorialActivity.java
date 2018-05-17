@@ -1,6 +1,7 @@
 package blueberrycheese.myolifehacker;
 
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -9,11 +10,13 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 /**
@@ -27,9 +30,12 @@ public class TutorialActivity extends Activity {
     private TextView imageGesture_textview;
     private TextView tutorialpage_textview;
     private Button tutorialpage_btn;
-
+    private RelativeLayout.LayoutParams mLayoutParams;
     private int tutorial_cnt = 0;
     private static final int tutorial_page=8;
+    private Context mcontext;
+    private String normalText1,boldText,normalText2;
+    private SpannableString str;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,8 +47,11 @@ public class TutorialActivity extends Activity {
         imageGesture_textview = (TextView)findViewById(R.id.imageGesture_texview);
         tutorialpage_textview = (TextView)findViewById(R.id.tutorialpage_textview);
         tutorialpage_btn = (Button)findViewById(R.id.tutorialpage_btn);
+        mLayoutParams = (RelativeLayout.LayoutParams)tutorialpage_textview.getLayoutParams();
+        mcontext = this;
         tutorial_cnt = 0;
         switchPage();
+
         tutorialpage_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -54,11 +63,11 @@ public class TutorialActivity extends Activity {
         });
 
     }
-    private String normalText1,boldText,normalText2;
-    private SpannableString str;
+
     public void switchPage(){
         switch (tutorial_cnt%tutorial_page){
             case 0:
+                mLayoutParams.setMargins((int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,15,mcontext.getResources().getDisplayMetrics()), (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,30,mcontext.getResources().getDisplayMetrics()),0,0);
                 String normalText1 = "좌측메뉴를 눌러서\n기계와";
                 String boldText = " 블루투스";
                 String normalText2 = "를 연결하세요!";
@@ -71,6 +80,7 @@ public class TutorialActivity extends Activity {
                 tutorialpage_textview.setText(str);
                 break;
             case 1:
+                mLayoutParams.setMargins((int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,15,mcontext.getResources().getDisplayMetrics()), (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,40,mcontext.getResources().getDisplayMetrics()),0,0);
                 tutorialpage_textview.setText("블루투스 연결 후 ");
                 normalText1 = "";
                 boldText = "새끼손가락";
@@ -102,7 +112,7 @@ public class TutorialActivity extends Activity {
                 tutorialpage_textview.setText(" ");
                 normalText1 = "손을 ";
                 boldText = "안으로";
-                normalText2 = "구부리면\n핸드폰기능조작을 시작합니다.";
+                normalText2 = "구부리면\n볼륨/밝기 조작을 시작합니다.";
                 str = new SpannableString(normalText1+ boldText + normalText2);
                 btn_pointer.setVisibility(View.INVISIBLE);
                 imageGesture_view.setVisibility(View.VISIBLE);
