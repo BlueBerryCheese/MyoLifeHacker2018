@@ -264,7 +264,9 @@ public class MainActivity extends AppCompatActivity
             item.setChecked(true);
 
         } else if (id == R.id.nav_tutorial) {
-
+            Intent intent = new Intent(this,TutorialActivity.class);
+            startActivity(intent);
+            return true;
         }
 
         return true;
