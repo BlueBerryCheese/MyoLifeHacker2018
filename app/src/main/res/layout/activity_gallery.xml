@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/BackgroundColor">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:weightSum="10.3">
+        <TextView
+            android:id="@+id/img_pager"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_alignParentTop="true"
+            android:background="@color/FontColor"
+            android:textColor="@color/BackgroundColor"
+            android:textAlignment="center"
+            android:gravity="center"
+            android:text="Hello?"
+            android:textSize="20dp"
+            android:layout_weight="0.25"/>
+        <ScrollView
+            android:id="@+id/scrollview1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/img_pager"
+            android:layout_weight="10.05">
+            <com.bosong.commentgallerylib.CommentImageGrid
+                android:id="@+id/comment_grid"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:placeholder_image="@drawable/placeholder"
+                app:fallback_image="@drawable/placeholder"
+                />
+        </ScrollView>
+
+        <!--Gesture 안내 표시용 Layout-->
+        <LinearLayout
+            android:id="@+id/maingesturelinearlayout_gallery"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:layout_gravity="bottom"
+            android:background="#ffffff"
+            android:orientation="horizontal"
+            android:layout_weight="0.1"
+            android:weightSum="15">
+
+            <LinearLayout
+                android:id="@+id/gesturelinearlayout1_gallery"
+                android:layout_width="0dp"
+                android:layout_height="64dp"
+                android:layout_gravity="bottom"
+                android:layout_weight="3"
+                android:background="#ffffff"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:weightSum="10">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="7"
+                    android:src="@drawable/gesture_1_nb" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="3"
+                    android:gravity="center"
+                    android:text="Select" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/gesturelinearlayout2_gallery"
+                android:layout_width="0dp"
+                android:layout_height="64dp"
+                android:layout_gravity="bottom"
+                android:layout_weight="3"
+                android:background="#ffffff"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:weightSum="10">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="7"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/gesture_3_nb" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="3"
+                    android:gravity="center"
+                    android:text="Next" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/gesturelinearlayout3_gallery"
+                android:layout_width="0dp"
+                android:layout_height="64dp"
+                android:layout_gravity="bottom"
+                android:layout_weight="3"
+                android:background="#ffffff"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:weightSum="10">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="7"
+                    android:src="@drawable/gesture_2_nb" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="3"
+                    android:gravity="center"
+                    android:text="Previous" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/gesturelinearlayout4_gallery"
+                android:layout_width="0dp"
+                android:layout_height="64dp"
+                android:layout_gravity="bottom"
+                android:layout_weight="3"
+                android:background="#ffffff"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:weightSum="10">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="7"
+                    android:src="@drawable/gesture_6_nb" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="3"
+                    android:gravity="center"
+                    android:text="Go Back" />
+
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/gesturelinearlayout5_gallery"
+                android:layout_width="0dp"
+                android:layout_height="64dp"
+                android:layout_gravity="bottom"
+                android:layout_weight="3"
+                android:background="#ffffff"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:weightSum="10">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="7"
+                    android:src="@drawable/gesture_5_nb" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="3"
+                    android:gravity="center"
+                    android:text="Unlock" />
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/lottie_gallery_lock"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            app:lottie_fileName="lock.json"
+            android:layout_marginBottom="120dp"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/lottie_gallery_unlock"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            app:lottie_fileName="material_wave_loading.json"
+            android:layout_marginBottom="20dp"/>
+    </LinearLayout>
+</RelativeLayout>
+

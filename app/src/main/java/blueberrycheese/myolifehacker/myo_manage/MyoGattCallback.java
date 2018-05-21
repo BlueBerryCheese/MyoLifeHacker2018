@@ -11,10 +11,14 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.UUID;
+
+import blueberrycheese.myolifehacker.events.ServiceEvent;
 
 /**
  * Created by Seongho on 2017-12-01.
@@ -160,6 +164,7 @@ public class MyoGattCallback extends BluetoothGattCallback {
                 // Get CommandCharacteristic
                 mCharacteristic_command = service.getCharacteristic(UUID.fromString(COMMAND_ID));
                 if (mCharacteristic_command == null) {
+                    Log.d(TAG, "mCharacteristic_command is null");
                 } else {
                     Log.d(TAG, "Find command Characteristic !!");
                 }
@@ -226,14 +231,14 @@ public class MyoGattCallback extends BluetoothGattCallback {
                             '\n' + String.format("Stream Type       : %d", byteReader.getByte());
 
 
-
-                    mHandler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            if(dataView!=null)
-                                dataView.setText(callback_msg);
-                        }
-                    });
+//20180430
+//                    mHandler.post(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            if(dataView!=null)
+//                                dataView.setText(callback_msg);
+//                        }
+//                    });
 
                 }
             }
@@ -257,13 +262,29 @@ public class MyoGattCallback extends BluetoothGattCallback {
 
     long last_send_never_sleep_time_ms = System.currentTimeMillis();
     final static long NEVER_SLEEP_SEND_TIME = 10000;  // Milli Second
+    String currentModelForLog = "";
+
     @Override
     public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
         if (EMG_0_ID.equals(characteristic.getUuid().toString())) {
             long systemTime_ms = System.currentTimeMillis();
             byte[] emg_data = characteristic.getValue();
-            GestureDetectModelManager.getCurrentModel().event(systemTime_ms,emg_data);
+            //Original
+//            GestureDetectModelManager.getCurrentModel().event(systemTime_ms,emg_data);
+//            currentModelForLog = GestureDetectModelManager.getCurrentModel().toString();
+            if(GestureDetectModelManager.getCurrentModel() != null && !currentModelForLog.equals(GestureDetectModelManager.getCurrentModel().toString())){
+                Log.e(TAG,"GestureDetectModelManager.getCurrentModel  Changed to : " + GestureDetectModelManager.getCurrentModel());
+                currentModelForLog = GestureDetectModelManager.getCurrentModel().toString();
+            }
+            try{
+                GestureDetectModelManager.getCurrentModel().event(systemTime_ms,emg_data);
+            }catch(NullPointerException e){
+                Log.e(TAG,"GestureDetectModelManager.getCurrentModel NULL! NullPointerException accrued.");
+//                GestureDetectModelManager.setCurrentModel(new NopModel());
+//                EventBus.getDefault().post(new ServiceEvent.setDetectModel_Event(1));
+            }
 
+            
             ByteReader emg_br = new ByteReader();
             emg_br.setByteData(emg_data);
 
@@ -281,40 +302,41 @@ public class MyoGattCallback extends BluetoothGattCallback {
                 emg_br_data[i] = emg_br.getByte();
             }
 
-
-            mHandler.post(new Runnable() {
-                @Override
-                public void run() {
-                    if(dataView!=null)
-                        dataView.setText(callback_msg);
-                    sb=new StringBuilder("emg   ");
-
-                    if(count<25) {
-                        for (int i = 0; i < 8; i++) {
-                            checking[i] = (emg_br_data[i]>emg_br_data[i+8])?emg_br_data[i]:emg_br_data[i+8];
-                            if(count==0){
-                                maxData[i] = checking[i];
-                            }
-                            if (maxData[i] < checking[i])
-                                maxData[i] = checking[i];
-                        }
-                        count++;
-                    }
-                    else {
-                        for (int k = 0; k < 8; k++) {
-                            sb.append(maxData[k] + ",  ");
-                        }
-                        Log.d("data",sb.toString());
-//                        maxDataTextView.setText(sb.toString());
-                        sb=new StringBuilder("emg ");
-                        count=0;
-                    }
-                }
-            });
+//20180430. - 주석안하고 그대로 두면 계속 exception 메시지 나다가 서비스 크래쉬 등 이상현상 발생함.
+//            mHandler.post(new Runnable() {
+//                @Override
+//                public void run() {
+//                    if(dataView!=null)
+//                        dataView.setText(callback_msg);
+//                    sb=new StringBuilder("emg   ");
+//
+//                    if(count<25) {
+//                        for (int i = 0; i < 8; i++) {
+//                            checking[i] = (emg_br_data[i]>emg_br_data[i+8])?emg_br_data[i]:emg_br_data[i+8];
+//                            if(count==0){
+//                                maxData[i] = checking[i];
+//                            }
+//                            if (maxData[i] < checking[i])
+//                                maxData[i] = checking[i];
+//                        }
+//                        count++;
+//                    }
+//                    else {
+//                        for (int k = 0; k < 8; k++) {
+//                            sb.append(maxData[k] + ",  ");
+//                        }
+//                        Log.d("data",sb.toString());
+////                        maxDataTextView.setText(sb.toString());
+//                        sb=new StringBuilder("emg ");
+//                        count=0;
+//                    }
+//                }
+//            });
 
             if (systemTime_ms > last_send_never_sleep_time_ms + NEVER_SLEEP_SEND_TIME) {
                 // set Myo [Never Sleep Mode]
                 setMyoControlCommand(commandList.sendUnSleep());
+                Log.e(TAG,"Sent unsleep command to Myo");
                 last_send_never_sleep_time_ms = systemTime_ms;
             }
         }
@@ -331,6 +353,7 @@ public class MyoGattCallback extends BluetoothGattCallback {
             int i_prop = mCharacteristic_command.getProperties();
             if (i_prop == BluetoothGattCharacteristic.PROPERTY_WRITE) {
                 if (mBluetoothGatt.writeCharacteristic(mCharacteristic_command)) {
+                    Log.d(TAG,"setMyoControlCommand True");
                     return true;
                 }
             }

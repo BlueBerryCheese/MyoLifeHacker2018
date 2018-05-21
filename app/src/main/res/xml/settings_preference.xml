@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:title="설정"/>
+    <SwitchPreference
+        android:defaultValue="true"
+        android:key="vibrate"
+        android:summary="진동을 설정합니다."
+        android:title="진동" />
+
+    <ListPreference
+        android:defaultValue="강하게"
+        android:entries="@array/vibrate_power"
+        android:summary="강하게"
+        android:key="vibrate_power"
+        android:entryValues="@array/vibrate_power"
+        android:title="진동 세기"
+        android:dependency="vibrate"/>
+
+    <ListPreference
+        android:defaultValue="50"
+        android:entries="@array/recognizing_count"
+        android:summary="50"
+        android:key="recognizing_count"
+        android:entryValues="@array/recognizing_count"
+        android:title="제스처 인식 주기" />
+
+    <PreferenceCategory android:title="제스처 인식 주기를 짧게 설정할수록 빠른 인식이 가능하지만 정확도는 떨어질 수 있습니다."/>
+</PreferenceScreen>

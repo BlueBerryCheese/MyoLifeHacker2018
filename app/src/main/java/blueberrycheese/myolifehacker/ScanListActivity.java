@@ -9,11 +9,13 @@ import android.bluetooth.BluetoothManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.ParcelUuid;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -24,7 +26,12 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.ArrayList;
+
+import blueberrycheese.myolifehacker.events.ServiceEvent;
+import blueberrycheese.myolifehacker.myo_manage.MyoService;
 
 /**
  * Created by pc on 2018-04-05.
@@ -50,6 +57,10 @@ public class ScanListActivity extends AppCompatActivity implements BluetoothAdap
 
     private ArrayAdapter<String> adapter;
 
+    //For service
+    private ArrayList<BluetoothDevice> bluetoothDeviceList = new ArrayList<>();
+    BluetoothDevice bluetoothDevice_Selected;
+    private SharedPreferences prefs;
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -68,6 +79,10 @@ public class ScanListActivity extends AppCompatActivity implements BluetoothAdap
 
         lv.setAdapter(adapter);
 
+        prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        Log.d("Shared",prefs.getString("vibrate_power",""));
+
+
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -79,10 +94,41 @@ public class ScanListActivity extends AppCompatActivity implements BluetoothAdap
                 Intent intent;
                 intent = new Intent(getApplicationContext(), MainActivity.class);
 
-                intent.putExtra(TAG, myoName);
+//서비스 위해 주석처리
+//                intent.putExtra(TAG, myoName);
 
                 startActivity(intent);
 
+
+//              //Service Test
+                //TODO: Need to improve code of getting bluetooth device info for connection
+                for(int i = 0;i<deviceNames.size();i++){
+                    BluetoothDevice bluetoothDeviceCmp = bluetoothDeviceList.get(i);
+                    if(bluetoothDeviceCmp.getName().equals(myoName)){
+                        bluetoothDevice_Selected = bluetoothDeviceCmp;
+                        Log.d("BLEActivity", "Selected BluetoothDevice : " + bluetoothDevice_Selected.getName());
+                        break;
+                    }
+                }
+
+                startService(new Intent(getApplicationContext(), MyoService.class));
+                EventBus.getDefault().postSticky(new ServiceEvent.MyoDeviceEvent(bluetoothDevice_Selected));
+
+
+//                String vp = prefs.getString("vibrate_power","강하게");
+//                int vpp;
+//                int rc = Integer.parseInt(prefs.getString("recognizing_count","30"));
+//                boolean iv = prefs.getBoolean("vibrate",true);
+//                if(vp.equals("강하게"))
+//                    vpp=3;
+//                else if(vp.equals("보통"))
+//                    vpp=2;
+//                else if(vp.equals("약하게"))
+//                    vpp=1;
+//                else
+//                    vpp=3;
+//                Log.d(TAG,"setting_event : " + vp+" , " + rc+" , " + iv);
+//                EventBus.getDefault().postSticky(new ServiceEvent.SettingEvent(vpp,iv,rc));
             }
         });
     }
@@ -110,6 +156,8 @@ public class ScanListActivity extends AppCompatActivity implements BluetoothAdap
 
         if (device.getName() != null && !deviceNames.contains(device.getName())) {
             deviceNames.add(device.getName());
+            //For service
+            bluetoothDeviceList.add(device);
         }
     }
 

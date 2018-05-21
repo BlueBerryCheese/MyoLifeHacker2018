@@ -34,17 +34,20 @@ android:layout_height="match_parent"
         app:cameraVideoMaxDuration="0"
         app:cameraVideoQuality="max720p" />
 
-    <TextView
-        android:id="@+id/cameraActivityGesture"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:text="x"
-        android:textAlignment="center"
-        android:textColor="@color/colorPrimary"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        app:layout_anchor="@+id/camera"
-        app:layout_anchorGravity="right|top" />
+    <!--<TextView-->
+        <!--android:id="@+id/cameraActivityGesture"-->
+        <!--android:layout_width="50dp"-->
+        <!--android:layout_height="50dp"-->
+        <!--android:text="x"-->
+        <!--android:textAlignment="center"-->
+        <!--android:textColor="@color/colorPrimary"-->
+        <!--android:textSize="18sp"-->
+        <!--android:textStyle="bold"-->
+        <!--app:layout_anchor="@+id/camera"-->
+        <!--app:layout_anchorGravity="right|top" />-->
+
+
+
 
     <LinearLayout
         android:id="@+id/linearlayout1"
@@ -113,14 +116,6 @@ android:layout_height="match_parent"
                 android:layout_height="1dp"
                 android:layout_weight="1" />
 
-            <Button
-                android:id="@+id/dttButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/color_button"
-                android:onClick="onClickdtt"
-                android:text="off"
-                android:textAlignment="center" />
         </LinearLayout>
 
         <!--Gesture 안내 표시용 Layout-->
@@ -131,7 +126,7 @@ android:layout_height="match_parent"
             android:layout_gravity="bottom"
             android:background="#ffffff"
             android:orientation="horizontal"
-            android:weightSum="12">
+            android:weightSum="18">
 
             <LinearLayout
                 android:id="@+id/gesturelinearlayout1"
@@ -148,7 +143,7 @@ android:layout_height="match_parent"
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:layout_weight="7"
-                    android:src="@drawable/gesture_fist" />
+                    android:src="@drawable/gesture_1_nb" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -174,7 +169,7 @@ android:layout_height="match_parent"
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:layout_weight="7"
-                    android:src="@drawable/gesture_spread" />
+                    android:src="@drawable/gesture_4_nb" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -200,7 +195,7 @@ android:layout_height="match_parent"
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:layout_weight="7"
-                    android:src="@drawable/gesture_wavein" />
+                    android:src="@drawable/gesture_2_nb" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -226,7 +221,7 @@ android:layout_height="match_parent"
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:layout_weight="7"
-                    android:src="@drawable/gesture_waveout" />
+                    android:src="@drawable/gesture_3_nb" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -236,12 +231,80 @@ android:layout_height="match_parent"
                     android:text="Grid Toggle" />
 
             </LinearLayout>
+            <LinearLayout
+                android:id="@+id/gesturelinearlayout5"
+                android:layout_width="0dp"
+                android:layout_height="64dp"
+                android:layout_gravity="bottom"
+                android:layout_weight="3"
+                android:background="#ffffff"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:weightSum="10">
 
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="7"
+                    android:src="@drawable/gesture_6_nb" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="3"
+                    android:gravity="center"
+                    android:text="Go Back" />
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/gesturelinearlayout6"
+                android:layout_width="0dp"
+                android:layout_height="64dp"
+                android:layout_gravity="bottom"
+                android:layout_weight="3"
+                android:background="#ffffff"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:weightSum="10">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="7"
+                    android:src="@drawable/gesture_5_nb" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="3"
+                    android:gravity="center"
+                    android:text="Unlock" />
+            </LinearLayout>
 
         </LinearLayout>
 
     </LinearLayout>
-
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/lottie_camera_lock"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        app:lottie_fileName="lock.json"
+        android:layout_marginBottom="150dp"/>
+    </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/lottie_camera_unlock"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        app:lottie_fileName="material_wave_loading.json"
+        android:layout_marginBottom="50dp"
+        />
+    </LinearLayout>
 <!-- Edit -->
 <android.support.v4.widget.NestedScrollView
     android:id="@+id/controls"

@@ -8,6 +8,7 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -15,10 +16,24 @@ import android.widget.MediaController;
 import android.widget.TextView;
 import android.widget.VideoView;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import blueberrycheese.myolifehacker.R;
+import blueberrycheese.myolifehacker.events.ServiceEvent;
 
 
 public class VideoPreviewActivity extends AppCompatActivity {
+    private static final String TAG = "VideoPreviewActivity";
+    private static final int ADDITIONAL_DELAY = 0;
+    private static final int VIBRATION_A = 1;
+    private static final int VIBRATION_B = 2;
+    private static final int VIBRATION_C = 3;
+    private static final int CURRENT_ACTIVITY = 2;
+
+    private int gestureNum = -1;
+    int[] smoothcount = new int[6];
 
     private VideoView videoView;
 
@@ -58,6 +73,9 @@ public class VideoPreviewActivity extends AppCompatActivity {
                 playVideo();
             }
         });
+
+        //Restart lock Timer so user can use gesture continuously
+        EventBus.getDefault().post(new ServiceEvent.restartLockTimerEvent(ADDITIONAL_DELAY));
     }
 
     void playVideo() {
@@ -65,4 +83,53 @@ public class VideoPreviewActivity extends AppCompatActivity {
         videoView.start();
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onGestureEvent(ServiceEvent.GestureEvent event) {
+        gestureNum = event.gestureNumber;
+        Log.d(TAG,"Gesture num : "+event.gestureNumber);
+
+        switch(gestureNum){
+            case 0 :
+                if(smoothcount[gestureNum]>1) {
+                    //Send Vibration Event
+                    EventBus.getDefault().post(new ServiceEvent.VibrateEvent(VIBRATION_A));
+                    //Restart lock Timer so user can use gesture continuously
+                    EventBus.getDefault().post(new ServiceEvent.restartLockTimerEvent(ADDITIONAL_DELAY));
+                    finish();
+                    smoothcount[gestureNum]=-1;
+                    resetSmoothCount();
+                }
+                smoothcount[gestureNum]++;
+
+                break;
+            default :
+                break;
+
+        }
+    }
+
+    public void resetSmoothCount(){
+        for(int i=0;i<smoothcount.length;i++){
+            smoothcount[i]=0;
+        }
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        if(!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
+        //Post event to notify that user's watching the activity.
+        EventBus.getDefault().postSticky(new ServiceEvent.currentActivity_Event(CURRENT_ACTIVITY));
+    }
+
+    @Override
+    public void onStop(){
+        //Post event to notify that user's leaving the activity.
+        EventBus.getDefault().postSticky(new ServiceEvent.currentActivity_Event(-1));
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+
+    }
 }
