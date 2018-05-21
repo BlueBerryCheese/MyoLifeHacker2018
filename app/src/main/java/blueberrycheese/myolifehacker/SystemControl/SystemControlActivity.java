@@ -369,51 +369,6 @@ public class SystemControlActivity extends AppCompatActivity {
             }
         });
     }
-    /*
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(ServiceEvent.GestureEvent event) {
-        gestureNum = event.gestureNumber;
-        Log.d("Event","SystemEvent Gesture num : "+event.gestureNumber);
-        systemFeature.function(gestureNum);
-        */
-//        switch(gestureNum){
-//            case 0 :
-//                if(smoothcount[gestureNum]>1) {
-//
-//                }
-//                smoothcount[gestureNum]++;
-//
-//                break;
-//
-//            case 1 :
-//                if(smoothcount[gestureNum]>1) {
-//
-//                }
-//                smoothcount[gestureNum]++;
-//
-//                break;
-//
-//            case 2 :
-//                if(smoothcount[gestureNum]>1) {
-//
-//                }
-//                smoothcount[gestureNum]++;
-//                break;
-//
-//            case 3 :
-//
-//                break;
-//            case 4 :
-//
-//                break;
-//            case 5 :
-//
-//                break;
-//            default :
-//                break;
-//
-//        }
-//    }
 
     public void resetSmoothCount(){
         for(int i : smoothcount){

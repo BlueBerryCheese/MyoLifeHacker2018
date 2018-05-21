@@ -40,7 +40,9 @@ public class MyoService extends Service {
     private static final int VIBRATION_A = 1;
     private static final int VIBRATION_B = 2;
     private static final int VIBRATION_C = 3;
-    private int vibrate_state=3;
+    private int lock_vibrate_state=3;
+    private int recog_vibrate_state=3;
+    private int conn_vibrate_state=3;
     NotificationManager manager;
     Notification myNotication;
 
@@ -92,23 +94,8 @@ public class MyoService extends Service {
         Log.d(TAG,"recognizing_count : " + sharedPreferences.getString("recognizing_count","30"));
         locked = getResources().getDrawable(R.drawable.locked);
         unlocked = getResources().getDrawable(R.drawable.unlocked);
-        String vp = sharedPreferences.getString("vibrate_power","강하게");
-        int vpp;
+        setting_vibrate();
 
-        boolean iv = sharedPreferences.getBoolean("vibrate",true);
-        if(iv){
-            if(vp.equals("강하게"))
-                vpp=3;
-            else if(vp.equals("보통"))
-                vpp=2;
-            else if(vp.equals("약하게"))
-                vpp=1;
-            else
-                vpp=3;
-        }else{
-            vpp=0;
-        }
-        vibrate_state = vpp;
     }
 
     @Override
@@ -236,7 +223,7 @@ public class MyoService extends Service {
                     detectModel = new GestureDetectModel(detectMethod);
                     startDetectModel();
                     //Send Vibration Event
-                    EventBus.getDefault().post(new ServiceEvent.VibrateEvent(vibrate_state));
+                    EventBus.getDefault().post(new ServiceEvent.VibrateEvent(conn_vibrate_state));
                     EventBus.getDefault().postSticky(new ServiceEvent.myoConnected_Event(true));
                     //EventBus.getDefault().post(new ServiceEvent.myoLock_Event(true));
 
@@ -295,7 +282,7 @@ public class MyoService extends Service {
                             mHandler.postDelayed(lockRunnable, TIMETOLOCK);
 
                             //Send Vibration Event
-                            EventBus.getDefault().post(new ServiceEvent.VibrateEvent(VIBRATION_B));
+                            EventBus.getDefault().post(new ServiceEvent.VibrateEvent(recog_vibrate_state));
 
                             resetSmoothCount();
 //                    smoothcount[gestureNum] = -1;
@@ -336,7 +323,7 @@ public class MyoService extends Service {
                             mHandler.postDelayed(lockRunnable, TIMETOLOCK);
 
                             //Send Vibration Event
-                            EventBus.getDefault().post(new ServiceEvent.VibrateEvent(VIBRATION_B));
+                            EventBus.getDefault().post(new ServiceEvent.VibrateEvent(lock_vibrate_state));
 
                             resetSmoothCount();
 //                    smoothcount[gestureNum] = -1;
@@ -440,18 +427,25 @@ public class MyoService extends Service {
 
     @Subscribe(sticky = true)
     public void setting_event(ServiceEvent.SettingEvent event){
-        Log.d(TAG, "setting_event" + event.vibrate_p + "," + event.recognizing_Num + "," +event.is_vibrate);
-        vibrate_state=3;
+        Log.d(TAG, "setting_event" + event.lock_vibrate_p + ","+ event.recog_vibrate_p + ","+ event.conn_vibrate_p + "," + event.recognizing_Num + "," +event.is_vibrate);
+        lock_vibrate_state=3;
+        recog_vibrate_state=3;
+        conn_vibrate_state=3;
+
         if(event.is_vibrate){
             //mMyoCallback.setMyoControlCommand(commandList.sendVibration(event.vibrate_p));
-            vibrate_state=event.vibrate_p;
-            Log.d(TAG, "setting_event" + event.vibrate_p + " on ");
+            lock_vibrate_state=event.lock_vibrate_p;
+            recog_vibrate_state=event.recog_vibrate_p;
+            conn_vibrate_state=event.conn_vibrate_p;
+            Log.d(TAG, "setting_event on ");
         }else{
             //mMyoCallback.setMyoControlCommand(commandList.sendVibration(0));
-            vibrate_state=0;
+            lock_vibrate_state=0;
+            recog_vibrate_state=0;
+            conn_vibrate_state=0;
             Log.d(TAG, "setting_event" +" No Vibration ");
         }
-        EventBus.getDefault().post(new ServiceEvent.VibrateEvent(vibrate_state));
+        EventBus.getDefault().post(new ServiceEvent.VibrateEvent(recog_vibrate_state));
     }
 
 
@@ -474,7 +468,52 @@ public class MyoService extends Service {
 
 
 
+    public void setting_vibrate(){
+        String lock_vp = sharedPreferences.getString("lock_vibrate_power","강하게");
+        String recog_vp = sharedPreferences.getString("recog_vibrate_power","강하게");
+        String conn_vp = sharedPreferences.getString("conn_vibrate_power","강하게");
+        int lock_vpp,recog_vpp,conn_vpp;
+
+        boolean iv = sharedPreferences.getBoolean("vibrate",true);
+        if(iv){
+            if(lock_vp.equals("강하게"))
+                lock_vpp=3;
+            else if(lock_vp.equals("보통"))
+                lock_vpp=2;
+            else if(lock_vp.equals("약하게"))
+                lock_vpp=1;
+            else
+                lock_vpp=3;
+
+            if(recog_vp.equals("강하게"))
+                recog_vpp=3;
+            else if(recog_vp.equals("보통"))
+                recog_vpp=2;
+            else if(recog_vp.equals("약하게"))
+                recog_vpp=1;
+            else
+                recog_vpp=3;
+
+            if(conn_vp.equals("강하게"))
+                conn_vpp=3;
+            else if(conn_vp.equals("보통"))
+                conn_vpp=2;
+            else if(conn_vp.equals("약하게"))
+                conn_vpp=1;
+            else
+                conn_vpp=3;
+        }else{
+            lock_vpp=0;
+            recog_vpp=0;
+            conn_vpp=0;
+        }
+        lock_vibrate_state = lock_vpp;
+        recog_vibrate_state = recog_vpp;
+        conn_vibrate_state = conn_vpp;
+    }
+
 }
+
 
 
 

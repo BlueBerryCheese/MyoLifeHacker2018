@@ -267,6 +267,10 @@ public class MainActivity extends AppCompatActivity
             Intent intent = new Intent(this,TutorialActivity.class);
             startActivity(intent);
             return true;
+        }else if (id == R.id.nav_test) {
+            Intent intent = new Intent(this,TestPageActivity.class);
+            startActivity(intent);
+            return true;
         }
 
         return true;
