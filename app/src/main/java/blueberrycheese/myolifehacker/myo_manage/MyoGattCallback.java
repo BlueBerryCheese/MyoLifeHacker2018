@@ -273,7 +273,7 @@ public class MyoGattCallback extends BluetoothGattCallback {
 //            GestureDetectModelManager.getCurrentModel().event(systemTime_ms,emg_data);
 //            currentModelForLog = GestureDetectModelManager.getCurrentModel().toString();
             if(GestureDetectModelManager.getCurrentModel() != null && !currentModelForLog.equals(GestureDetectModelManager.getCurrentModel().toString())){
-                Log.e(TAG,"GestureDetectModelManager.getCurrentMoel : " + GestureDetectModelManager.getCurrentModel());
+                Log.e(TAG,"GestureDetectModelManager.getCurrentModel  Changed to : " + GestureDetectModelManager.getCurrentModel());
                 currentModelForLog = GestureDetectModelManager.getCurrentModel().toString();
             }
             try{
@@ -281,7 +281,7 @@ public class MyoGattCallback extends BluetoothGattCallback {
             }catch(NullPointerException e){
                 Log.e(TAG,"GestureDetectModelManager.getCurrentModel NULL! NullPointerException accrued.");
 //                GestureDetectModelManager.setCurrentModel(new NopModel());
-                EventBus.getDefault().post(new ServiceEvent.setDetectModel_Event(1));
+//                EventBus.getDefault().post(new ServiceEvent.setDetectModel_Event(1));
             }
 
             
@@ -353,7 +353,7 @@ public class MyoGattCallback extends BluetoothGattCallback {
             int i_prop = mCharacteristic_command.getProperties();
             if (i_prop == BluetoothGattCharacteristic.PROPERTY_WRITE) {
                 if (mBluetoothGatt.writeCharacteristic(mCharacteristic_command)) {
-                    Log.d("MyoGattCallback","setMyoControlCommand True");
+                    Log.d(TAG,"setMyoControlCommand True");
                     return true;
                 }
             }

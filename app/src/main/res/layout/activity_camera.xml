@@ -65,8 +65,10 @@ android:layout_height="match_parent"
             android:layout_gravity="bottom"
             android:layout_weight="5"
             android:orientation="horizontal"
-            android:padding="4dp"
-            android:weightSum="5">
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:paddingBottom="4dp"
+            android:weightSum="3">
 
             <ImageButton
                 android:id="@+id/edit"
@@ -202,7 +204,7 @@ android:layout_height="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="3"
                     android:gravity="center"
-                    android:text="Flash Toggle" />
+                    android:text="Flash" />
 
             </LinearLayout>
 
@@ -226,9 +228,9 @@ android:layout_height="match_parent"
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
-                    android:layout_weight="3"
+                    android:layout_weight="4"
                     android:gravity="center"
-                    android:text="Grid Toggle" />
+                    android:text="CamSwitch" />
 
             </LinearLayout>
             <LinearLayout
@@ -276,7 +278,7 @@ android:layout_height="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="3"
                     android:gravity="center"
-                    android:text="Hold" />
+                    android:text="Unlock" />
             </LinearLayout>
 
         </LinearLayout>

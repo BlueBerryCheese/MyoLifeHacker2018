@@ -63,6 +63,8 @@ public class GalleryActivity extends AppCompatActivity {
     private float density;
     private int paddingPixel;
     private int pageTot;
+    private static final int CURRENT_ACTIVITY = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -142,9 +144,14 @@ public class GalleryActivity extends AppCompatActivity {
         if(!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this);
         }
+        //Post event to notify that user's watching the activity.
+        EventBus.getDefault().postSticky(new ServiceEvent.currentActivity_Event(CURRENT_ACTIVITY));
     }
     @Override
     public void onStop(){
+        //Post event to notify that user's leaving the activity.
+        EventBus.getDefault().postSticky(new ServiceEvent.currentActivity_Event(-1));
+
         EventBus.getDefault().unregister(this);
         super.onStop();
 //        this.closeBLEGatt();
@@ -286,6 +293,19 @@ public class GalleryActivity extends AppCompatActivity {
 
                 break;
 
+            case 5:
+                smoothcount[gestureNum]++;
+                if(smoothcount[gestureNum]>1) {
+                    //Send Vibration Event
+                    EventBus.getDefault().post(new ServiceEvent.VibrateEvent(VIBRATION_A));
+                    //Restart lock Timer so user can use gesture continuously
+                    EventBus.getDefault().post(new ServiceEvent.restartLockTimerEvent(ADDITIONAL_DELAY));
+
+                    finish();
+//                    Toasty.normal(getBaseContext(),"Open picture", Toast.LENGTH_SHORT, icon_1).show();
+
+                    resetSmoothCount();
+                }
             default :
                 break;
 

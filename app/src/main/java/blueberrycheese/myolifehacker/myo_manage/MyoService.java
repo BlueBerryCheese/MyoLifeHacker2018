@@ -34,8 +34,8 @@ import blueberrycheese.myolifehacker.events.ServiceEvent;
 public class MyoService extends Service {
     private static final String TAG = "Myo_Service";
     //Previous SCAN_PERIOD was 5000.
-    private static final long SCAN_PERIOD = 5000;
-    private static final int TIMETOLOCK = 6000;
+    private static final long SCAN_PERIOD = 4500;
+    private static final int TIMETOLOCK = 8000;
 
     private static final int VIBRATION_A = 1;
     private static final int VIBRATION_B = 2;
@@ -62,9 +62,16 @@ public class MyoService extends Service {
 
     private MyoApp myoApp = null;
     public int[] smoothcount = new int[6];
+    private final int FIST = 0;
     private final int LITTLEFINGER = 4;
     private final int SCISSORS = 5;
     private SharedPreferences sharedPreferences;
+    private int currentActivity;
+
+    private final int DEFAULT_ACTIVITY = 0;
+    private final int MUSIC_ACTIVITY = 1;
+    private final int CAMERA_ACTIVITY = 2;
+    private static IGestureDetectModel nopModel = new NopModel();
 
 
     public MyoService() {
@@ -127,9 +134,9 @@ public class MyoService extends Service {
 
         builder.setAutoCancel(false);
         builder.setTicker("this is ticker text");
-        builder.setContentTitle("Life Hacker Activated");
-        builder.setContentText("......");
-        builder.setSmallIcon(R.drawable.ic_menu_myo);
+        builder.setContentTitle("Life Hacker Running..");
+//        builder.setContentText("");
+        builder.setSmallIcon(R.drawable.ic_stat_m);
         builder.setContentIntent(pendingIntent);
         builder.setOngoing(true);
 //        builder.setSubText("This is subtext...");   //API level 16
@@ -201,8 +208,8 @@ public class MyoService extends Service {
 //            Log.d("EMGFALSETest","mMyoCallbaack.setMyoControlCommand-before if clause: " + mMyoCallback.setMyoControlCommand(commandList.sendEmgOnly()));
             if (mBluetoothGatt == null || !mMyoCallback.setMyoControlCommand(commandList.sendEmgOnly())) {
                 falseCount++;
-                if(falseCount > 3){
-                    Log.d(TAG,"postDelayed already executed enough! Something's wrong now.");
+                if(falseCount > 4){
+                    Log.d(TAG,"postDelayed Runnable already executed enough! Something's wrong.");
                     stopSelf();
                     return;
                 }
@@ -262,90 +269,100 @@ public class MyoService extends Service {
         }else{
             switch(gestureNum) {
                 case LITTLEFINGER:
-                    smoothcount[gestureNum]++;
+                    if(currentActivity == MUSIC_ACTIVITY){
+                        EventBus.getDefault().post(new ServiceEvent.GestureEvent(gestureNum));
+                    }else{
+                        smoothcount[gestureNum]++;
 
-                    if (smoothcount[gestureNum] > 2) {
-                        if(!myoApp.isUnlocked()){
-                            myoApp.unlockGesture(0);
+                        if (smoothcount[gestureNum] > 2) {
+                            if(!myoApp.isUnlocked()){
+                                myoApp.unlockGesture(0);
 
-                            Handler mHandler = new Handler(Looper.getMainLooper());
-                            mHandler.postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    // 내용
-                                    Toasty.normal(getBaseContext(),"Gesture recognition Unlocked", Toast.LENGTH_SHORT,unlocked).show();
-                                    EventBus.getDefault().post(new ServiceEvent.myoLock_Event(!myoApp.isUnlocked()));
-                                    // EventBus.getDefault().post(new ServiceEvent.myoLock_Event(true));
-                                }
-                            }, 0);
-                            Log.d(TAG,"Unlock "+ LITTLEFINGER);
+                                Handler mHandler = new Handler(Looper.getMainLooper());
+                                mHandler.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        // 내용
+                                        Toasty.normal(getBaseContext(),"Gesture recognition Unlocked", Toast.LENGTH_SHORT,unlocked).show();
+                                        EventBus.getDefault().post(new ServiceEvent.myoLock_Event(!myoApp.isUnlocked()));
+                                        // EventBus.getDefault().post(new ServiceEvent.myoLock_Event(true));
+                                    }
+                                }, 0);
+                                Log.d(TAG,"Unlock "+ LITTLEFINGER);
+                            }
+
+                            //create runnable for lock.
+                            mHandler.postDelayed(lockRunnable, TIMETOLOCK);
+
+                            //Send Vibration Event
+                            EventBus.getDefault().post(new ServiceEvent.VibrateEvent(VIBRATION_B));
+
+                            resetSmoothCount();
+//                    smoothcount[gestureNum] = -1;
+                            mHandler.removeCallbacks(resetCountRunnable);
                         }
 
-                        //create runnable for lock.
-                        mHandler.postDelayed(lockRunnable, TIMETOLOCK);
 
-                        //Send Vibration Event
-                        EventBus.getDefault().post(new ServiceEvent.VibrateEvent(VIBRATION_B));
+                        //create runnable to reset smoothcount
 
-                        resetSmoothCount();
-//                    smoothcount[gestureNum] = -1;
                         mHandler.removeCallbacks(resetCountRunnable);
+                        mHandler.postDelayed(resetCountRunnable, TIMETOLOCK);
                     }
-
-
-                    //create runnable to reset smoothcount
-
-                    mHandler.removeCallbacks(resetCountRunnable);
-                    mHandler.postDelayed(resetCountRunnable, TIMETOLOCK);
-
                     break;
 
                 case SCISSORS:
-                    smoothcount[gestureNum]++;
+                    if(currentActivity == DEFAULT_ACTIVITY){
+                        EventBus.getDefault().post(new ServiceEvent.GestureEvent(gestureNum));
+                    } else{
+                        smoothcount[gestureNum]++;
 
-                    if (smoothcount[gestureNum] > 2) {
-                        if(!myoApp.isUnlocked()){
-                            myoApp.unlockGesture(1);
-                            Handler mHandler = new Handler(Looper.getMainLooper());
-                            mHandler.postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    // 내용
-                                    Toasty.normal(getBaseContext(),"Gesture recognition Unlocked", Toast.LENGTH_SHORT,unlocked).show();
-                                    EventBus.getDefault().post(new ServiceEvent.myoLock_Event(!myoApp.isUnlocked()));
-                                    //EventBus.getDefault().post(new ServiceEvent.myoLock_Event(true));
-                                }
-                            }, 0);
-                            Log.d(TAG,"Unlock "+ SCISSORS);
-                        }
+                        if (smoothcount[gestureNum] > 2) {
+                            if(!myoApp.isUnlocked()){
+                                myoApp.unlockGesture(1);
+                                Handler mHandler = new Handler(Looper.getMainLooper());
+                                mHandler.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        // 내용
+                                        Toasty.normal(getBaseContext(),"Gesture recognition Unlocked", Toast.LENGTH_SHORT,unlocked).show();
+                                        EventBus.getDefault().post(new ServiceEvent.myoLock_Event(!myoApp.isUnlocked()));
+                                        //EventBus.getDefault().post(new ServiceEvent.myoLock_Event(true));
+                                    }
+                                }, 0);
+                                Log.d(TAG,"Unlock "+ SCISSORS);
+                            }
 
-                        //create runnable for lock.
-                        mHandler.postDelayed(lockRunnable, TIMETOLOCK);
+                            //create runnable for lock.
+                            mHandler.postDelayed(lockRunnable, TIMETOLOCK);
 
-                        //Send Vibration Event
-                        EventBus.getDefault().post(new ServiceEvent.VibrateEvent(VIBRATION_B));
+                            //Send Vibration Event
+                            EventBus.getDefault().post(new ServiceEvent.VibrateEvent(VIBRATION_B));
 
-                        resetSmoothCount();
+                            resetSmoothCount();
 //                    smoothcount[gestureNum] = -1;
 
+                            mHandler.removeCallbacks(resetCountRunnable);
+                        }
+
+
+                        //create runnable to reset smoothcount
+
                         mHandler.removeCallbacks(resetCountRunnable);
+                        mHandler.postDelayed(resetCountRunnable, TIMETOLOCK);
                     }
 
-
-                    //create runnable to reset smoothcount
-
-                    mHandler.removeCallbacks(resetCountRunnable);
-                    mHandler.postDelayed(resetCountRunnable, TIMETOLOCK);
-
                     break;
-
+                case FIST:
+                    if(currentActivity == CAMERA_ACTIVITY){
+                        EventBus.getDefault().post(new ServiceEvent.GestureEvent(gestureNum));
+                    }
+                    break;
                 default:
                     break;
 
             }
 
         }
-
 
     }
 
@@ -384,9 +401,16 @@ public class MyoService extends Service {
     }
 
     @Subscribe(sticky = true)
+    public void getCurrentActivity(ServiceEvent.currentActivity_Event event){
+        currentActivity = event.currentActivity;
+        Log.e(TAG,"Got current activity : " + currentActivity);
+    }
+
+    @Subscribe(sticky = true)
     public void getMyoDevice(ServiceEvent.testEvent event){
         Log.e(TAG, event.text + " arrived at service !!");
     }
+
 
     public void startDetectModel() {
 //        IGestureDetectModel model = detectModel;
@@ -401,7 +425,10 @@ public class MyoService extends Service {
     public void setDetectModel(ServiceEvent.setDetectModel_Event event){
         if(event.set == 1){
             GestureDetectModelManager.setCurrentModel(model);
-            Log.e(TAG,"setDetectModel called");
+            Log.e(TAG,"setCurrentModel -> DetectModel");
+        } else if(event.set == 2){
+            GestureDetectModelManager.setCurrentModel(nopModel);
+            Log.e(TAG,"setCurrentModel -> NopModel");
         }
     }
 
@@ -425,15 +452,25 @@ public class MyoService extends Service {
             Log.d(TAG, "setting_event" +" No Vibration ");
         }
         EventBus.getDefault().post(new ServiceEvent.VibrateEvent(vibrate_state));
-
-
-
     }
-//    @Subscribe(sticky = true)
-//    public void getMyoDevice_String(ServiceEvent.MyoDevice_StringEvent event){
-//        Log.e("serviceevent", event.MyoDevice_String + " arrived at service !!");
-//        bluetoothDevice = event.MyoDevice_String;
-//    }
+
+
+    //새로 detectMethod/Model 생성. -> K-means 모델 바꼈을때(Adapt 버튼 눌렀을 때) or 인식 주기 설정 바꼈을때 App 재시작 하지않고 적용 가능하게 하기 위함
+    @Subscribe
+    public void reCreateDetect(ServiceEvent.reCreateDetectM_Event event){
+        Log.d(TAG,"Recreating Detect for using new model");
+        saveMethod  = new GestureSaveMethod(-1, getApplicationContext(),1);
+        if (saveMethod.getSaveState() == GestureSaveMethod.SaveState.Have_Saved) {
+            int recog_cnt = Integer.parseInt(sharedPreferences.getString("recognizing_count","30"));
+            detectMethod = new GestureDetectMethod(mHandler, saveMethod.getCompareDataList(),recog_cnt);
+            detectModel = new GestureDetectModel(detectMethod);
+            model = detectModel;
+//            GestureDetectModelManager.setCurrentModel(model);
+            Log.d(TAG,"Recreating Detect done!");
+
+//            startDetectModel();
+        }
+    }
 
 
 
