@@ -526,20 +526,22 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
                     //Restart lock Timer so user can use gesture continuously
                     EventBus.getDefault().post(new ServiceEvent.restartLockTimerEvent(ADDITIONAL_DELAY));
 
-                    switch(currentGrid){
-                        case OFF:
-                            camera.setGrid(Grid.DRAW_3X3);
-                            currentGrid = Grid.DRAW_3X3;
-                            Toasty.normal(getBaseContext(),"Grid mode  Draw", Toast.LENGTH_SHORT, icon_3).show();
-                            break;
-                        case DRAW_3X3:
-                            camera.setGrid(Grid.OFF);
-                            currentGrid = Grid.OFF;
-                            Toasty.normal(getBaseContext(),"Grid mode  off", Toast.LENGTH_SHORT, icon_3).show();
-                            break;
-                        default:
-                            break;
-                    }
+                    toggleCamera();
+
+//                    switch(currentGrid){
+//                        case OFF:
+//                            camera.setGrid(Grid.DRAW_3X3);
+//                            currentGrid = Grid.DRAW_3X3;
+//                            Toasty.normal(getBaseContext(),"Grid mode  Draw", Toast.LENGTH_SHORT, icon_3).show();
+//                            break;
+//                        case DRAW_3X3:
+//                            camera.setGrid(Grid.OFF);
+//                            currentGrid = Grid.OFF;
+//                            Toasty.normal(getBaseContext(),"Grid mode  off", Toast.LENGTH_SHORT, icon_3).show();
+//                            break;
+//                        default:
+//                            break;
+//                    }
 
 //                    smoothcount[gestureNum]=-1;
                     resetSmoothCount();
