@@ -33,7 +33,7 @@
         <LinearLayout
             android:id="@+id/gesture_Linear_1"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical">
             <LinearLayout
                 android:id="@+id/maingesturelinearlayout"
@@ -100,52 +100,52 @@
 
 
                 <LinearLayout
-                android:id="@+id/gesturelinearlayout3"
-                android:layout_width="64dp"
-                android:layout_height="64dp"
-                android:layout_weight="3"
-                android:background="#ffffff"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:weightSum="10">
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="2dp"
-                    android:layout_weight="7"
-                    android:src="@drawable/gesture_3_nb" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="0dp"
+                    android:id="@+id/gesturelinearlayout3"
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
                     android:layout_weight="3"
+                    android:background="#ffffff"
                     android:gravity="center"
-                    android:text="Next"
-                    android:textSize="9sp" />
-            </LinearLayout>
+                    android:orientation="vertical"
+                    android:weightSum="10">
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="2dp"
+                        android:layout_weight="7"
+                        android:src="@drawable/gesture_3_nb" />
 
-            <LinearLayout
-                android:id="@+id/gesturelinearlayout4"
-                android:layout_width="64dp"
-                android:layout_height="64dp"
-                android:layout_weight="3"
-                android:background="#ffffff"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:weightSum="10">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="0dp"
+                        android:layout_weight="3"
+                        android:gravity="center"
+                        android:text="Next"
+                        android:textSize="9sp" />
+                </LinearLayout>
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="2dp"
-                    android:layout_weight="7"
-                    android:src="@drawable/gesture_4_nb" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="0dp"
+                <LinearLayout
+                    android:id="@+id/gesturelinearlayout4"
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
                     android:layout_weight="3"
+                    android:background="#ffffff"
                     android:gravity="center"
-                    android:text="Go Back"
-                    android:textSize="9sp" />
+                    android:orientation="vertical"
+                    android:weightSum="10">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="2dp"
+                        android:layout_weight="7"
+                        android:src="@drawable/gesture_4_nb" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="0dp"
+                        android:layout_weight="3"
+                        android:gravity="center"
+                        android:text="Go Back"
+                        android:textSize="9sp" />
                 </LinearLayout>
 
             </LinearLayout>
@@ -208,39 +208,38 @@
                 </LinearLayout>
 
 
-
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#ffffff">
 
             </LinearLayout>
-
-
-
-
         </LinearLayout>
 
-
     </RelativeLayout>
-<!--
-    <Button
-        android:id="@+id/dttButton_music"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="onClickdtt_music"
-        android:layout_marginLeft="50dp"
-        android:textColor="@android:color/white"
-        android:layout_below="@id/maingesturelinearlayout"
-        android:text="off"
-        />
+    <!--
+        <Button
+            android:id="@+id/dttButton_music"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onClickdtt_music"
+            android:layout_marginLeft="50dp"
+            android:textColor="@android:color/white"
+            android:layout_below="@id/maingesturelinearlayout"
+            android:text="off"
+            />
 
-    <TextView
-        android:id="@+id/MusicActivityGesture"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:textColor="@android:color/white"
-        android:layout_marginLeft="50dp"
-        android:layout_alignParentTop="true"
-        android:layout_toRightOf="@id/dttButton_music"
-        android:text="x" />
--->
+        <TextView
+            android:id="@+id/MusicActivityGesture"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:textColor="@android:color/white"
+            android:layout_marginLeft="50dp"
+            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@id/dttButton_music"
+            android:text="x" />
+    -->
 
     <View
         android:id="@+id/song_list_background"
@@ -308,23 +307,23 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-    <com.airbnb.lottie.LottieAnimationView
-        android:id="@+id/lottie_music_lock"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        app:lottie_fileName="lock.json"
-        android:layout_marginBottom="120dp"/>
-    </LinearLayout>
-        <LinearLayout
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/lottie_music_lock"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-    <com.airbnb.lottie.LottieAnimationView
-        android:id="@+id/lottie_music_unlock"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            app:lottie_fileName="lock.json"
+            android:layout_marginBottom="120dp"/>
+    </LinearLayout>
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        app:lottie_fileName="material_wave_loading.json"
-        android:layout_marginBottom="20dp"/>
+        android:layout_height="match_parent">
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/lottie_music_unlock"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            app:lottie_fileName="material_wave_loading.json"
+            android:layout_marginBottom="20dp"/>
     </LinearLayout>
 </RelativeLayout>
