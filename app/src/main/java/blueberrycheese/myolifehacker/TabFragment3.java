@@ -90,6 +90,7 @@ public class TabFragment3 extends Fragment {
     private GestureDetectMethod detectMethod;
     private Button btn_ready,btn_remove,btn_sync,btn_save,btn_tutorial;
     private ImageView saveGesture_Image;
+    private IGestureDetectModel model;
     private int inds_num=0;
     private int inds_remove=0;
     private int inds_adapter=0;
@@ -199,6 +200,7 @@ public class TabFragment3 extends Fragment {
         SelectLinearLayout= (LinearLayout)view.findViewById(R.id.SelectLinearLayout);
         //saveMethod = new GestureSaveMethod(0,view.getContext());
         saveMethod = new GestureSaveMethod();
+        saveModel = new GestureSaveModel(saveMethod);
         mHandler = new Handler();
 
         // Below 4 lines are for preventing IndexOutOfBoundsException Error
@@ -449,18 +451,20 @@ public class TabFragment3 extends Fragment {
                 saveMethod.setState(GestureSaveMethod.SaveState.Now_Saving);        // SaveState 저장중으로 변경
                 // 제스처의 카운트가 0일 때
                 if(saveMethod.getGestureCounter()==4) {// 동그라미 5개일때 제스처이미지 변경
-                    viewAnimator_save.showNext();
-                    inds_num=viewAnimator_save.getDisplayedChild();
-                    saveModel = new GestureSaveModel(saveMethod, inds_num);
-                    Toasty.info(ncontext, "Gesture "+(inds_num)+" save complete", Toast.LENGTH_SHORT, true).show();
+                    //이곳에 있던 코드 아래 postDealyed 안쪽으로 옮김
                     mHandler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
+                            viewAnimator_save.showNext();
+                            inds_num=viewAnimator_save.getDisplayedChild();
+                            //TODO: 아래에 saveModel 굳이 다시 생성해줘야하는지 확인
+                            saveModel = new GestureSaveModel(saveMethod, inds_num);
+                            Toasty.info(ncontext, "Gesture "+(inds_num)+" save complete", Toast.LENGTH_SHORT, true).show();
                             for(int i=0;i<views.length;i++){        //동그라미 빈칸으로 바꿔줌
                                 views[i].setBackgroundResource(R.drawable.imgbtn_default);
                             }
                         }
-                    },300);
+                    },1200);
                     if(inds_num==5) {
 
                     }
@@ -468,7 +472,6 @@ public class TabFragment3 extends Fragment {
 
                     }
                 }
-
 
                 gestureText.setText("Gesture" + (inds_num + 1) + "'s Saving Count : " + (saveMethod.getGestureCounter() + 1)); // 아래쪽 텍스트 변경
 
@@ -530,9 +533,8 @@ public class TabFragment3 extends Fragment {
                     Toasty.error(ncontext, "Please delete model first", Toast.LENGTH_LONG,true).show();
                 } else if (saveMethod.getSaveState() == GestureSaveMethod.SaveState.Not_Saved || saveMethod.getSaveState() == GestureSaveMethod.SaveState.Now_Saving) {
                     saveMethod.setState(GestureSaveMethod.SaveState.Now_Saving);
-                    dialog=ProgressDialog.show(getContext(), "","Loading, Please Wait..",true,true);
+                    dialog=ProgressDialog.show(getContext(), "","잠시만 기다려주세요...",true,true);
                     dialog.show();
-
 
                     new Handler().postDelayed(new Runnable() {
                         @Override
@@ -544,15 +546,23 @@ public class TabFragment3 extends Fragment {
                             }
                             dialog.dismiss();
                             Toasty.info(ncontext,  "Model creation complete", Toast.LENGTH_SHORT, true).show();
+                            textView_tutorial.setText("제스처가 준비되었습니다. \n원하는 기능을 사용하는 데 제스처를 사용할 수 있습니다.");
+
+                            saveMethod.setState(GestureSaveMethod.SaveState.Have_Saved);
+                            model = saveModel;
+                            //  model.setAction(new GestureDetectSendResultAction(mactivity,TabFragment3.this));
+                            GestureDetectModelManager.setCurrentModel(new NopModel());
+                            EventBus.getDefault().post(new ServiceEvent.reCreateDetectM_Event());
                         }
                     },2000);
-                    saveMethod.setState(GestureSaveMethod.SaveState.Have_Saved);
-                    IGestureDetectModel model = saveModel;
-                    //  model.setAction(new GestureDetectSendResultAction(mactivity,TabFragment3.this));
-                    GestureDetectModelManager.setCurrentModel(model);
+                    //이 아래에 있는거 위의 postdelayed 안쪽으로 옮김
+//                    saveMethod.setState(GestureSaveMethod.SaveState.Have_Saved);
+//                    IGestureDetectModel model = saveModel;
+//                    //  model.setAction(new GestureDetectSendResultAction(mactivity,TabFragment3.this));
+//                    GestureDetectModelManager.setCurrentModel(model);
 
                     //   startSaveModel();
-                    textView_tutorial.setText("제스처가 준비되었습니다. \n원하는 기능을 사용하는 데 제스처를 사용할 수 있습니다.");
+
                 }
             }
         });
@@ -842,7 +852,6 @@ public class TabFragment3 extends Fragment {
 
     @Override
     public void onDetach() {
-        startDetectModel_Event();
         super.onDetach();
         mListener = null;
     }
@@ -865,6 +874,7 @@ public class TabFragment3 extends Fragment {
         try {
             EventBus.getDefault().register(this);           //이벤트 버스 다시 키는 역활
         }catch (Exception e){}
+        GestureDetectModelManager.setCurrentModel(new NopModel());
     }
 
 

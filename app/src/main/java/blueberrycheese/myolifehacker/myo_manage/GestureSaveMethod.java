@@ -127,7 +127,7 @@ public class GestureSaveMethod {
                     for(int adp_index=0; adp_index<DATA_PEOPLE; adp_index++) {
                         count_adap = 0; // 안드로이드 파일쪽 count세는 변수
                         adp_max_index = PERSONAL_LENGTH * percent;
-                        Log.e(TAG, "반복 횟수 :" + adp_index + 1);
+                        Log.e(TAG, "반복 횟수 :" + (adp_index + 1));
                         Log.e(TAG, "adp_max_index================ " + count_adap);
                         while (adp_max_index > count_adap && ((line = bufferedReader.readLine()) != null)) {
                             stringTokenizer = new StringTokenizer(line, ",");
@@ -142,12 +142,14 @@ public class GestureSaveMethod {
                         }
                         //  Log.e(TAG, "PERSONAL_LENGTH*(adp_index+1)================ " + PERSONAL_LENGTH*(adp_index+1));
                         Log.e(TAG, "PERSONAL_LENGTH*(adp_index+1)================ " + count_adap);
+
+                        //While문 돌리면서 count_adap만 ++ 해주어서 다음 사람의 기본 제스처데이터 시작점까지 가도록 계속 readLine()함.
                         while (PERSONAL_LENGTH > count_adap && ((line = bufferedReader.readLine()) != null)) {
-                            stringTokenizer = new StringTokenizer(line, ",");
-                            double[] emgDat = new double[8];
-                            for (int k = 0; k < 8; k++) {
-                                emgDat[k] = Double.parseDouble(stringTokenizer.nextToken());
-                            }
+//                            stringTokenizer = new StringTokenizer(line, ",");
+//                            double[] emgDat = new double[8];
+//                            for (int k = 0; k < 8; k++) {
+//                                emgDat[k] = Double.parseDouble(stringTokenizer.nextToken());
+//                            }
                             //  Log.e(TAG, "adp_max_index================!!!!!!! " + count_adap);
                             count_adap++;
                         }
@@ -160,6 +162,7 @@ public class GestureSaveMethod {
                     stringTokenizer = null;
                     Log.e(TAG, "Loading txt size is================ " + doublePointList.size());
 //                    Toast.makeText(context,"K-MEANS_lization about"+(i+1)+" data", Toast.LENGTH_LONG).show();
+                    //Executing K-means (clustere.cluster(doublePointList)
                     List<? extends Cluster<DoublePoint>> res = clusterer.cluster(doublePointList);
 
                     try {

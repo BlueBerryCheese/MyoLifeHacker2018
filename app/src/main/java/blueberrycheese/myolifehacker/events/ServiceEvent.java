@@ -102,6 +102,10 @@ public class ServiceEvent {
         }
     }
 
+    public static class reCreateDetectM_Event{
+
+    }
+
 
     ///////Test
 
