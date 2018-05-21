@@ -222,7 +222,7 @@
                     android:textColor="@color/FontColor"
                     android:textStyle="bold"
                     android:gravity="center"
-                    android:text="Hold" />
+                    android:text="Unlock" />
 
             </LinearLayout>
         </LinearLayout>

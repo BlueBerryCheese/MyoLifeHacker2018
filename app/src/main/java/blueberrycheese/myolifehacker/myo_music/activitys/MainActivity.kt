@@ -23,10 +23,7 @@ import android.support.v4.view.MenuItemCompat
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.SearchView
 import android.util.Log
-import android.view.Menu
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.Button
 import android.widget.SeekBar
 import android.widget.TextView
@@ -152,6 +149,7 @@ class MainActivity : SimpleActivity(), SongListListener{
         setContentView(R.layout.music_activity_main)
 
         FontConfig.setGlobalFont(this, this!!.getWindow().getDecorView())
+        this.window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)  //윈도우 가장위에 배터리,wifi뜨는 부분 제거
         icon_1 = resources.getDrawable(R.drawable.gesture_1_w)
         icon_2 = resources.getDrawable(R.drawable.gesture_2_w)
         icon_3 = resources.getDrawable(R.drawable.gesture_3_w)

@@ -149,6 +149,11 @@
             android:label="@string/manage_playlists"
             android:parentActivityName=".myo_music.activities.activitys.SettingsActivity"/>
 
+        <activity android:name=".TutorialActivity"
+            android:label="tutorial"
+            android:theme="@style/Theme.Transparent_tutorial"/>
+
+
         <service
             android:name=".myo_music.activities.services.MusicService"
             android:exported="false">

@@ -512,8 +512,6 @@ public class TabFragment3 extends Fragment {
                         saveMethod.getSaveState() == GestureSaveMethod.SaveState.Have_Saved) {
 
                     //saveMethod.setState(GestureSaveMethod.SaveState.Now_Saving);
-                    //dialog= new LoadingDialog().setProgress(mactivity);
-                    //ProgressDialog dialog = ProgressDialog.show(DialogSam)
                     /*
                     dialog= ProgressDialog.show(getContext(), "","Loading, Please Wait..",true,true);
                     dialog.show();  // 로딩이미지 표현.
@@ -532,7 +530,6 @@ public class TabFragment3 extends Fragment {
                     Toasty.error(ncontext, "Please delete model first", Toast.LENGTH_LONG,true).show();
                 } else if (saveMethod.getSaveState() == GestureSaveMethod.SaveState.Not_Saved || saveMethod.getSaveState() == GestureSaveMethod.SaveState.Now_Saving) {
                     saveMethod.setState(GestureSaveMethod.SaveState.Now_Saving);
-                    // dialog= new LoadingDialog().setProgress(mactivity);
                     dialog=ProgressDialog.show(getContext(), "","Loading, Please Wait..",true,true);
                     dialog.show();
 
