@@ -84,6 +84,7 @@ public class SettingPreferenceFragment extends PreferenceFragment {
 
             if(key.equals("recognizing_count")){
                 recognizing_count_Preference.setSummary(prefs.getString("recognizing_count","30"));
+                EventBus.getDefault().post(new ServiceEvent.reCreateDetectM_Event());
             }
 
             String vp = prefs.getString("vibrate_power","강하게");

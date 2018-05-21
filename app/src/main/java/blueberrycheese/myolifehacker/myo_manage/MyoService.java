@@ -34,7 +34,7 @@ import blueberrycheese.myolifehacker.events.ServiceEvent;
 public class MyoService extends Service {
     private static final String TAG = "Myo_Service";
     //Previous SCAN_PERIOD was 5000.
-    private static final long SCAN_PERIOD = 5000;
+    private static final long SCAN_PERIOD = 4500;
     private static final int TIMETOLOCK = 8000;
 
     private static final int VIBRATION_A = 1;
@@ -71,6 +71,7 @@ public class MyoService extends Service {
     private final int DEFAULT_ACTIVITY = 0;
     private final int MUSIC_ACTIVITY = 1;
     private final int CAMERA_ACTIVITY = 2;
+    private static IGestureDetectModel nopModel = new NopModel();
 
 
     public MyoService() {
@@ -133,9 +134,9 @@ public class MyoService extends Service {
 
         builder.setAutoCancel(false);
         builder.setTicker("this is ticker text");
-        builder.setContentTitle("Life Hacker Activated");
-        builder.setContentText("......");
-        builder.setSmallIcon(R.drawable.ic_menu_myo);
+        builder.setContentTitle("Life Hacker Running..");
+//        builder.setContentText("");
+        builder.setSmallIcon(R.drawable.ic_stat_m);
         builder.setContentIntent(pendingIntent);
         builder.setOngoing(true);
 //        builder.setSubText("This is subtext...");   //API level 16
@@ -207,8 +208,8 @@ public class MyoService extends Service {
 //            Log.d("EMGFALSETest","mMyoCallbaack.setMyoControlCommand-before if clause: " + mMyoCallback.setMyoControlCommand(commandList.sendEmgOnly()));
             if (mBluetoothGatt == null || !mMyoCallback.setMyoControlCommand(commandList.sendEmgOnly())) {
                 falseCount++;
-                if(falseCount > 3){
-                    Log.d(TAG,"postDelayed already executed enough! Something's wrong now.");
+                if(falseCount > 4){
+                    Log.d(TAG,"postDelayed Runnable already executed enough! Something's wrong.");
                     stopSelf();
                     return;
                 }
@@ -424,7 +425,10 @@ public class MyoService extends Service {
     public void setDetectModel(ServiceEvent.setDetectModel_Event event){
         if(event.set == 1){
             GestureDetectModelManager.setCurrentModel(model);
-            Log.e(TAG,"setDetectModel called");
+            Log.e(TAG,"setCurrentModel -> DetectModel");
+        } else if(event.set == 2){
+            GestureDetectModelManager.setCurrentModel(nopModel);
+            Log.e(TAG,"setCurrentModel -> NopModel");
         }
     }
 
@@ -448,7 +452,24 @@ public class MyoService extends Service {
             Log.d(TAG, "setting_event" +" No Vibration ");
         }
         EventBus.getDefault().post(new ServiceEvent.VibrateEvent(vibrate_state));
+    }
 
+
+    //새로 detectMethod/Model 생성. -> K-means 모델 바꼈을때(Adapt 버튼 눌렀을 때) or 인식 주기 설정 바꼈을때 App 재시작 하지않고 적용 가능하게 하기 위함
+    @Subscribe
+    public void reCreateDetect(ServiceEvent.reCreateDetectM_Event event){
+        Log.d(TAG,"Recreating Detect for using new model");
+        saveMethod  = new GestureSaveMethod(-1, getApplicationContext(),1);
+        if (saveMethod.getSaveState() == GestureSaveMethod.SaveState.Have_Saved) {
+            int recog_cnt = Integer.parseInt(sharedPreferences.getString("recognizing_count","30"));
+            detectMethod = new GestureDetectMethod(mHandler, saveMethod.getCompareDataList(),recog_cnt);
+            detectModel = new GestureDetectModel(detectMethod);
+            model = detectModel;
+//            GestureDetectModelManager.setCurrentModel(model);
+            Log.d(TAG,"Recreating Detect done!");
+
+//            startDetectModel();
+        }
     }
 
 
