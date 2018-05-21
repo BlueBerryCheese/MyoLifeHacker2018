@@ -152,7 +152,9 @@
         <activity android:name=".TutorialActivity"
             android:label="tutorial"
             android:theme="@style/Theme.Transparent_tutorial"/>
-
+        <activity android:name=".TestPageActivity"
+            android:label="TestPage"
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <service
             android:name=".myo_music.activities.services.MusicService"

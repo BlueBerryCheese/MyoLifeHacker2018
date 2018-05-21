@@ -1,7 +1,9 @@
 package blueberrycheese.myolifehacker.CameraView;
 
+import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -41,7 +43,10 @@ public class PicturePreviewActivity extends AppCompatActivity {
     private int gestureNum = -1;
     int[] smoothcount = new int[6];
     private static final int CURRENT_ACTIVITY = 2;
-
+    private int lock_vibrate_state;
+    private int recog_vibrate_state;
+    private int conn_vibrate_state;
+    private SharedPreferences sharedPreferences;  //sharePreference호출 후 적용
     private static WeakReference<byte[]> image;
 
     public static void setImage(@Nullable byte[] im) {
@@ -54,7 +59,8 @@ public class PicturePreviewActivity extends AppCompatActivity {
         setContentView(R.layout.activity_picture_preview);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);  //윈도우 가장위에 배터리,wifi뜨는 부분 제거
         setTitle("Picture Preview");
-
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getBaseContext());  //sharePreference호출 후 적용
+        setting_vibrate();
         final ImageView imageView = findViewById(R.id.image);
         final MessageView nativeCaptureResolution = findViewById(R.id.nativeCaptureResolution);
         // final MessageView actualResolution = findViewById(R.id.actualResolution);
@@ -181,5 +187,49 @@ public class PicturePreviewActivity extends AppCompatActivity {
         EventBus.getDefault().unregister(this);
         super.onStop();
 
+    }
+
+    public void setting_vibrate(){
+        String lock_vp = sharedPreferences.getString("lock_vibrate_power","강하게");
+        String recog_vp = sharedPreferences.getString("recog_vibrate_power","강하게");
+        String conn_vp = sharedPreferences.getString("conn_vibrate_power","강하게");
+        int lock_vpp,recog_vpp,conn_vpp;
+
+        boolean iv = sharedPreferences.getBoolean("vibrate",true);
+        if(iv){
+            if(lock_vp.equals("강하게"))
+                lock_vpp=3;
+            else if(lock_vp.equals("보통"))
+                lock_vpp=2;
+            else if(lock_vp.equals("약하게"))
+                lock_vpp=1;
+            else
+                lock_vpp=3;
+
+            if(recog_vp.equals("강하게"))
+                recog_vpp=3;
+            else if(recog_vp.equals("보통"))
+                recog_vpp=2;
+            else if(recog_vp.equals("약하게"))
+                recog_vpp=1;
+            else
+                recog_vpp=3;
+
+            if(conn_vp.equals("강하게"))
+                conn_vpp=3;
+            else if(conn_vp.equals("보통"))
+                conn_vpp=2;
+            else if(conn_vp.equals("약하게"))
+                conn_vpp=1;
+            else
+                conn_vpp=3;
+        }else{
+            lock_vpp=0;
+            recog_vpp=0;
+            conn_vpp=0;
+        }
+        lock_vibrate_state = lock_vpp;
+        recog_vibrate_state = recog_vpp;
+        conn_vibrate_state = conn_vpp;
     }
 }

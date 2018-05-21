@@ -12,10 +12,28 @@
         android:defaultValue="강하게"
         android:entries="@array/vibrate_power"
         android:summary="강하게"
-        android:key="vibrate_power"
+        android:key="lock_vibrate_power"
         android:entryValues="@array/vibrate_power"
-        android:title="진동 세기"
+        android:title="잠금 진동 세기"
         android:dependency="vibrate"/>
+
+    <ListPreference
+        android:defaultValue="강하게"
+        android:entries="@array/vibrate_power"
+        android:summary="강하게"
+        android:key="recog_vibrate_power"
+        android:entryValues="@array/vibrate_power"
+        android:title="인식 진동 세기"
+        android:dependency="vibrate"/>
+    <ListPreference
+        android:defaultValue="강하게"
+        android:entries="@array/vibrate_power"
+        android:summary="강하게"
+        android:key="conn_vibrate_power"
+        android:entryValues="@array/vibrate_power"
+        android:title="연결 진동 세기"
+        android:dependency="vibrate"/>
+
 
     <ListPreference
         android:defaultValue="50"

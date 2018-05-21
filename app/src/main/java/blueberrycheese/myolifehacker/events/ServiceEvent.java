@@ -84,11 +84,15 @@ public class ServiceEvent {
 
 
     public static class SettingEvent{
-        public int vibrate_p;
+        public int lock_vibrate_p;
+        public int recog_vibrate_p;
+        public int conn_vibrate_p;
         public boolean is_vibrate;
         public int recognizing_Num;
-        public SettingEvent(int vNum,boolean is_v,int rNum){
-            this.vibrate_p = vNum;
+        public SettingEvent(int vNum,int vNum1,int vNum2,boolean is_v,int rNum){
+            this.lock_vibrate_p = vNum;
+            this.recog_vibrate_p = vNum1;
+            this.conn_vibrate_p = vNum2;
             is_vibrate = is_v;
             recognizing_Num = rNum;
         }

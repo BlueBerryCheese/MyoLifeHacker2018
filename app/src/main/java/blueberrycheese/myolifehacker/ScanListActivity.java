@@ -80,7 +80,9 @@ public class ScanListActivity extends AppCompatActivity implements BluetoothAdap
         lv.setAdapter(adapter);
 
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        Log.d("Shared",prefs.getString("vibrate_power",""));
+        Log.d("Shared",prefs.getString("lock_vibrate_power",""));
+        Log.d("Shared",prefs.getString("recog_vibrate_power",""));
+        Log.d("Shared",prefs.getString("conn_vibrate_power",""));
 
 
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
