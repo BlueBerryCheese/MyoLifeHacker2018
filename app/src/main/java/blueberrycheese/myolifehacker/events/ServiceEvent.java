@@ -110,6 +110,9 @@ public class ServiceEvent {
 
     }
 
+    public static class startActivity_Event{
+
+    }
 
     ///////Test
 
