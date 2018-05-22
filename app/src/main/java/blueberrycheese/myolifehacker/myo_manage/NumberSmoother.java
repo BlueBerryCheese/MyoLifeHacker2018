@@ -71,7 +71,7 @@ public class NumberSmoother {
 //                gestureNumArray=new LinkedList<>();
 //                numCounter =  new int[MAX_SAVE_LENGTH];
                 Log.d("detect_gesture_cnt","-> "+numCounter[0]+","+numCounter[1]+","+numCounter[2]+","+numCounter[3]+","+numCounter[4]+","+numCounter[5]);
-                Log.d("number success","Myo_Service . getSmoothingNumber got gesturenumber : "+i_element);
+                Log.d("number success","(Myo_Service) . getSmoothingNumber got gesturenumber : "+i_element);
                 EventBus.getDefault().post(new ServiceEvent.GestureEvent_forService(i_element));
                 return i_element;
             }

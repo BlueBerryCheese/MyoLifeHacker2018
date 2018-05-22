@@ -359,6 +359,8 @@ public class TabFragment1 extends Fragment {
 
     @Override
     public void onStop() {
+        //Post event to notify that user's leaving the activity.
+//        EventBus.getDefault().postSticky(new ServiceEvent.currentActivity_Event(-1));
         try{
             EventBus.getDefault().unregister(this);         //이벤트버스는 시행되면 계속 그곳에서 이벤트가 발생하는데 문제가 일어날수있다 생각하여 멈추거나할때 이벤트를 꺼주는것을 해야함 아니면 베터리소모가 크답니다.
         }catch (Exception e){}
@@ -366,11 +368,15 @@ public class TabFragment1 extends Fragment {
     }
 
     @Override
+    public void onPause(){
+        //Post event to notify that user's leaving the activity.
+        EventBus.getDefault().postSticky(new ServiceEvent.currentActivity_Event(-1));
+        super.onPause();
+    }
+
+    @Override
     public void onResume(){
-
         super.onResume();
-
-
 
         try {
             EventBus.getDefault().register(this);           //이벤트 버스 다시 키는 역활

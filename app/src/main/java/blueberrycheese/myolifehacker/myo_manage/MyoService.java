@@ -10,6 +10,7 @@ import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.PixelFormat;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.IBinder;
@@ -17,11 +18,13 @@ import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.util.Log;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
+import blueberrycheese.myolifehacker.MainActivity;
 import blueberrycheese.myolifehacker.MyoApp;
 import blueberrycheese.myolifehacker.R;
 import blueberrycheese.myolifehacker.Toasty;
@@ -70,8 +73,10 @@ public class MyoService extends Service {
     private final int MUSIC_ACTIVITY = 1;
     private final int CAMERA_PREVIEW_ACTIVITY = 2;
     private final int TEST_ACTIVITY = 3;
+    private final int MAIN_ACTIVITY = 4;
     private static IGestureDetectModel nopModel = new NopModel();
 
+    private WindowManager mWindowManager;
 
     public MyoService() {
     }
@@ -97,6 +102,11 @@ public class MyoService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId){
+        if(intent != null && intent.getAction()!=null && intent.getAction().equals("STOP")){
+            stopSelf();
+            return START_NOT_STICKY;
+        }
+
         Log.e("ServiceEvent", "onStartCommand");
         if(!EventBus.getDefault().isRegistered(this)){
             EventBus.getDefault().register(this);
@@ -106,8 +116,6 @@ public class MyoService extends Service {
         BluetoothManager mBluetoothManager = (BluetoothManager) getSystemService(BLUETOOTH_SERVICE);
 //        mBluetoothAdapter = mBluetoothManager.getAdapter();
 
-
-
         //Notification
         manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         Intent nintent = new Intent("com.rj.notitfications.SECACTIVITY");
@@ -116,15 +124,20 @@ public class MyoService extends Service {
 
         Notification.Builder builder = new Notification.Builder(this);
 
+        Intent stopSelf = new Intent(this, MyoService.class);
+        stopSelf.setAction("STOP");
+        PendingIntent stopIntent = PendingIntent.getService(this, 0, stopSelf, PendingIntent.FLAG_CANCEL_CURRENT) ;
+
         builder.setAutoCancel(false);
         builder.setTicker("this is ticker text");
-        builder.setContentTitle("Life Hacker Running..");
+        builder.setContentTitle("Life Hacker On");
 //        builder.setContentText("");
         builder.setSmallIcon(R.drawable.ic_stat_m);
         builder.setContentIntent(pendingIntent);
         builder.setOngoing(true);
 //        builder.setSubText("This is subtext...");   //API level 16
         builder.setNumber(100);
+        builder.addAction(R.drawable.ic_menu_myo,"STOP", stopIntent);
         builder.build();
 
         myNotication = builder.getNotification();
@@ -137,8 +150,12 @@ public class MyoService extends Service {
 
   @Override
   public void onDestroy(){
+        Log.d(TAG,"Service onDestory");
       EventBus.getDefault().unregister(this);
-      manager.cancel(11);
+      if(manager != null){
+          manager.cancel(11);
+      }
+      closeBLEGatt();
       super.onDestroy();
 
   }
@@ -246,6 +263,7 @@ public class MyoService extends Service {
             return;
         }
 
+
         if(myoApp.isUnlocked()){
             if(myoApp.getUnlockedGesture()==LITTLEFINGER){
                 EventBus.getDefault().post(new ServiceEvent.GestureEvent(gestureNum));
@@ -257,6 +275,11 @@ public class MyoService extends Service {
         }else{
             switch(gestureNum) {
                 case LITTLEFINGER:
+                    if(currentActivity == -1){
+                        //test
+                        EventBus.getDefault().post(new ServiceEvent.startActivity_Event());
+                    }
+
                     if(currentActivity == MUSIC_ACTIVITY){
                         EventBus.getDefault().post(new ServiceEvent.GestureEvent(gestureNum));
                     }else{
@@ -391,7 +414,7 @@ public class MyoService extends Service {
     @Subscribe(sticky = true)
     public void setCurrentActivity(ServiceEvent.currentActivity_Event event){
         currentActivity = event.currentActivity;
-        Log.e(TAG,"Got current activity : " + currentActivity);
+        Log.e(TAG,"Set current activity to : " + currentActivity);
     }
 
     @Subscribe(sticky = true)
@@ -467,6 +490,12 @@ public class MyoService extends Service {
         }
     }
 
+    @Subscribe
+    public void startActivity(ServiceEvent.startActivity_Event event) {
+        Intent actIntent = new Intent(this, MainActivity.class);
+        actIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(actIntent);
+    }
 
 
     public void setting_vibrate(){
@@ -512,6 +541,16 @@ public class MyoService extends Service {
         recog_vibrate_state = recog_vpp;
         conn_vibrate_state = conn_vpp;
     }
+
+    public void closeBLEGatt() {
+        if (mBluetoothGatt == null) {
+            return;
+        }
+        mMyoCallback.stopCallback();
+        mBluetoothGatt.close();
+        mBluetoothGatt = null;
+    }
+
 
 }
 

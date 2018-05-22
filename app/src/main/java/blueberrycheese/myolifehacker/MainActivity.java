@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import blueberrycheese.myolifehacker.events.ServiceEvent;
 import blueberrycheese.myolifehacker.myo_manage.MyoCommandList;
 import blueberrycheese.myolifehacker.myo_manage.MyoGattCallback;
 import blueberrycheese.myolifehacker.myo_manage.MyoService;
@@ -52,10 +53,21 @@ public class MainActivity extends AppCompatActivity
     private static final long SCAN_PERIOD = 5000;
     private NavigationView navigationView;
     private ViewPager viewPager;
+    private static final int CURRENT_ACTIVITY = 4;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //화면 꺼짐/잠금 상태에서 가능하도록
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
+                | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD
+                | WindowManager.LayoutParams.FLAG_FULLSCREEN
+                | WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
+//                | WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
+                | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON
+                | WindowManager.LayoutParams.FLAG_ALLOW_LOCK_WHILE_SCREEN_ON);
+
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -141,7 +153,22 @@ public class MainActivity extends AppCompatActivity
     protected void onResume(){
         super.onResume();
         listener.onPageSelected(viewPager.getCurrentItem());
+//        if(!EventBus.getDefault().isRegistered(this)) {
+//            EventBus.getDefault().register(this);
+//        }
 
+        //Post event to notify that user's watching the activity.
+        EventBus.getDefault().postSticky(new ServiceEvent.currentActivity_Event(CURRENT_ACTIVITY));
+
+    }
+
+    @Override
+    public void onStop(){
+//        //Post event to notify that user's leaving the activity.
+//        EventBus.getDefault().postSticky(new ServiceEvent.currentActivity_Event(-1));
+
+//        EventBus.getDefault().unregister(this);
+        super.onStop();
     }
 
     // Adapter for the viewpager using FragmentPagerAdapter
@@ -320,8 +347,8 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onDestroy(){
         Log.d(TAG,"MainActivity onDestroy!");
-        //Service Test
-        stopService(new Intent(this, MyoService.class));
+//        //Service Test
+//        stopService(new Intent(this, MyoService.class));
 
         super.onDestroy();
 
