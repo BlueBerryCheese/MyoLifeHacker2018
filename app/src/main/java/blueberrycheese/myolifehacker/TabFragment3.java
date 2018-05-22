@@ -533,44 +533,44 @@ public class TabFragment3 extends Fragment {
                     Toasty.error(ncontext, "Please delete model first", Toast.LENGTH_LONG,true).show();
                 } else if (saveMethod.getSaveState() == GestureSaveMethod.SaveState.Not_Saved || saveMethod.getSaveState() == GestureSaveMethod.SaveState.Now_Saving) {
                     saveMethod.setState(GestureSaveMethod.SaveState.Now_Saving);
-                    dialog=ProgressDialog.show(getContext(), "","잠시만 기다려주세요...",true,true);
+                    dialog=ProgressDialog.show(getContext(), "","잠시만 기다려주세요...",true,false);
                     dialog.show();
-//
-    Thread th = new Thread(new Runnable() {
-        @Override
-        public void run() {
-            Log.d(TAG,"inside thread!");
-            if(dialog.isShowing()) {
-                Log.d(TAG,"thread - is showing");
-                saveMethod = new GestureSaveMethod(inds_num, mactivity,pass_adapter);
-                saveModel = new GestureSaveModel(saveMethod, inds_num);
-                //startSaveModel();
-            }
-            dialog.dismiss();
-//            Toasty.info(ncontext,  "Model creation complete", Toast.LENGTH_SHORT, true).show();
-//            textView_tutorial.setText("제스처가 준비되었습니다. \n원하는 기능을 사용하는 데 제스처를 사용할 수 있습니다.");
 
-            mactivity.runOnUiThread(new Runnable(){
-                @Override
-                public void run(){
-                    Toasty.info(ncontext,  "Model creation complete", Toast.LENGTH_SHORT, true).show();
-                    textView_tutorial.setText("제스처가 준비되었습니다. \n원하는 기능을 사용하는 데 제스처를 사용할 수 있습니다.");
-                }
-            });
+                    //Running K-means++ using worker thread.
+                    Thread th = new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Log.d(TAG,"inside thread!");
+                            if(dialog.isShowing()) {
+                                Log.d(TAG,"thread - is showing");
+                                saveMethod = new GestureSaveMethod(inds_num, mactivity,pass_adapter);
+                                saveModel = new GestureSaveModel(saveMethod, inds_num);
+                                //startSaveModel();
+                            }
+                            dialog.dismiss();
+                //            Toasty.info(ncontext,  "Model creation complete", Toast.LENGTH_SHORT, true).show();
+                //            textView_tutorial.setText("제스처가 준비되었습니다. \n원하는 기능을 사용하는 데 제스처를 사용할 수 있습니다.");
 
-            saveMethod.setState(GestureSaveMethod.SaveState.Have_Saved);
-            model = saveModel;
-            //  model.setAction(new GestureDetectSendResultAction(mactivity,TabFragment3.this));
-            GestureDetectModelManager.setCurrentModel(new NopModel());
-            EventBus.getDefault().post(new ServiceEvent.reCreateDetectM_Event());
-        }
-    });
-    th.setPriority(1);
-    th.start();
-    //
+                            mactivity.runOnUiThread(new Runnable(){
+                                @Override
+                                public void run(){
+                                    Toasty.info(ncontext,  "Model creation complete", Toast.LENGTH_SHORT, true).show();
+                                    textView_tutorial.setText("제스처가 준비되었습니다. \n원하는 기능을 사용하는 데 제스처를 사용할 수 있습니다.");
+                                }
+                            });
+
+                            saveMethod.setState(GestureSaveMethod.SaveState.Have_Saved);
+                            model = saveModel;
+                            //  model.setAction(new GestureDetectSendResultAction(mactivity,TabFragment3.this));
+                            GestureDetectModelManager.setCurrentModel(new NopModel());
+                            EventBus.getDefault().post(new ServiceEvent.reCreateDetectM_Event());
+                        }
+                    });
+                    th.setPriority(1);
+                    th.start();
+                    //
 
 /*
-
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
@@ -598,6 +598,7 @@ public class TabFragment3 extends Fragment {
 
                     //   startSaveModel();
 */
+
                 }
             }
         });
