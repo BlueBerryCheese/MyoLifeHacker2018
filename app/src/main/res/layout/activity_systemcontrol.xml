@@ -237,7 +237,6 @@
         android:textSize="25dp"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="20dp"
-        android:layout_above="@+id/BottomLinearLayout"
         android:text="Connect Myo "
         android:layout_alignParentBottom="true"
         android:textStyle="bold" />

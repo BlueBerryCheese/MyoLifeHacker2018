@@ -162,8 +162,11 @@ public class GestureSaveMethod {
                     stringTokenizer = null;
                     Log.e(TAG, "Loading txt size is================ " + doublePointList.size());
 //                    Toast.makeText(context,"K-MEANS_lization about"+(i+1)+" data", Toast.LENGTH_LONG).show();
+
+                    Log.e(TAG, "Starting K-means++ Clustering");
                     //Executing K-means (clustere.cluster(doublePointList)
                     List<? extends Cluster<DoublePoint>> res = clusterer.cluster(doublePointList);
+                    Log.e(TAG, "K-means++ Clustering done");
 
                     try {
                         for (Cluster<DoublePoint> re : res) {

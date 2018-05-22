@@ -1,8 +1,10 @@
 package blueberrycheese.myolifehacker.ImageViewer;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -41,12 +43,19 @@ public class CommentGalleryActivity extends AppCompatActivity {
     private int gestureNum = -1;
     private int max_size=0;
     private static final int CURRENT_ACTIVITY = 0;
-
+    private int lock_vibrate_state;
+    private int recog_vibrate_state;
+    private int conn_vibrate_state;
+    private SharedPreferences sharedPreferences;  //sharePreference호출 후 적용
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);  //윈도우 가장위에 배터리,wifi뜨는 부분 제거
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON); // 화면 안꺼지게
+
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getBaseContext());  //sharePreference호출 후 적용
+        setting_vibrate();
 
         mGallery = (CommentGallery) findViewById(R.id.comment_gallery);
         mGallery.setData((CommentGalleryContainer) getIntent().getSerializableExtra(GalleryActivity.COMMENT_LIST),
@@ -154,7 +163,7 @@ public class CommentGalleryActivity extends AppCompatActivity {
 //                }
 //                smoothcount[gestureNum]++;
                 //Send Vibration Event
-                EventBus.getDefault().post(new ServiceEvent.VibrateEvent(VIBRATION_A));
+                EventBus.getDefault().post(new ServiceEvent.VibrateEvent(recog_vibrate_state));
                 //Restart lock Timer so user can use gesture continuously
                 EventBus.getDefault().post(new ServiceEvent.restartLockTimerEvent(ADDITIONAL_DELAY));
 
@@ -181,7 +190,7 @@ public class CommentGalleryActivity extends AppCompatActivity {
                     resetSmoothCount();
                 }
                 //Send Vibration Event
-                EventBus.getDefault().post(new ServiceEvent.VibrateEvent(VIBRATION_A));
+                EventBus.getDefault().post(new ServiceEvent.VibrateEvent(recog_vibrate_state));
                 //Restart lock Timer so user can use gesture continuously
                 EventBus.getDefault().post(new ServiceEvent.restartLockTimerEvent(ADDITIONAL_DELAY));
                 Toasty.normal(getBaseContext(),"Previous picture", Toast.LENGTH_SHORT, icon_2).show();
@@ -201,7 +210,7 @@ public class CommentGalleryActivity extends AppCompatActivity {
                     resetSmoothCount();
                 }
                 //Send Vibration Event
-                EventBus.getDefault().post(new ServiceEvent.VibrateEvent(VIBRATION_A));
+                EventBus.getDefault().post(new ServiceEvent.VibrateEvent(recog_vibrate_state));
                 //Restart lock Timer so user can use gesture continuously
                 EventBus.getDefault().post(new ServiceEvent.restartLockTimerEvent(ADDITIONAL_DELAY));
                 Toasty.normal(getBaseContext(),"Next Picture", Toast.LENGTH_SHORT, icon_3).show();
@@ -222,5 +231,49 @@ public class CommentGalleryActivity extends AppCompatActivity {
         for(int i=0;i<smoothcount.length;i++){
             smoothcount[i]=0;
         }
+    }
+
+    public void setting_vibrate(){
+        String lock_vp = sharedPreferences.getString("lock_vibrate_power","강하게");
+        String recog_vp = sharedPreferences.getString("recog_vibrate_power","강하게");
+        String conn_vp = sharedPreferences.getString("conn_vibrate_power","강하게");
+        int lock_vpp,recog_vpp,conn_vpp;
+
+        boolean iv = sharedPreferences.getBoolean("vibrate",true);
+        if(iv){
+            if(lock_vp.equals("강하게"))
+                lock_vpp=3;
+            else if(lock_vp.equals("보통"))
+                lock_vpp=2;
+            else if(lock_vp.equals("약하게"))
+                lock_vpp=1;
+            else
+                lock_vpp=3;
+
+            if(recog_vp.equals("강하게"))
+                recog_vpp=3;
+            else if(recog_vp.equals("보통"))
+                recog_vpp=2;
+            else if(recog_vp.equals("약하게"))
+                recog_vpp=1;
+            else
+                recog_vpp=3;
+
+            if(conn_vp.equals("강하게"))
+                conn_vpp=3;
+            else if(conn_vp.equals("보통"))
+                conn_vpp=2;
+            else if(conn_vp.equals("약하게"))
+                conn_vpp=1;
+            else
+                conn_vpp=3;
+        }else{
+            lock_vpp=0;
+            recog_vpp=0;
+            conn_vpp=0;
+        }
+        lock_vibrate_state = lock_vpp;
+        recog_vibrate_state = recog_vpp;
+        conn_vibrate_state = conn_vpp;
     }
 }
