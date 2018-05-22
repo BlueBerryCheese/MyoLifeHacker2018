@@ -1,6 +1,8 @@
 package blueberrycheese.myolifehacker.myo_manage;
 
+import android.annotation.TargetApi;
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -12,11 +14,13 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.PixelFormat;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.view.WindowManager;
 import android.widget.Toast;
@@ -77,6 +81,7 @@ public class MyoService extends Service {
     private static IGestureDetectModel nopModel = new NopModel();
 
     private WindowManager mWindowManager;
+    private final int notifyID = 11;
 
     public MyoService() {
     }
@@ -118,31 +123,46 @@ public class MyoService extends Service {
 
         //Notification
         manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        Intent nintent = new Intent("com.rj.notitfications.SECACTIVITY");
-
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 1, nintent, 0);
-
-        Notification.Builder builder = new Notification.Builder(this);
 
         Intent stopSelf = new Intent(this, MyoService.class);
         stopSelf.setAction("STOP");
         PendingIntent stopIntent = PendingIntent.getService(this, 0, stopSelf, PendingIntent.FLAG_CANCEL_CURRENT) ;
 
-        builder.setAutoCancel(false);
-        builder.setTicker("this is ticker text");
-        builder.setContentTitle("Life Hacker On");
-//        builder.setContentText("");
-        builder.setSmallIcon(R.drawable.ic_stat_m);
-        builder.setContentIntent(pendingIntent);
-        builder.setOngoing(true);
-//        builder.setSubText("This is subtext...");   //API level 16
-        builder.setNumber(100);
-        builder.addAction(R.drawable.ic_menu_myo,"STOP", stopIntent);
-        builder.build();
+        String CHANNEL_ID = "MLH_Channel";
+        CharSequence name = "MyoLifeHackerCHNL";
+        int importance = NotificationManager.IMPORTANCE_HIGH;
 
-        myNotication = builder.getNotification();
-        manager.notify(11, myNotication);
+        //For Oreo (NotificationChannel)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel mChannel = new NotificationChannel(CHANNEL_ID, name, importance);
+            manager.createNotificationChannel(mChannel);
+        }
+
+        Notification notification =  new NotificationCompat.Builder(this, CHANNEL_ID)
+                .setSmallIcon(R.drawable.ic_stat_m)
+                .setContentTitle("Life Hacker On")
+                .setChannelId(CHANNEL_ID)
+                .addAction(R.drawable.ic_menu_myo,"STOP", stopIntent)
+                .setOngoing(true)
+                .setAutoCancel(false)
+                .build();
+
+//        builder.setAutoCancel(false);
+//        builder.setTicker("this is ticker text");
+//        builder.setContentTitle("Life Hacker On");
+////        builder.setContentText("");
+//        builder.setSmallIcon(R.drawable.ic_stat_m);
+//        builder.setContentIntent(pendingIntent);
+//        builder.setOngoing(true);
+////        builder.setSubText("This is subtext...");   //API level 16
+//        builder.setNumber(100);
+//        builder.addAction(R.drawable.ic_menu_myo,"STOP", stopIntent);
+//        builder.build();
+
+//        myNotication = builder.getNotification();
+//        manager.notify(notifyID, myNotication);
         //
+        manager.notify(notifyID, notification);
 
         return START_STICKY;
     }
@@ -153,7 +173,7 @@ public class MyoService extends Service {
         Log.d(TAG,"Service onDestory");
       EventBus.getDefault().unregister(this);
       if(manager != null){
-          manager.cancel(11);
+          manager.cancel(notifyID);
       }
       closeBLEGatt();
       super.onDestroy();
