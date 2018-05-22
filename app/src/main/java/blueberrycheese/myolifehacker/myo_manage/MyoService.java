@@ -19,15 +19,11 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.airbnb.lottie.LottieAnimationView;
-
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
-import blueberrycheese.myolifehacker.MainActivity;
 import blueberrycheese.myolifehacker.MyoApp;
 import blueberrycheese.myolifehacker.R;
-import blueberrycheese.myolifehacker.TabFragment1;
 import blueberrycheese.myolifehacker.Toasty;
 import blueberrycheese.myolifehacker.events.ServiceEvent;
 
@@ -72,7 +68,8 @@ public class MyoService extends Service {
 
     private final int DEFAULT_ACTIVITY = 0;
     private final int MUSIC_ACTIVITY = 1;
-    private final int CAMERA_ACTIVITY = 2;
+    private final int CAMERA_PREVIEW_ACTIVITY = 2;
+    private final int TEST_ACTIVITY = 3;
     private static IGestureDetectModel nopModel = new NopModel();
 
 
@@ -244,6 +241,10 @@ public class MyoService extends Service {
 
         gestureNum = event.gestureNumber;
         Log.d(TAG,"Gesture num : "+ gestureNum);
+        if (currentActivity == TEST_ACTIVITY){
+            EventBus.getDefault().post(new ServiceEvent.GestureEvent(gestureNum));
+            return;
+        }
 
         if(myoApp.isUnlocked()){
             if(myoApp.getUnlockedGesture()==LITTLEFINGER){
@@ -298,7 +299,7 @@ public class MyoService extends Service {
                     break;
 
                 case SCISSORS:
-                    if(currentActivity == DEFAULT_ACTIVITY){
+                    if(currentActivity == DEFAULT_ACTIVITY || currentActivity == CAMERA_PREVIEW_ACTIVITY){
                         EventBus.getDefault().post(new ServiceEvent.GestureEvent(gestureNum));
                     } else{
                         smoothcount[gestureNum]++;
@@ -340,7 +341,7 @@ public class MyoService extends Service {
 
                     break;
                 case FIST:
-                    if(currentActivity == CAMERA_ACTIVITY){
+                    if(currentActivity == CAMERA_PREVIEW_ACTIVITY){
                         EventBus.getDefault().post(new ServiceEvent.GestureEvent(gestureNum));
                     }
                     break;
@@ -388,7 +389,7 @@ public class MyoService extends Service {
     }
 
     @Subscribe(sticky = true)
-    public void getCurrentActivity(ServiceEvent.currentActivity_Event event){
+    public void setCurrentActivity(ServiceEvent.currentActivity_Event event){
         currentActivity = event.currentActivity;
         Log.e(TAG,"Got current activity : " + currentActivity);
     }

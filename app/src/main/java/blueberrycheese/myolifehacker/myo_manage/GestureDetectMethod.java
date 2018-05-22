@@ -97,7 +97,8 @@ public class GestureDetectMethod {
     int cnt = 0;
     int cnt_thr = 0;
     int old_gesture_num=-1;
-    //getDetectGesture Use By K-MEANS
+
+    //getDetectGesture Use By K-MEANS <-? It is for measuring euclidean distance between incoming emg data and K-means model data. to get the gesture user's giving.
     public GestureState getDetectGesture(byte[] data) {
         EmgData streamData = new EmgData(new EmgCharacteristicData(data));
         //streamCount++;

@@ -25,6 +25,8 @@ public class TestPageActivity extends AppCompatActivity {
     private TextView LogTextView;
     private TextView gestureTextView2;
 
+    private static final int CURRENT_ACTIVITY = 3;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(TAG,"TestPageActivity onCreate");
@@ -42,10 +44,22 @@ public class TestPageActivity extends AppCompatActivity {
     @Override
     protected void onResume(){
         super.onResume();
-
+        if(!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
+        //Post event to notify that user's watching the activity.
+        EventBus.getDefault().postSticky(new ServiceEvent.currentActivity_Event(CURRENT_ACTIVITY));
 
     }
 
+    @Override
+    public void onStop(){
+        //Post event to notify that user's leaving the activity.
+        EventBus.getDefault().postSticky(new ServiceEvent.currentActivity_Event(-1));
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+
+    }
     //
     @Override
     public void onBackPressed() {
