@@ -54,8 +54,8 @@ public class TestPageActivity extends AppCompatActivity {
 
     @Override
     public void onStop(){
-        //Post event to notify that user's leaving the activity.
-        EventBus.getDefault().postSticky(new ServiceEvent.currentActivity_Event(-1));
+//        //Post event to notify that user's leaving the activity.
+//        EventBus.getDefault().postSticky(new ServiceEvent.currentActivity_Event(-1));
         EventBus.getDefault().unregister(this);
         super.onStop();
 
@@ -66,7 +66,12 @@ public class TestPageActivity extends AppCompatActivity {
             super.onBackPressed();
     }
 
-
+    @Override
+    public void onPause(){
+        //Post event to notify that user's leaving the activity.
+        EventBus.getDefault().postSticky(new ServiceEvent.currentActivity_Event(-1));
+        super.onPause();
+    }
 
 
 
@@ -138,7 +143,7 @@ public class TestPageActivity extends AppCompatActivity {
                 break;
 
         }
-        log_smoothcount = "SMOOTH_COUNT : "+"[ " + smoothcount[0] + " ],"+"[ " + smoothcount[1] + " ],"+"[ " + smoothcount[2] + " ],"+"[ " + smoothcount[3] + " ],"+"[ " + smoothcount[4] + " ],"+"[ " + smoothcount[5] + " ]";
+        log_smoothcount = "COUNT\n"+"[ " + smoothcount[0] + " ],"+"[ " + smoothcount[1] + " ],"+"[ " + smoothcount[2] + " ],"+"[ " + smoothcount[3] + " ],"+"[ " + smoothcount[4] + " ],"+"[ " + smoothcount[5] + " ]";
         LogTextView.setText(log_smoothcount);
     }
 
