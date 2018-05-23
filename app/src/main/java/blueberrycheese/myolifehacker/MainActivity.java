@@ -157,8 +157,8 @@ public class MainActivity extends AppCompatActivity
 //            EventBus.getDefault().register(this);
 //        }
 
-        //Post event to notify that user's watching the activity.
-        EventBus.getDefault().postSticky(new ServiceEvent.currentActivity_Event(CURRENT_ACTIVITY));
+//        //Post event to notify that user's watching the activity.
+//        EventBus.getDefault().postSticky(new ServiceEvent.currentActivity_Event(CURRENT_ACTIVITY));
 
     }
 
