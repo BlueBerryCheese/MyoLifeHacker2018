@@ -272,7 +272,6 @@ public class MyoGattCallback extends BluetoothGattCallback {
     @Override
     public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
         if (EMG_0_ID.equals(characteristic.getUuid().toString())) {
-            Log.d(TAG,"EMO_O_ID1");
             long systemTime_ms = System.currentTimeMillis();
             byte[] emg_data = characteristic.getValue();
             //Original
@@ -317,7 +316,6 @@ public class MyoGattCallback extends BluetoothGattCallback {
             }
         }
         if (EMG_0_ID2.equals(characteristic.getUuid().toString())) {
-            Log.d(TAG,"EMO_O_ID2");
             long systemTime_ms = System.currentTimeMillis();
             byte[] emg_data = characteristic.getValue();
             //Original

@@ -437,8 +437,9 @@ public class MyoService extends Service {
 
     @Subscribe(sticky = true)
     public void setCurrentActivity(ServiceEvent.currentActivity_Event event){
+        Log.e(TAG,"Set current activity from: " + this.currentActivity + "  to : " + event.currentActivity);
         currentActivity = event.currentActivity;
-        Log.e(TAG,"Set current activity to : " + currentActivity);
+
     }
 
     @Subscribe(sticky = true)
@@ -503,7 +504,7 @@ public class MyoService extends Service {
         Log.d(TAG,"Recreating Detect for using new model");
         saveMethod  = new GestureSaveMethod(-1, getApplicationContext(),1);
         if (saveMethod.getSaveState() == GestureSaveMethod.SaveState.Have_Saved) {
-            int recog_cnt = Integer.parseInt(sharedPreferences.getString("recognizing_count","30"));
+            int recog_cnt = Integer.parseInt(sharedPreferences.getString("recognizing_count","50"));
             detectMethod = new GestureDetectMethod(mHandler, saveMethod.getCompareDataList(),recog_cnt);
             detectModel = new GestureDetectModel(detectMethod);
             model = detectModel;

@@ -19,16 +19,17 @@ import blueberrycheese.myolifehacker.myo_music.Gesture.MusicEvent;
  */
 
 public class NumberSmoother {
+    private final static String TAG = "NumberSmoother";//5
     private final static int SMOOTHING_LENGTH = 50;//5
     private final static int THRESHOLD_LENGTH = 25;//3
     private int smoothingLength = 50;//5
-    private int thresholdLength = 20;//3
+    private int thresholdLength = 25;//3
     private final static int MAX_SAVE_LENGTH=6;
     private final static int DECLINE_LENGTH = 5;
     private Queue<Integer> gestureNumArray = new LinkedList<>();
     private int[] numCounter =  new int[MAX_SAVE_LENGTH];
     private int storageDataCount = 0;
-
+    private final static double percent = 0.45;
     private SystemFeature systemFeature;
     private int mod_cnt = 30;
 
@@ -41,7 +42,8 @@ public class NumberSmoother {
     public NumberSmoother(int mod_cnt){
         this.mod_cnt = mod_cnt;
         this.smoothingLength = mod_cnt;
-//        this.thresholdLength = (int) smoothingLength * (double)0.4;
+        this.thresholdLength = (int)(smoothingLength * percent);
+        Log.d(TAG,"thresholdlength: " + thresholdLength);
     }
 
     public  NumberSmoother(SystemFeature systemFeature){
@@ -55,7 +57,7 @@ public class NumberSmoother {
             numCounter[gestureNum]++;
         }
         storageDataCount++;
-        if (storageDataCount > SMOOTHING_LENGTH) {
+        if (storageDataCount > smoothingLength) {
             int deleteNumber = gestureNumArray.peek();
             if (deleteNumber != -1) {
                 numCounter[deleteNumber]--;
@@ -75,7 +77,7 @@ public class NumberSmoother {
 
     public int getSmoothingNumber() {
         for (int i_element = 0; i_element < MAX_SAVE_LENGTH; i_element++) {
-            if (numCounter[i_element] >= THRESHOLD_LENGTH) {//50개중 20개이상 일치하지 않으면 불일치(인지되지 않은 제스처)
+            if (numCounter[i_element] >= thresholdLength) {//50개중 20개이상 일치하지 않으면 불일치(인지되지 않은 제스처)
                 Log.d("number success","number success : "+(i_element));
 //                gestureNumArray=new LinkedList<>();
 //                numCounter =  new int[MAX_SAVE_LENGTH];

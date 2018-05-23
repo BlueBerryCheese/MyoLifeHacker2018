@@ -110,7 +110,7 @@ public class TabFragment1 extends Fragment {
     private boolean myoConnection;
     private boolean myoConnection_lock;
     private boolean first=true;
-
+    private static final int CURRENT_ACTIVITY = 4;
 
     int[] smoothcount = new int[6];
     private int gestureNum = -1;
@@ -382,7 +382,8 @@ public class TabFragment1 extends Fragment {
         try {
             EventBus.getDefault().register(this);           //이벤트 버스 다시 키는 역활
         }catch (Exception e){}
-
+        //Post event to notify that user's watching the activity.
+        EventBus.getDefault().postSticky(new ServiceEvent.currentActivity_Event(CURRENT_ACTIVITY));
     }
 
 //    @Subscribe(threadMode = ThreadMode.MAIN)

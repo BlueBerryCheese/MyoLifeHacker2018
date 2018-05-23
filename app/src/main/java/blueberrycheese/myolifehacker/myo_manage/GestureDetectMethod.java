@@ -21,7 +21,7 @@ public class GestureDetectMethod {
     private final static Double THRESHOLD = 0.01;
     private final static int KMEANS_K = 128;    //sampling한 KMEANS_K의 갯수
     private final static String FileList_kmeans = "KMEANS_DATA.dat";    //적용되는 KMEANS_DATA파일 우리가 생성함
-    private static int NOACTIONEMG = 5;
+    private static int NOACTIONEMG = 10;
 
     private final ArrayList<EmgData> compareGesture;
 
@@ -53,7 +53,7 @@ public class GestureDetectMethod {
         compareGesture = gesture;
         this.handler=handler;
         this.mod_cnt=mod_cnt;
-        numberSmoother = new NumberSmoother();
+        numberSmoother = new NumberSmoother(mod_cnt);
     }
 
     public GestureDetectMethod(Handler handler, ArrayList<EmgData> gesture, TextView textView) {
