@@ -33,6 +33,7 @@ public class MyoGattCallback extends BluetoothGattCallback {
     private static final String FIRMWARE_ID = "d5060201-a904-deb9-4748-2c7f4a124842";
     private static final String COMMAND_ID  = "d5060401-a904-deb9-4748-2c7f4a124842";
     private static final String EMG_0_ID    = "d5060105-a904-deb9-4748-2c7f4a124842";
+    private static final String EMG_0_ID2    = "d5060305-a904-deb9-4748-2c7f4a124842";
     /** android Characteristic ID (from Android Samples/BluetoothLeGatt/SampleGattAttributes.CLIENT_CHARACTERISTIC_CONFIG) */
     private static final String CLIENT_CHARACTERISTIC_CONFIG = "00002902-0000-1000-8000-00805f9b34fb";
 
@@ -42,7 +43,7 @@ public class MyoGattCallback extends BluetoothGattCallback {
     private BluetoothGatt mBluetoothGatt;
     private BluetoothGattCharacteristic mCharacteristic_command;
     private BluetoothGattCharacteristic mCharacteristic_emg0;
-
+    private BluetoothGattCharacteristic mCharacteristic_emg2;
     private MyoCommandList commandList = new MyoCommandList();
 
     private String TAG = "MyoGatt";
@@ -106,28 +107,32 @@ public class MyoGattCallback extends BluetoothGattCallback {
         if (status == BluetoothGatt.GATT_SUCCESS) {
             // Find GATT Service
             BluetoothGattService service_emg = gatt.getService(UUID.fromString(MYO_EMG_DATA_ID));
+
             if (service_emg == null) {
                 Log.d(TAG,"No Myo EMG-Data Service !!");
             } else {
                 Log.d(TAG, "Find Myo EMG-Data Service !!");
                 // Getting CommandCharacteristic
                 mCharacteristic_emg0 = service_emg.getCharacteristic(UUID.fromString(EMG_0_ID));
-                if (mCharacteristic_emg0 == null) {
+                mCharacteristic_emg2 = service_emg.getCharacteristic(UUID.fromString(EMG_0_ID2));
+                if (mCharacteristic_emg0 == null || mCharacteristic_emg2 == null) {
                     callback_msg = "Not Found EMG-Data Characteristic";
                 } else {
                     // Setting the notification
                     boolean registered_0 = gatt.setCharacteristicNotification(mCharacteristic_emg0, true);
+                    boolean registered_2 = gatt.setCharacteristicNotification(mCharacteristic_emg2, true);
                     if (!registered_0) {
                         Log.d(TAG,"EMG-Data Notification FALSE !!");
                     } else {
                         Log.d(TAG,"EMG-Data Notification TRUE !!");
                         // Turn ON the Characteristic Notification
                         BluetoothGattDescriptor descriptor_0 = mCharacteristic_emg0.getDescriptor(UUID.fromString(CLIENT_CHARACTERISTIC_CONFIG));
+                        BluetoothGattDescriptor descriptor_2 = mCharacteristic_emg2.getDescriptor(UUID.fromString(CLIENT_CHARACTERISTIC_CONFIG));
                         if (descriptor_0 != null ){
                             descriptor_0.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
-
+                            descriptor_2.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
                             writeGattDescriptor(descriptor_0);
-
+                            writeGattDescriptor(descriptor_2);
                             Log.d(TAG,"Set descriptor");
 
                         } else {
@@ -267,6 +272,7 @@ public class MyoGattCallback extends BluetoothGattCallback {
     @Override
     public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
         if (EMG_0_ID.equals(characteristic.getUuid().toString())) {
+            Log.d(TAG,"EMO_O_ID1");
             long systemTime_ms = System.currentTimeMillis();
             byte[] emg_data = characteristic.getValue();
             //Original
@@ -284,7 +290,7 @@ public class MyoGattCallback extends BluetoothGattCallback {
 //                EventBus.getDefault().post(new ServiceEvent.setDetectModel_Event(1));
             }
 
-            
+
             ByteReader emg_br = new ByteReader();
             emg_br.setByteData(emg_data);
 
@@ -302,36 +308,51 @@ public class MyoGattCallback extends BluetoothGattCallback {
                 emg_br_data[i] = emg_br.getByte();
             }
 
-//20180430. - 주석안하고 그대로 두면 계속 exception 메시지 나다가 서비스 크래쉬 등 이상현상 발생함.
-//            mHandler.post(new Runnable() {
-//                @Override
-//                public void run() {
-//                    if(dataView!=null)
-//                        dataView.setText(callback_msg);
-//                    sb=new StringBuilder("emg   ");
-//
-//                    if(count<25) {
-//                        for (int i = 0; i < 8; i++) {
-//                            checking[i] = (emg_br_data[i]>emg_br_data[i+8])?emg_br_data[i]:emg_br_data[i+8];
-//                            if(count==0){
-//                                maxData[i] = checking[i];
-//                            }
-//                            if (maxData[i] < checking[i])
-//                                maxData[i] = checking[i];
-//                        }
-//                        count++;
-//                    }
-//                    else {
-//                        for (int k = 0; k < 8; k++) {
-//                            sb.append(maxData[k] + ",  ");
-//                        }
-//                        Log.d("data",sb.toString());
-////                        maxDataTextView.setText(sb.toString());
-//                        sb=new StringBuilder("emg ");
-//                        count=0;
-//                    }
-//                }
-//            });
+
+            if (systemTime_ms > last_send_never_sleep_time_ms + NEVER_SLEEP_SEND_TIME) {
+                // set Myo [Never Sleep Mode]
+                setMyoControlCommand(commandList.sendUnSleep());
+                Log.e(TAG,"Sent unsleep command to Myo");
+                last_send_never_sleep_time_ms = systemTime_ms;
+            }
+        }
+        if (EMG_0_ID2.equals(characteristic.getUuid().toString())) {
+            Log.d(TAG,"EMO_O_ID2");
+            long systemTime_ms = System.currentTimeMillis();
+            byte[] emg_data = characteristic.getValue();
+            //Original
+//            GestureDetectModelManager.getCurrentModel().event(systemTime_ms,emg_data);
+//            currentModelForLog = GestureDetectModelManager.getCurrentModel().toString();
+            if(GestureDetectModelManager.getCurrentModel() != null && !currentModelForLog.equals(GestureDetectModelManager.getCurrentModel().toString())){
+                Log.e(TAG,"GestureDetectModelManager.getCurrentModel  Changed to : " + GestureDetectModelManager.getCurrentModel());
+                currentModelForLog = GestureDetectModelManager.getCurrentModel().toString();
+            }
+            try{
+                GestureDetectModelManager.getCurrentModel().event(systemTime_ms,emg_data);
+            }catch(NullPointerException e){
+                Log.e(TAG,"GestureDetectModelManager.getCurrentModel NULL! NullPointerException accrued.");
+//                GestureDetectModelManager.setCurrentModel(new NopModel());
+//                EventBus.getDefault().post(new ServiceEvent.setDetectModel_Event(1));
+            }
+
+
+            ByteReader emg_br = new ByteReader();
+            emg_br.setByteData(emg_data);
+
+            final String callback_msg = String.format("emg %5d,%5d,%5d,%5d,%5d,%5d,%5d,%5d\n" +
+                            "    %5d,%5d,%5d,%5d,%5d,%5d,%5d,%5d",
+                    emg_br.getByte(),emg_br.getByte(),emg_br.getByte(),emg_br.getByte(),
+                    emg_br.getByte(),emg_br.getByte(),emg_br.getByte(),emg_br.getByte(),
+                    emg_br.getByte(),emg_br.getByte(),emg_br.getByte(),emg_br.getByte(),
+                    emg_br.getByte(),emg_br.getByte(),emg_br.getByte(),emg_br.getByte());
+
+            emg_br = new ByteReader();
+            emg_br.setByteData(emg_data);
+            emg_br_data=new int[16];
+            for(int i=0;i<16;i++){
+                emg_br_data[i] = emg_br.getByte();
+            }
+
 
             if (systemTime_ms > last_send_never_sleep_time_ms + NEVER_SLEEP_SEND_TIME) {
                 // set Myo [Never Sleep Mode]

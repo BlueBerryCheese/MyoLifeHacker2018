@@ -124,7 +124,7 @@ public class GestureDetectMethod {
                     detect_distance = distance;
 //                Log.d("detect_gesture",(int)i_gesture+"distance ("+distance+") -> "+(int)(i_gesture/KMEANS_K));
                     detect_Num = (int) (i_gesture / KMEANS_K);
-
+                    Log.d("detect_gesture", "Final gesture distance (" + detect_distance + ") -> " + (int) (detect_Num));
                 }
             }
 
@@ -137,17 +137,19 @@ public class GestureDetectMethod {
         if(cnt%mod_cnt==0){
             cnt=0;
             int result = numberSmoother.getSmoothingNumber();
-            if(old_gesture_num!=result){
-                old_gesture_num = result;
-                cnt_thr=0;
-            }else{
-                cnt_thr++;
-                if(cnt_thr>3){
-                    numberSmoother.clearArray();    // 같은게 계속 반복되면 클리어 한판!
-                    cnt_thr=0;
-                    old_gesture_num=-1;
-                }
-            }
+
+
+//            if(old_gesture_num!=result){
+//                old_gesture_num = result;
+//                cnt_thr=0;
+//            }else{
+//                cnt_thr++;
+//                if(cnt_thr>3){
+//                    numberSmoother.clearArray();    // 같은게 계속 반복되면 클리어 한판!
+//                    cnt_thr=0;
+//                    old_gesture_num=-1;
+//                }
+//            }
         }
 
         return getEnum(old_gesture_num);
