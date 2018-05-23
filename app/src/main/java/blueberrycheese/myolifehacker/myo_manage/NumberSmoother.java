@@ -20,7 +20,9 @@ import blueberrycheese.myolifehacker.myo_music.Gesture.MusicEvent;
 
 public class NumberSmoother {
     private final static int SMOOTHING_LENGTH = 50;//5
-    private final static int THRESHOLD_LENGTH = 20;//3
+    private final static int THRESHOLD_LENGTH = 25;//3
+    private int smoothingLength = 50;//5
+    private int thresholdLength = 20;//3
     private final static int MAX_SAVE_LENGTH=6;
     private final static int DECLINE_LENGTH = 5;
     private Queue<Integer> gestureNumArray = new LinkedList<>();
@@ -28,11 +30,18 @@ public class NumberSmoother {
     private int storageDataCount = 0;
 
     private SystemFeature systemFeature;
-
+    private int mod_cnt = 30;
 
     private Context mcontext;
+
     public NumberSmoother(){
 
+    }
+
+    public NumberSmoother(int mod_cnt){
+        this.mod_cnt = mod_cnt;
+        this.smoothingLength = mod_cnt;
+//        this.thresholdLength = (int) smoothingLength * (double)0.4;
     }
 
     public  NumberSmoother(SystemFeature systemFeature){

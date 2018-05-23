@@ -295,15 +295,19 @@ public class MyoService extends Service {
         }else{
             switch(gestureNum) {
                 case LITTLEFINGER:
-                    if(currentActivity == -1){
-                        //test
-                        EventBus.getDefault().post(new ServiceEvent.startActivity_Event());
-                    }
 
                     if(currentActivity == MUSIC_ACTIVITY){
                         EventBus.getDefault().post(new ServiceEvent.GestureEvent(gestureNum));
                     }else{
                         smoothcount[gestureNum]++;
+
+                        //When screen is off or no activity is on. It will start main activity.
+                        if(currentActivity == -1 && smoothcount[gestureNum] > 1){
+                            Log.d(TAG,"Start main activity... - by little finger");
+                            EventBus.getDefault().post(new ServiceEvent.startActivity_Event());
+                            resetSmoothCount();
+                            return;
+                        }
 
                         if (smoothcount[gestureNum] > 2) {
                             if(!myoApp.isUnlocked()){
@@ -513,7 +517,7 @@ public class MyoService extends Service {
     @Subscribe
     public void startActivity(ServiceEvent.startActivity_Event event) {
         Intent actIntent = new Intent(this, MainActivity.class);
-        actIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        actIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(actIntent);
     }
 

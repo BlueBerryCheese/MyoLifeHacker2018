@@ -124,7 +124,6 @@ public class GestureDetectMethod {
                     detect_distance = distance;
 //                Log.d("detect_gesture",(int)i_gesture+"distance ("+distance+") -> "+(int)(i_gesture/KMEANS_K));
                     detect_Num = (int) (i_gesture / KMEANS_K);
-                    Log.d("detect_gesture", "Final gesture distance (" + detect_distance + ") -> " + (int) (detect_Num));
                 }
             }
 
