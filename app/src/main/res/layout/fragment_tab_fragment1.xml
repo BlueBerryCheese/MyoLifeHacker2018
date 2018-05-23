@@ -17,13 +17,13 @@
         app:hintsEnabled="true">
 
         <com.imangazaliev.circlemenu.CircleMenuButton
-            android:id="@+id/gallery_button"
+            android:id="@+id/music"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:colorNormal="#2196F3"
             app:colorPressed="#1E88E5"
             app:hintText="Favorite"
-            app:icon="@drawable/ic_menu_gallery" />
+            app:icon="@drawable/ic_music_note_black_24dp" />
 
         <com.imangazaliev.circlemenu.CircleMenuButton
             android:id="@+id/camera_button"
@@ -35,22 +35,22 @@
             app:icon="@drawable/ic_menu_camera" />
 
         <com.imangazaliev.circlemenu.CircleMenuButton
-            android:id="@+id/music"
+            android:id="@+id/volume"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:colorNormal="#F44336"
             app:colorPressed="#E53935"
             app:hintText="Music"
-            app:icon="@drawable/ic_music_note_black_24dp" />
+            app:icon="@drawable/ic_volume_up_black_24dp" />
 
         <com.imangazaliev.circlemenu.CircleMenuButton
-            android:id="@+id/volume"
+            android:id="@+id/gallery_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:colorNormal="#9C27B0"
             app:colorPressed="#8E24AA"
             app:hintText="Place"
-            app:icon="@drawable/ic_volume_up_black_24dp" />
+            app:icon="@drawable/ic_menu_gallery" />
 
         <!--<com.imangazaliev.circlemenu.CircleMenuButton-->
         <!--android:id="@+id/edit"-->
