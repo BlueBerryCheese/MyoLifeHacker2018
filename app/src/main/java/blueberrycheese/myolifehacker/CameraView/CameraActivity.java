@@ -440,12 +440,12 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
         myoConnection = event.connection;
         myoApp = (MyoApp) getApplication().getApplicationContext();
         if(myoConnection) {
-            if(first && !myoApp.isUnlocked()) {
+            if(!myoApp.isUnlocked()) {
                 animationView_camera_lock.playAnimation();
                 animationView_camera_lock.loop(true);
                 animationView_camera_lock.setVisibility(View.VISIBLE);
                 first=false;
-            }else if(first && myoApp.isUnlocked()) {
+            }else {
                 animationView_camera_unlock.playAnimation();
                 animationView_camera_unlock.loop(true);
                 animationView_camera_unlock.setVisibility(View.VISIBLE);
@@ -598,6 +598,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
                     EventBus.getDefault().post(new ServiceEvent.VibrateEvent(recog_vibrate_state));
                     //Restart lock Timer so user can use gesture continuously
                     EventBus.getDefault().post(new ServiceEvent.restartLockTimerEvent(ADDITIONAL_DELAY));
+                    Toasty.normal(getBaseContext(),"Go back", Toast.LENGTH_SHORT, icon_6).show();
                     finish();
                     resetSmoothCount();
 //                    Toasty.normal(getBaseContext(),"Capture Photo", Toast.LENGTH_SHORT, icon_1).show();

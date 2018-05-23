@@ -148,12 +148,12 @@ public class CommentGalleryActivity extends AppCompatActivity {
         myoConnection = event.connection;
         myoApp = (MyoApp) getApplication().getApplicationContext();
         if(myoConnection) {
-            if(first && !myoApp.isUnlocked()) {
+            if(!myoApp.isUnlocked()) {
                 animationView_gallery_picture_lock.playAnimation();
                 animationView_gallery_picture_lock.loop(true);
                 animationView_gallery_picture_lock.setVisibility(View.VISIBLE);
                 first=false;
-            }else if(first && myoApp.isUnlocked()) {
+            }else {
                 animationView_gallery_picture_unlock.playAnimation();
                 animationView_gallery_picture_unlock.loop(true);
                 animationView_gallery_picture_unlock.setVisibility(View.VISIBLE);
@@ -238,6 +238,19 @@ public class CommentGalleryActivity extends AppCompatActivity {
 
                 break;
 
+            case 5:
+                smoothcount[gestureNum]++;
+                if(smoothcount[gestureNum]>1) {
+                    //Send Vibration Event
+                    EventBus.getDefault().post(new ServiceEvent.VibrateEvent(recog_vibrate_state));
+                    //Restart lock Timer so user can use gesture continuously
+                    EventBus.getDefault().post(new ServiceEvent.restartLockTimerEvent(ADDITIONAL_DELAY));
+                    Toasty.normal(getBaseContext(),"Go back", Toast.LENGTH_SHORT, icon_6).show();
+                    finish();
+//                    Toasty.normal(getBaseContext(),"Open picture", Toast.LENGTH_SHORT, icon_1).show();
+
+                    resetSmoothCount();
+                }
             default :
                 break;
 

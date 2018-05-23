@@ -785,12 +785,12 @@ class MainActivity : SimpleActivity(), SongListListener{
         myoConnection = event.connection
         myoApp = application.applicationContext as MyoApp
         if (myoConnection as Boolean) {
-            if (first && !myoApp!!.isUnlocked()) {
+            if (!myoApp!!.isUnlocked()) {
                 lottie_music_lock.playAnimation()
                 lottie_music_lock.loop(true)
                 lottie_music_lock.setVisibility(View.VISIBLE)
                 first = false
-            } else if (first && myoApp!!.isUnlocked()) {
+            } else {
                 lottie_music_unlock.playAnimation()
                 lottie_music_unlock.loop(true)
                 lottie_music_unlock.setVisibility(View.VISIBLE)

@@ -108,6 +108,7 @@ public class TabFragment1 extends Fragment {
     private LottieAnimationView animationView_main_lock;
     private LottieAnimationView animationView_main_unlock;
     private boolean myoConnection;
+    private boolean myoConnection_lock;
     private boolean first=true;
 
 
@@ -467,13 +468,22 @@ public class TabFragment1 extends Fragment {
     @Subscribe(sticky = true)
     public void getMyoDevice(ServiceEvent.myoConnected_Event event) {
         myoConnection = event.connection;
+        //myoConnection_lock = event.lock;
         myoApp = (MyoApp) getActivity().getApplicationContext();
         if(myoConnection) {
-            if(first) {
+            //if(first) {
+            if (!myoApp.isUnlocked()) {
                 animationView_main_lock.playAnimation();
                 animationView_main_lock.loop(true);
                 animationView_main_lock.setVisibility(View.VISIBLE);
-                first=false;
+                animationView_main_unlock.setVisibility(View.INVISIBLE);
+                //first=false;
+            }
+            else {
+                animationView_main_unlock.playAnimation();
+                animationView_main_unlock.loop(true);
+                animationView_main_unlock.setVisibility(View.VISIBLE);
+                animationView_main_lock.setVisibility(View.INVISIBLE);
             }
         }
         else {

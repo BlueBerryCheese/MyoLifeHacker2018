@@ -310,12 +310,12 @@ public class SystemControlActivity extends AppCompatActivity {
         myoConnection = event.connection;
         myoApp = (MyoApp) getApplication().getApplicationContext();
         if(myoConnection) {
-            if(first && !myoApp.isUnlocked()) {
+            if(!myoApp.isUnlocked()) {
                 animationView_system_lock.playAnimation();
                 animationView_system_lock.loop(true);
                 animationView_system_lock.setVisibility(View.VISIBLE);
                 first=false;
-            }else if(first && myoApp.isUnlocked()) {
+            }else {
                 animationView_system_unlock.playAnimation();
                 animationView_system_unlock.loop(true);
                 animationView_system_unlock.setVisibility(View.VISIBLE);
