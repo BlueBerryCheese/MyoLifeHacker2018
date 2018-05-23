@@ -541,8 +541,8 @@ public class TabFragment1 extends Fragment {
 
             case 1 :
                 if(smoothcount[gestureNum]>1) {
-                    circleMenu.onSelectAnimationStart(circleMenuButton_volume);
-                    circleMenu.onSelectAnimationEnd(circleMenuButton_volume);
+                    circleMenu.onSelectAnimationStart(circleMenuButton_gallery);
+                    circleMenu.onSelectAnimationEnd(circleMenuButton_gallery);
 
                     //Send Vibration Event
 
@@ -552,8 +552,7 @@ public class TabFragment1 extends Fragment {
 
                     resetSmoothCount();
                     smoothcount[gestureNum]=-1;
-
-                    Toasty.normal(getContext(),"Open nterior function",Toast.LENGTH_SHORT, icon_2).show();
+                    Toasty.normal(getContext(),"Open gallery",Toast.LENGTH_SHORT, icon_4).show();
                 }
                 smoothcount[gestureNum]++;
                 break;
@@ -577,9 +576,10 @@ public class TabFragment1 extends Fragment {
                 break;
 
             case 3 :
+
                 if(smoothcount[gestureNum]>1) {
-                    circleMenu.onSelectAnimationStart(circleMenuButton_gallery);
-                    circleMenu.onSelectAnimationEnd(circleMenuButton_gallery);
+                    circleMenu.onSelectAnimationStart(circleMenuButton_volume);
+                    circleMenu.onSelectAnimationEnd(circleMenuButton_volume);
 
                     //Send Vibration Event
 
@@ -589,11 +589,12 @@ public class TabFragment1 extends Fragment {
 
                     resetSmoothCount();
                     smoothcount[gestureNum]=-1;
-                    Toasty.normal(getContext(),"Open gallery",Toast.LENGTH_SHORT, icon_4).show();
+
+                    Toasty.normal(getContext(),"Open nterior function",Toast.LENGTH_SHORT, icon_2).show();
                 }
                 smoothcount[gestureNum]++;
                 break;
-            case 4 :
+            case 5 :
                 if(smoothcount[gestureNum]>1) {
                 circleMenu.onSelectAnimationStart(circleMenuButton_music);
                 circleMenu.onSelectAnimationEnd(circleMenuButton_music);
