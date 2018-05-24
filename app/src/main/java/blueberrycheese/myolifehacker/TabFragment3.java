@@ -464,7 +464,7 @@ public class TabFragment3 extends Fragment {
                                 views[i].setBackgroundResource(R.drawable.imgbtn_default);
                             }
                         }
-                    },1200);
+                    },1000);
                     if(inds_num==5) {
 
                     }

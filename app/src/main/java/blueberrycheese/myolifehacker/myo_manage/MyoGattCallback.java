@@ -274,6 +274,7 @@ public class MyoGattCallback extends BluetoothGattCallback {
         if (EMG_0_ID.equals(characteristic.getUuid().toString())) {
             long systemTime_ms = System.currentTimeMillis();
             byte[] emg_data = characteristic.getValue();
+            Log.d(TAG,"Test_emgdata_ : " + emg_data.toString());
             //Original
 //            GestureDetectModelManager.getCurrentModel().event(systemTime_ms,emg_data);
 //            currentModelForLog = GestureDetectModelManager.getCurrentModel().toString();
@@ -300,12 +301,14 @@ public class MyoGattCallback extends BluetoothGattCallback {
                     emg_br.getByte(),emg_br.getByte(),emg_br.getByte(),emg_br.getByte(),
                     emg_br.getByte(),emg_br.getByte(),emg_br.getByte(),emg_br.getByte());
 
-            emg_br = new ByteReader();
-            emg_br.setByteData(emg_data);
-            emg_br_data=new int[16];
-            for(int i=0;i<16;i++){
-                emg_br_data[i] = emg_br.getByte();
-            }
+            Log.d(TAG,"EMG data 16 : " + callback_msg);
+
+//            emg_br = new ByteReader();
+//            emg_br.setByteData(emg_data);
+//            emg_br_data=new int[16];
+//            for(int i=0;i<16;i++){
+//                emg_br_data[i] = emg_br.getByte();
+//            }
 
 
             if (systemTime_ms > last_send_never_sleep_time_ms + NEVER_SLEEP_SEND_TIME) {
@@ -344,20 +347,20 @@ public class MyoGattCallback extends BluetoothGattCallback {
                     emg_br.getByte(),emg_br.getByte(),emg_br.getByte(),emg_br.getByte(),
                     emg_br.getByte(),emg_br.getByte(),emg_br.getByte(),emg_br.getByte());
 
-            emg_br = new ByteReader();
-            emg_br.setByteData(emg_data);
-            emg_br_data=new int[16];
-            for(int i=0;i<16;i++){
-                emg_br_data[i] = emg_br.getByte();
-            }
+//            emg_br = new ByteReader();
+//            emg_br.setByteData(emg_data);
+//            emg_br_data=new int[16];
+//            for(int i=0;i<16;i++){
+//                emg_br_data[i] = emg_br.getByte();
+//            }
 
 
-            if (systemTime_ms > last_send_never_sleep_time_ms + NEVER_SLEEP_SEND_TIME) {
-                // set Myo [Never Sleep Mode]
-                setMyoControlCommand(commandList.sendUnSleep());
-                Log.e(TAG,"Sent unsleep command to Myo");
-                last_send_never_sleep_time_ms = systemTime_ms;
-            }
+//            if (systemTime_ms > last_send_never_sleep_time_ms + NEVER_SLEEP_SEND_TIME) {
+//                // set Myo [Never Sleep Mode]
+//                setMyoControlCommand(commandList.sendUnSleep());
+//                Log.e(TAG,"Sent unsleep command to Myo");
+//                last_send_never_sleep_time_ms = systemTime_ms;
+//            }
         }
     }
 

@@ -91,6 +91,9 @@ public class NumberSmoother {
         return -1;
     }
 
+
+
+    /////////////////////////////////////
     /*
     SystemControl 부분 SmootingNumber
      */
