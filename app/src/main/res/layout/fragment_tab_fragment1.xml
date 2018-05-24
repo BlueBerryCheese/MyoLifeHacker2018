@@ -104,7 +104,7 @@ android:layout_width="match_parent"
 android:layout_height="wrap_content"
 android:layout_gravity="bottom"
 app:lottie_fileName="lock.json"
-android:layout_marginBottom="120dp"/>
+android:layout_marginBottom="100dp"/>
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -115,7 +115,8 @@ android:layout_marginBottom="120dp"/>
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         app:lottie_fileName="material_wave_loading.json"
-        android:layout_marginBottom="20dp"/>
+        android:layout_marginBottom="10dp"/>
+
     </LinearLayout>
 
 </FrameLayout>
