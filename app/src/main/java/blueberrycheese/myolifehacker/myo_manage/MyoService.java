@@ -174,6 +174,7 @@ public class MyoService extends Service {
   @Override
   public void onDestroy(){
         Log.d(TAG,"Service onDestory");
+
       EventBus.getDefault().unregister(this);
       if(manager != null){
           manager.cancel(notifyID);
@@ -194,33 +195,6 @@ public class MyoService extends Service {
         mMyoCallback.setBluetoothGatt(mBluetoothGatt);
         myoApp = (MyoApp) getApplicationContext();
 
-//  Made separated runnable()... Look down below
-//
-//        new Handler().postDelayed(new Runnable() {
-//              @Override
-//              public void run() {
-//                  if (mBluetoothGatt == null || !mMyoCallback.setMyoControlCommand(commandList.sendEmgOnly())) {
-//                      Log.d(TAG,"False EMG");
-//                      Log.d("EMGFALSETest","mBluetoothGatt : " + mBluetoothGatt);//
-////call stopSelf() for killing service
-////                      stopSelf();
-//                  } else {
-//                      saveMethod  = new GestureSaveMethod(-1, getApplicationContext(),1);
-//                      Log.d(TAG,"True EMG");
-//                      if (saveMethod.getSaveState() == GestureSaveMethod.SaveState.Have_Saved) {
-//                          detectMethod = new GestureDetectMethod(mHandler, saveMethod.getCompareDataList());    //아예 새롭게 각각의 detectMethod를 구현하는것이 빠를것으로 예상된다.
-//                          detectModel = new GestureDetectModel(detectMethod);
-//                          startDetectModel();
-//                      }
-//
-//                      if (saveMethod.getSaveState() == GestureSaveMethod.SaveState.Have_Saved) {
-//                          //gestureText.setText("DETECT Ready");
-//                      } else {
-//                          //gestureText.setText("Teach me \'Gesture\'");
-//                      }
-//                  }
-//              }
-//          },SCAN_PERIOD);
           new Handler().postDelayed(runMethodModel, SCAN_PERIOD);
 
       }

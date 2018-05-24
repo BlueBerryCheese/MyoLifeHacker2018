@@ -41,7 +41,7 @@
             app:colorNormal="#F44336"
             app:colorPressed="#E53935"
             app:hintText="Music"
-            app:icon="@drawable/ic_volume_up_black_24dp" />
+            app:icon="@drawable/setting_gear" />
 
         <com.imangazaliev.circlemenu.CircleMenuButton
             android:id="@+id/gallery_button"
