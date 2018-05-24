@@ -112,6 +112,7 @@ public class TabFragment1 extends Fragment {
     private boolean first=true;
     private static final int CURRENT_ACTIVITY = 4;
     private static boolean islock=true;
+    private Toast toast;
     int[] smoothcount = new int[6];
     private int gestureNum = -1;
 
@@ -249,7 +250,7 @@ public class TabFragment1 extends Fragment {
                         Intent intent = new Intent(getActivity().getApplicationContext(), CameraActivity.class);
 //                        intent.putExtra("bluetoothDevice", device);
                         startActivity(intent);
-                        Toasty.normal(getContext(),"Open Camera",Toast.LENGTH_SHORT).show();
+                        //Toasty.normal(getContext(),"Open Camera",Toast.LENGTH_SHORT).show();
                         //Toasty.info(getContext(),"Time over myo Locked", Toast.LENGTH_SHORT,icon_1).show();
                         //Toasty.normal(getContext(),"Open camera",Toast.LENGTH_SHORT).show();
                        // animationView.cancelAnimation();
@@ -262,7 +263,7 @@ public class TabFragment1 extends Fragment {
                         intent2.putExtra("bluetoothDevice", device);
                         startActivity(intent2);
                         //Toasty.success(getContext(), "Open interior function", Toast.LENGTH_SHORT, true).show();
-                        Toasty.normal(getContext(),"Open interior function",Toast.LENGTH_SHORT).show();
+                       // Toasty.normal(getContext(),"Open interior function",Toast.LENGTH_SHORT).show();
                         //animationView.cancelAnimation();
                        // animationView.setVisibility(View.GONE);
                         break;
@@ -272,7 +273,7 @@ public class TabFragment1 extends Fragment {
                         intent3.putExtra("bluetoothDevice", device);
                         startActivity(intent3);
                         //Toasty.success(getContext(), "Open music", Toast.LENGTH_SHORT, true).show();
-                        Toasty.normal(getContext(),"Open music",Toast.LENGTH_SHORT).show();
+                       // Toasty.normal(getContext(),"Open music",Toast.LENGTH_SHORT).show();
                        // animationView.cancelAnimation();
                        // animationView.setVisibility(View.GONE);
                         break;
@@ -282,7 +283,7 @@ public class TabFragment1 extends Fragment {
                         intent4.putExtra("bluetoothDevice", device);
                         startActivity(intent4);
                         //Toasty.success(getContext(), "Open gallery", Toast.LENGTH_SHORT, true).show();
-                        Toasty.normal(getContext(),"Open gallery",Toast.LENGTH_SHORT).show();
+                       // Toasty.normal(getContext(),"Open gallery",Toast.LENGTH_SHORT).show();
                         //animationView.cancelAnimation();
                         //animationView.setVisibility(View.GONE);
                         break;
@@ -535,7 +536,10 @@ public class TabFragment1 extends Fragment {
                     islock = false;
                     resetSmoothCount();
                    // Toasty.success(getContext(), "Open menu", Toast.LENGTH_SHORT, false).show();
-                    Toasty.normal(getContext(),"Open menu",Toast.LENGTH_SHORT, icon_1).show();
+                    if (toast!=null)
+                        toast.cancel();
+                    toast =Toasty.normal(getContext(),"Open menu",Toast.LENGTH_SHORT, icon_1);
+                    toast.show();
                 }
                 if(!islock&&smoothcount[gestureNum]>1) {
                     circleMenu.onOpenAnimationStart();
@@ -570,7 +574,10 @@ public class TabFragment1 extends Fragment {
 
                     resetSmoothCount();
                     smoothcount[gestureNum]=-1;
-                    Toasty.normal(getContext(),"Open gallery",Toast.LENGTH_SHORT, icon_4).show();
+                    if (toast!=null)
+                        toast.cancel();
+                    toast =Toasty.normal(getContext(),"Open gallery",Toast.LENGTH_SHORT, icon_4);
+                    toast.show();
                 }
                 if(islock&&smoothcount[gestureNum]>4) {
                     circleMenu.onSelectAnimationStart(circleMenuButton_gallery);
@@ -602,7 +609,10 @@ public class TabFragment1 extends Fragment {
 
                     resetSmoothCount();
                     smoothcount[gestureNum]=-1;
-                    Toasty.normal(getContext(),"Open camera",Toast.LENGTH_SHORT, icon_3).show();
+                    if (toast!=null)
+                        toast.cancel();
+                    toast =Toasty.normal(getContext(),"Open camera",Toast.LENGTH_SHORT, icon_3);
+                    toast.show();
                 }
                 if(islock&&smoothcount[gestureNum]>4) {
                     circleMenu.onSelectAnimationStart(circleMenuButton_camera);
@@ -636,7 +646,10 @@ public class TabFragment1 extends Fragment {
                     resetSmoothCount();
                     smoothcount[gestureNum]=-1;
 
-                    Toasty.normal(getContext(),"Open nterior function",Toast.LENGTH_SHORT, icon_2).show();
+                    if (toast!=null)
+                        toast.cancel();
+                    toast = Toasty.normal(getContext(),"Open nterior function",Toast.LENGTH_SHORT, icon_2);
+                    toast.show();
                 }
                 if(islock&&smoothcount[gestureNum]>4) {
                     circleMenu.onSelectAnimationStart(circleMenuButton_volume);
@@ -668,7 +681,10 @@ public class TabFragment1 extends Fragment {
 
                 resetSmoothCount();
                 smoothcount[gestureNum]=-1;
-                Toasty.normal(getContext(),"Open music",Toast.LENGTH_SHORT, icon_5).show();
+                    if (toast!=null)
+                        toast.cancel();
+                    toast =Toasty.normal(getContext(),"Open music",Toast.LENGTH_SHORT, icon_5);
+                    toast.show();
             }
                 if(islock&&smoothcount[gestureNum]>4) {
                     circleMenu.onSelectAnimationStart(circleMenuButton_music);

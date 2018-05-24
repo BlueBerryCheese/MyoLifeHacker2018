@@ -24,6 +24,7 @@ public class SystemFeature {
     private AudioManager audioManager;
     private ContentResolver cResolver;
     private Drawable icon_1,icon_2,icon_3,icon_4,icon_5,icon_6;
+    private Toast toast;
     int currentBrightness;
     int BrightnessDiff = 5;
     int old_pos = -1;
@@ -95,7 +96,10 @@ public class SystemFeature {
                     );
                     Settings.System.putInt(cResolver, Settings.System.SCREEN_BRIGHTNESS_MODE, Settings.System.SCREEN_BRIGHTNESS_MODE_MANUAL);
                     Settings.System.putInt(cResolver, Settings.System.SCREEN_BRIGHTNESS, ((currentBrightness - BrightnessDiff)<20)?currentBrightness:currentBrightness - BrightnessDiff);
-                    Toasty.normal(mContext,"Bright down", Toast.LENGTH_SHORT, icon_1).show();
+                    if (toast!=null)
+                        toast.cancel();
+                    toast = Toasty.normal(mContext,"Bright down", Toast.LENGTH_SHORT, icon_1);
+                    toast.show();
                     resetSmoothCount();
                     smoothcount[poseNum]=-1;
                 }
@@ -136,7 +140,10 @@ public class SystemFeature {
                 //Volume Down
                 if(smoothcount[poseNum]>1){
                     VolumeDown();
-                    Toasty.normal(mContext,"Volume Down", Toast.LENGTH_SHORT, icon_2).show();
+                    if (toast!=null)
+                        toast.cancel();
+                    toast = Toasty.normal(mContext,"Volume Down", Toast.LENGTH_SHORT, icon_2);
+                    toast.show();
                     resetSmoothCount();
                     smoothcount[poseNum]=-1;
                 }
@@ -146,7 +153,10 @@ public class SystemFeature {
                 //Volume up
                 if(smoothcount[poseNum]>1){
                     VolumeUp();
-                    Toasty.normal(mContext,"Volume Up", Toast.LENGTH_SHORT, icon_3).show();
+                    if (toast!=null)
+                        toast.cancel();
+                    toast = Toasty.normal(mContext,"Volume Up", Toast.LENGTH_SHORT, icon_3);
+                    toast.show();
                     resetSmoothCount();
                     smoothcount[poseNum]=-1;
                 }
@@ -191,7 +201,10 @@ public class SystemFeature {
                     Settings.System.putInt(cResolver, Settings.System.SCREEN_BRIGHTNESS_MODE, Settings.System.SCREEN_BRIGHTNESS_MODE_MANUAL);
                     Settings.System.putInt(cResolver, Settings.System.SCREEN_BRIGHTNESS, ((currentBrightness + BrightnessDiff)>95)?currentBrightness:currentBrightness + BrightnessDiff);
                     resetSmoothCount();
-                    Toasty.normal(mContext,"Bright up", Toast.LENGTH_SHORT, icon_4).show();
+                    if (toast!=null)
+                        toast.cancel();
+                    toast =Toasty.normal(mContext,"Bright up", Toast.LENGTH_SHORT, icon_4);
+                    toast.show();
                 }
                 smoothcount[poseNum]++;
                 break;
@@ -200,7 +213,10 @@ public class SystemFeature {
                 break;
             case 5:
                 if(smoothcount[poseNum]>3){
-                    Toasty.normal(mContext,"Go Back", Toast.LENGTH_SHORT, icon_6).show();
+                    if (toast!=null)
+                        toast.cancel();
+                    toast =Toasty.normal(mContext,"Go Back", Toast.LENGTH_SHORT, icon_6);
+                    toast.show();
                     resetSmoothCount();
                     smoothcount[poseNum]=-1;
                 }

@@ -77,6 +77,7 @@ public class TabFragment3 extends Fragment {
     private LinearLayout main_linearlayout;
     private Activity mactivity;
     String deviceName;
+    private Toast toast;
 
     private TextView textView_tutorial;
     private TextView gestureText;
@@ -401,7 +402,10 @@ public class TabFragment3 extends Fragment {
                                 MyoDataFileReader dataFileReader = new MyoDataFileReader(TAG,FileList_kmeans);
                                 dataFileReader.removeFile(inds_remove);     //removeFile 메소드 호출
                                 saveMethod.setState(GestureSaveMethod.SaveState.Not_Saved);
-                                Toasty.success(ncontext, "Delete succes", Toast.LENGTH_SHORT, true).show();
+                                if (toast!=null)
+                                    toast.cancel();
+                                toast =Toasty.success(ncontext, "Delete succes", Toast.LENGTH_SHORT, true);
+                                toast.show();
                             }
                         }
                 );
@@ -459,7 +463,10 @@ public class TabFragment3 extends Fragment {
                             inds_num=viewAnimator_save.getDisplayedChild();
                             //TODO: 아래에 saveModel 굳이 다시 생성해줘야하는지 확인
                             saveModel = new GestureSaveModel(saveMethod, inds_num);
-                            Toasty.info(ncontext, "Gesture "+(inds_num)+" save complete", Toast.LENGTH_SHORT, true).show();
+                            if (toast!=null)
+                                toast.cancel();
+                            toast =Toasty.info(ncontext, "Gesture "+(inds_num)+" save complete", Toast.LENGTH_SHORT, true);
+                            toast.show();
                             for(int i=0;i<views.length;i++){        //동그라미 빈칸으로 바꿔줌
                                 views[i].setBackgroundResource(R.drawable.imgbtn_default);
                             }
@@ -530,7 +537,10 @@ public class TabFragment3 extends Fragment {
                         }
                     },1000);
 */
-                    Toasty.error(ncontext, "Please delete model first", Toast.LENGTH_LONG,true).show();
+                    if (toast!=null)
+                        toast.cancel();
+                    toast =Toasty.error(ncontext, "Please delete model first", Toast.LENGTH_LONG,true);
+                    toast.show();
                 } else if (saveMethod.getSaveState() == GestureSaveMethod.SaveState.Not_Saved || saveMethod.getSaveState() == GestureSaveMethod.SaveState.Now_Saving) {
                     saveMethod.setState(GestureSaveMethod.SaveState.Now_Saving);
                     dialog=ProgressDialog.show(getContext(), "","잠시만 기다려주세요...",true,false);
@@ -554,7 +564,10 @@ public class TabFragment3 extends Fragment {
                             mactivity.runOnUiThread(new Runnable(){
                                 @Override
                                 public void run(){
-                                    Toasty.info(ncontext,  "Model creation complete", Toast.LENGTH_SHORT, true).show();
+                                    if (toast!=null)
+                                        toast.cancel();
+                                    toast =Toasty.info(ncontext,  "Model creation complete", Toast.LENGTH_SHORT, true);
+                                    toast.show();
                                     textView_tutorial.setText("제스처가 준비되었습니다. \n원하는 기능을 사용하는 데 제스처를 사용할 수 있습니다.");
                                 }
                             });

@@ -48,6 +48,7 @@ public class MyoService extends Service {
     private int lock_vibrate_state=3;
     private int recog_vibrate_state=3;
     private int conn_vibrate_state=3;
+    private Toast toast;
     NotificationManager manager;
     Notification myNotication;
 
@@ -320,7 +321,10 @@ public class MyoService extends Service {
                                     @Override
                                     public void run() {
                                         // 내용
-                                        Toasty.normal(getBaseContext(),"Gesture recognition Unlocked", Toast.LENGTH_SHORT,unlocked).show();
+                                        if (toast!=null)
+                                            toast.cancel();
+                                        toast =Toasty.normal(getBaseContext(),"Gesture recognition Unlocked", Toast.LENGTH_SHORT,unlocked);
+                                        toast.show();
                                         EventBus.getDefault().post(new ServiceEvent.myoLock_Event(!myoApp.isUnlocked()));
                                         // EventBus.getDefault().post(new ServiceEvent.myoLock_Event(true));
                                     }
@@ -361,7 +365,10 @@ public class MyoService extends Service {
                                     @Override
                                     public void run() {
                                         // 내용
-                                        Toasty.normal(getBaseContext(),"Gesture recognition Unlocked", Toast.LENGTH_SHORT,unlocked).show();
+                                        if (toast!=null)
+                                            toast.cancel();
+                                        toast =Toasty.normal(getBaseContext(),"Gesture recognition Unlocked", Toast.LENGTH_SHORT,unlocked);
+                                        toast.show();
                                         EventBus.getDefault().post(new ServiceEvent.myoLock_Event(!myoApp.isUnlocked()));
                                         //EventBus.getDefault().post(new ServiceEvent.myoLock_Event(true));
                                     }
@@ -423,7 +430,10 @@ public class MyoService extends Service {
         public void run(){
             //Lock gesture
             myoApp.lockGesture();
-            Toasty.normal(getBaseContext(),"Time over myo Locked", Toast.LENGTH_SHORT,locked).show();
+            if (toast!=null)
+                toast.cancel();
+            toast =Toasty.normal(getBaseContext(),"Time over myo Locked", Toast.LENGTH_SHORT,locked);
+            toast.show();
             EventBus.getDefault().post(new ServiceEvent.myoLock_Event(!myoApp.isUnlocked()));
             Log.e(TAG,"Lock_Runnable : Gesture locked");
         }

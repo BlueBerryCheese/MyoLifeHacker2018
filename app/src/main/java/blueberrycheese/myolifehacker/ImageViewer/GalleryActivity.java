@@ -69,6 +69,7 @@ public class GalleryActivity extends AppCompatActivity {
     private int lock_vibrate_state;
     private int recog_vibrate_state;
     private int conn_vibrate_state;
+    private Toast toast;
     private SharedPreferences sharedPreferences;  //sharePreference호출 후 적용
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -257,7 +258,10 @@ public class GalleryActivity extends AppCompatActivity {
                     it.putExtra(LIST_SIZE,urls.size());
                     it.setClass(GalleryActivity.this, CommentGalleryActivity.class);
                     startActivity(it);
-                    Toasty.normal(getBaseContext(),"Open picture", Toast.LENGTH_SHORT, icon_1).show();
+                    if (toast!=null)
+                        toast.cancel();
+                    toast = Toasty.normal(getBaseContext(),"Open picture", Toast.LENGTH_SHORT, icon_1);
+                    toast.show();
                 }
 
 
@@ -284,7 +288,10 @@ public class GalleryActivity extends AppCompatActivity {
 //                    mCommentGrid.getChildAt(post_postionNum).setBackground(getResources().getDrawable(R.drawable.transparent_button));
 //                    mCommentGrid.getChildAt(positionNum).setBackground(getResources().getDrawable(R.color.color_accent));
                     post_postionNum=positionNum;
-                    Toasty.normal(getBaseContext(),"Previous picture", Toast.LENGTH_SHORT, icon_2).show();
+                    if (toast!=null)
+                        toast.cancel();
+                    toast = Toasty.normal(getBaseContext(),"Previous picture", Toast.LENGTH_SHORT, icon_2);
+                    toast.show();
                     resetSmoothCount();
                 }
 
@@ -311,7 +318,10 @@ public class GalleryActivity extends AppCompatActivity {
 //                    mCommentGrid.getChildAt(post_postionNum).setBackground(getResources().getDrawable(R.color.Transparent));
 //                    mCommentGrid.getChildAt(positionNum).setBackground(getResources().getDrawable(R.color.color_accent));
                     post_postionNum=positionNum;
-                    Toasty.normal(getBaseContext(),"Next Picture", Toast.LENGTH_SHORT, icon_3).show();
+                    if (toast!=null)
+                        toast.cancel();
+                    toast = Toasty.normal(getBaseContext(),"Next Picture", Toast.LENGTH_SHORT, icon_3);
+                    toast.show();
                     resetSmoothCount();
                 }
 
@@ -328,7 +338,10 @@ public class GalleryActivity extends AppCompatActivity {
                     EventBus.getDefault().post(new ServiceEvent.VibrateEvent(recog_vibrate_state));
                     //Restart lock Timer so user can use gesture continuously
                     EventBus.getDefault().post(new ServiceEvent.restartLockTimerEvent(ADDITIONAL_DELAY));
-                    Toasty.normal(getBaseContext(),"Go back", Toast.LENGTH_SHORT, icon_4).show();
+                    if (toast!=null)
+                        toast.cancel();
+                    toast = Toasty.normal(getBaseContext(),"Go back", Toast.LENGTH_SHORT, icon_4);
+                    toast.show();
 
                     finish();
 //                    Toasty.normal(getBaseContext(),"Open picture", Toast.LENGTH_SHORT, icon_1).show();

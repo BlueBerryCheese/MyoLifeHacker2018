@@ -93,7 +93,7 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
     private boolean first=true;
     private boolean myoConnection;
     private static final int CURRENT_ACTIVITY = 0;
-
+    private Toast toast;
     private static final String TAG = "CameraActivity";
 //    private Handler mHandler;
     private TextView gestureText;
@@ -492,7 +492,10 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
                     capturePhoto();
 //                    smoothcount[gestureNum]=-1;
                     resetSmoothCount();
-                    Toasty.normal(getBaseContext(),"Capture Photo", Toast.LENGTH_SHORT, icon_1).show();
+                    if (toast!=null)
+                        toast.cancel();
+                    toast =Toasty.normal(getBaseContext(),"Capture Photo", Toast.LENGTH_SHORT, icon_1);
+                    toast.show();
                 }
 
 
@@ -510,22 +513,34 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
                         case OFF:
                             camera.setFlash(Flash.ON);
                             currentCameraFlash = Flash.ON;
-                            Toasty.normal(getBaseContext(),"Flash mode off", Toast.LENGTH_SHORT, icon_2).show();
+                            if (toast!=null)
+                                toast.cancel();
+                            toast =Toasty.normal(getBaseContext(),"Flash mode off", Toast.LENGTH_SHORT, icon_2);
+                            toast.show();
                             break;
                         case ON:
                             camera.setFlash(Flash.AUTO);
                             currentCameraFlash = Flash.AUTO;
-                            Toasty.normal(getBaseContext(),"Flash mode Auto", Toast.LENGTH_SHORT, icon_2).show();
+                            if (toast!=null)
+                                toast.cancel();
+                            toast =Toasty.normal(getBaseContext(),"Flash mode Auto", Toast.LENGTH_SHORT, icon_2);
+                            toast.show();
                             break;
                         case AUTO:
                             camera.setFlash(Flash.TORCH);
                             currentCameraFlash = Flash.TORCH;
-                            Toasty.normal(getBaseContext(),"Flash mode Touch", Toast.LENGTH_SHORT, icon_2).show();
+                            if (toast!=null)
+                                toast.cancel();
+                            toast =Toasty.normal(getBaseContext(),"Flash mode Touch", Toast.LENGTH_SHORT, icon_2);
+                            toast.show();
                             break;
                         case TORCH:
                             camera.setFlash(Flash.OFF);
                             currentCameraFlash = Flash.OFF;
-                            Toasty.normal(getBaseContext(),"Flash mode off", Toast.LENGTH_SHORT, icon_2).show();
+                            if (toast!=null)
+                                toast.cancel();
+                            toast =Toasty.normal(getBaseContext(),"Flash mode off", Toast.LENGTH_SHORT, icon_2);
+                            toast.show();
                             break;
                         default:
                             break;
@@ -547,6 +562,10 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
 
                     toggleCamera();
 
+                    if (toast!=null)
+                        toast.cancel();
+                    toast = Toasty.normal(getBaseContext(),"Camera Switch", Toast.LENGTH_SHORT, icon_3);
+                    toast.show();
 //                    switch(currentGrid){
 //                        case OFF:
 //                            camera.setGrid(Grid.DRAW_3X3);
@@ -581,11 +600,17 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
                     if(videoRecording == false){
                         videoRecording = true;
                         captureVideo();
-                        Toasty.normal(getBaseContext(),"Video record start", Toast.LENGTH_SHORT, icon_4).show();
+                        if (toast!=null)
+                            toast.cancel();
+                        toast = Toasty.normal(getBaseContext(),"Video record start", Toast.LENGTH_SHORT, icon_4);
+                        toast.show();
                     } else if(videoRecording == true){
                         videoRecording = false;
                         camera.stopCapturingVideo();
-                        Toasty.normal(getBaseContext(),"Video record stop", Toast.LENGTH_SHORT, icon_4).show();
+                        if (toast!=null)
+                            toast.cancel();
+                        toast = Toasty.normal(getBaseContext(),"Video record stop", Toast.LENGTH_SHORT, icon_4);
+                        toast.show();
                          }
 
 //                    smoothcount[gestureNum]=-1;
@@ -598,7 +623,10 @@ public class CameraActivity extends AppCompatActivity implements View.OnClickLis
                     EventBus.getDefault().post(new ServiceEvent.VibrateEvent(recog_vibrate_state));
                     //Restart lock Timer so user can use gesture continuously
                     EventBus.getDefault().post(new ServiceEvent.restartLockTimerEvent(ADDITIONAL_DELAY));
-                    Toasty.normal(getBaseContext(),"Go back", Toast.LENGTH_SHORT, icon_6).show();
+                    if (toast!=null)
+                        toast.cancel();
+                    toast = Toasty.normal(getBaseContext(),"Go back", Toast.LENGTH_SHORT, icon_6);
+                    toast.show();
                     finish();
                     resetSmoothCount();
 //                    Toasty.normal(getBaseContext(),"Capture Photo", Toast.LENGTH_SHORT, icon_1).show();

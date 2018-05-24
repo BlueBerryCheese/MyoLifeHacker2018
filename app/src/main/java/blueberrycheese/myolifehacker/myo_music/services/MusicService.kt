@@ -62,6 +62,7 @@ class MusicService : Service(), MediaPlayer.OnPreparedListener, MediaPlayer.OnEr
         private var mAudioManager: AudioManager? = null
         private var mCoverArtHeight = 0
         private var mOreoFocusHandler: OreoAudioFocusHandler? = null
+        private var toast: Toast? = null
 
         private var mWasPlayingAtFocusLost = false
         private var mPlayOnPrepare = true
@@ -764,7 +765,11 @@ class MusicService : Service(), MediaPlayer.OnPreparedListener, MediaPlayer.OnEr
                     //Restart lock Timer so user can use gesture continuously
                     EventBus.getDefault().post(ServiceEvent.restartLockTimerEvent(ADDITIONAL_DELAY))
 
-                    Toasty.normal(this!!, "Play/Pause", Toast.LENGTH_SHORT, icon_1).show()
+                    if (toast != null) {
+                        toast!!.cancel()
+                    }
+                    toast = Toasty.normal(this!!, "Play/Pause", Toast.LENGTH_SHORT, icon_1)
+                    toast!!.show()
 //                    smoothcount[gestureNum] = -1
                     resetSmoothCount()
                 }
@@ -789,7 +794,11 @@ class MusicService : Service(), MediaPlayer.OnPreparedListener, MediaPlayer.OnEr
                     //Restart lock Timer so user can use gesture continuously
                     EventBus.getDefault().post(ServiceEvent.restartLockTimerEvent(ADDITIONAL_DELAY))
 
-                    Toasty.normal(this!!, "Previous", Toast.LENGTH_SHORT, icon_2).show()
+                    if (toast != null) {
+                        toast!!.cancel()
+                    }
+                    toast = Toasty.normal(this!!, "Previous", Toast.LENGTH_SHORT, icon_2)
+                    toast!!.show()
 //                    smoothcount[gestureNum] = -1
                     resetSmoothCount()
                 }
@@ -814,7 +823,11 @@ class MusicService : Service(), MediaPlayer.OnPreparedListener, MediaPlayer.OnEr
                     //Restart lock Timer so user can use gesture continuously
                     EventBus.getDefault().post(ServiceEvent.restartLockTimerEvent(ADDITIONAL_DELAY))
 
-                    Toasty.normal(this!!, "Next", Toast.LENGTH_SHORT, icon_3).show()
+                    if (toast != null) {
+                        toast!!.cancel()
+                    }
+                    toast = Toasty.normal(this!!, "Next", Toast.LENGTH_SHORT, icon_3)
+                    toast!!.show()
 //                    smoothcount[gestureNum] = -1
                     resetSmoothCount()
                 }

@@ -5,7 +5,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,6 +26,7 @@ public class TestPageActivity extends AppCompatActivity {
 
     private TextView LogTextView;
     private TextView gestureTextView2;
+    private Toast toast;  //////////
 
     private static final int CURRENT_ACTIVITY = 3;
 
@@ -72,6 +75,8 @@ public class TestPageActivity extends AppCompatActivity {
         EventBus.getDefault().postSticky(new ServiceEvent.currentActivity_Event(-1));
         super.onPause();
     }
+
+
 
 
 

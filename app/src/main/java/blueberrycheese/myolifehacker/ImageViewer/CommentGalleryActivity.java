@@ -46,6 +46,7 @@ public class CommentGalleryActivity extends AppCompatActivity {
     private int lock_vibrate_state;
     private int recog_vibrate_state;
     private int conn_vibrate_state;
+    private Toast toast;
     private SharedPreferences sharedPreferences;  //sharePreference호출 후 적용
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -190,7 +191,10 @@ public class CommentGalleryActivity extends AppCompatActivity {
                     mGallery.setData((CommentGalleryContainer) getIntent().getSerializableExtra(GalleryActivity.COMMENT_LIST),numCounter);
                     resetSmoothCount();
                     finish();
-                    Toasty.normal(getBaseContext(),"Close picture", Toast.LENGTH_SHORT, icon_1).show();
+                    if (toast!=null)
+                        toast.cancel();
+                    toast = Toasty.normal(getBaseContext(),"Close picture", Toast.LENGTH_SHORT, icon_1);
+                    toast.show();
                 }
 
                 break;
@@ -210,7 +214,10 @@ public class CommentGalleryActivity extends AppCompatActivity {
                 EventBus.getDefault().post(new ServiceEvent.VibrateEvent(recog_vibrate_state));
                 //Restart lock Timer so user can use gesture continuously
                 EventBus.getDefault().post(new ServiceEvent.restartLockTimerEvent(ADDITIONAL_DELAY));
-                Toasty.normal(getBaseContext(),"Previous picture", Toast.LENGTH_SHORT, icon_2).show();
+                if (toast!=null)
+                    toast.cancel();
+                toast = Toasty.normal(getBaseContext(),"Previous picture", Toast.LENGTH_SHORT, icon_2);
+                toast.show();
 
 
                 break;
@@ -230,7 +237,10 @@ public class CommentGalleryActivity extends AppCompatActivity {
                 EventBus.getDefault().post(new ServiceEvent.VibrateEvent(recog_vibrate_state));
                 //Restart lock Timer so user can use gesture continuously
                 EventBus.getDefault().post(new ServiceEvent.restartLockTimerEvent(ADDITIONAL_DELAY));
-                Toasty.normal(getBaseContext(),"Next Picture", Toast.LENGTH_SHORT, icon_3).show();
+                if (toast!=null)
+                    toast.cancel();
+                toast = Toasty.normal(getBaseContext(),"Next Picture", Toast.LENGTH_SHORT, icon_3);
+                toast.show();
 
                 break;
 
@@ -245,7 +255,10 @@ public class CommentGalleryActivity extends AppCompatActivity {
                     EventBus.getDefault().post(new ServiceEvent.VibrateEvent(recog_vibrate_state));
                     //Restart lock Timer so user can use gesture continuously
                     EventBus.getDefault().post(new ServiceEvent.restartLockTimerEvent(ADDITIONAL_DELAY));
-                    Toasty.normal(getBaseContext(),"Go back", Toast.LENGTH_SHORT, icon_6).show();
+                    if (toast!=null)
+                        toast.cancel();
+                    toast = Toasty.normal(getBaseContext(),"Go back", Toast.LENGTH_SHORT, icon_6);
+                    toast.show();
                     finish();
 //                    Toasty.normal(getBaseContext(),"Open picture", Toast.LENGTH_SHORT, icon_1).show();
 
