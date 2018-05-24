@@ -180,13 +180,15 @@ public class CommentGalleryActivity extends AppCompatActivity {
 //                    mGallery.setData((CommentGalleryContainer) getIntent().getSerializableExtra(GalleryActivity.COMMENT_LIST),numCounter)
 //                }
 //                smoothcount[gestureNum]++;
-                //Send Vibration Event
-                EventBus.getDefault().post(new ServiceEvent.VibrateEvent(recog_vibrate_state));
-                //Restart lock Timer so user can use gesture continuously
-                EventBus.getDefault().post(new ServiceEvent.restartLockTimerEvent(ADDITIONAL_DELAY));
+
 
                 smoothcount[gestureNum]++;
                 if(smoothcount[gestureNum]>1) {
+                    //Send Vibration Event
+                    EventBus.getDefault().post(new ServiceEvent.VibrateEvent(recog_vibrate_state));
+                    //Restart lock Timer so user can use gesture continuously
+                    EventBus.getDefault().post(new ServiceEvent.restartLockTimerEvent(ADDITIONAL_DELAY));
+
                     numCounter--;
                     mGallery.setData((CommentGalleryContainer) getIntent().getSerializableExtra(GalleryActivity.COMMENT_LIST),numCounter);
                     resetSmoothCount();
@@ -195,25 +197,27 @@ public class CommentGalleryActivity extends AppCompatActivity {
                         toast.cancel();
                     toast = Toasty.normal(getBaseContext(),"Close picture", Toast.LENGTH_SHORT, icon_1);
                     toast.show();
+
                 }
 
                 break;
 
             case 1 :
-
                 smoothcount[gestureNum]++;
                 if(numCounter<0){
                     numCounter=max_size-1;
                 }
                 if(smoothcount[gestureNum]>1) {
+                    //Send Vibration Event
+                    EventBus.getDefault().post(new ServiceEvent.VibrateEvent(recog_vibrate_state));
+                    //Restart lock Timer so user can use gesture continuously
+                    EventBus.getDefault().post(new ServiceEvent.restartLockTimerEvent(ADDITIONAL_DELAY));
+
                     numCounter--;
                     mGallery.setData((CommentGalleryContainer) getIntent().getSerializableExtra(GalleryActivity.COMMENT_LIST),numCounter);
                     resetSmoothCount();
                 }
-                //Send Vibration Event
-                EventBus.getDefault().post(new ServiceEvent.VibrateEvent(recog_vibrate_state));
-                //Restart lock Timer so user can use gesture continuously
-                EventBus.getDefault().post(new ServiceEvent.restartLockTimerEvent(ADDITIONAL_DELAY));
+
                 if (toast!=null)
                     toast.cancel();
                 toast = Toasty.normal(getBaseContext(),"Previous picture", Toast.LENGTH_SHORT, icon_2);
@@ -229,14 +233,15 @@ public class CommentGalleryActivity extends AppCompatActivity {
                     numCounter=0;
                 }
                 if(smoothcount[gestureNum]>1) {
+                    //Send Vibration Event
+                    EventBus.getDefault().post(new ServiceEvent.VibrateEvent(recog_vibrate_state));
+                    //Restart lock Timer so user can use gesture continuously
+                    EventBus.getDefault().post(new ServiceEvent.restartLockTimerEvent(ADDITIONAL_DELAY));
                     numCounter++;
                     mGallery.setData((CommentGalleryContainer) getIntent().getSerializableExtra(GalleryActivity.COMMENT_LIST),numCounter);
                     resetSmoothCount();
                 }
-                //Send Vibration Event
-                EventBus.getDefault().post(new ServiceEvent.VibrateEvent(recog_vibrate_state));
-                //Restart lock Timer so user can use gesture continuously
-                EventBus.getDefault().post(new ServiceEvent.restartLockTimerEvent(ADDITIONAL_DELAY));
+
                 if (toast!=null)
                     toast.cancel();
                 toast = Toasty.normal(getBaseContext(),"Next Picture", Toast.LENGTH_SHORT, icon_3);
