@@ -40,7 +40,7 @@ public class MyoService extends Service {
     private static final String TAG = "Myo_Service";
     //Previous SCAN_PERIOD was 5000.
     private static final long SCAN_PERIOD = 4500;
-    private static final int TIMETOLOCK = 8000;
+    private static int TIMETOLOCK = 8000;
 
     private static final int VIBRATION_A = 1;
     private static final int VIBRATION_B = 2;
@@ -104,7 +104,7 @@ public class MyoService extends Service {
         locked = getResources().getDrawable(R.drawable.locked);
         unlocked = getResources().getDrawable(R.drawable.unlocked);
         setting_vibrate();
-
+        TIMETOLOCK = Integer.parseInt(sharedPreferences.getString("recognizing_lock_count","8"))*1000;
     }
 
     @Override
@@ -479,6 +479,7 @@ public class MyoService extends Service {
     @Subscribe(sticky = true)
     public void setting_event(ServiceEvent.SettingEvent event){
         Log.d(TAG, "setting_event" + event.lock_vibrate_p + ","+ event.recog_vibrate_p + ","+ event.conn_vibrate_p + "," + event.recognizing_Num + "," +event.is_vibrate);
+
         lock_vibrate_state=3;
         recog_vibrate_state=3;
         conn_vibrate_state=3;
@@ -507,6 +508,7 @@ public class MyoService extends Service {
         saveMethod  = new GestureSaveMethod(-1, getApplicationContext(),1);
         if (saveMethod.getSaveState() == GestureSaveMethod.SaveState.Have_Saved) {
             int recog_cnt = Integer.parseInt(sharedPreferences.getString("recognizing_count","50"));
+            TIMETOLOCK = Integer.parseInt(sharedPreferences.getString("recognizing_lock_count","8"))*1000;
             detectMethod = new GestureDetectMethod(mHandler, saveMethod.getCompareDataList(),recog_cnt);
             detectModel = new GestureDetectModel(detectMethod);
             model = detectModel;
