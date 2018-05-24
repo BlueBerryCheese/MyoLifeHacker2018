@@ -55,11 +55,13 @@ public class SettingPreferenceFragment extends PreferenceFragment {
         }
 
         if (!prefs.getString("recognizing_count", "").equals("")) {
-            recognizing_count_Preference.setSummary(prefs.getString("recognizing_count", "30"));
+       //     recognizing_count_Preference.setSummary(prefs.getString("recognizing_count", "30"));
+            recognizing_count_Preference.setSummary(recognizing_count_Preference.getEntry());
 
         }
         if (!prefs.getString("recognizing_lock_count", "").equals("")) {
-            recognizing_lock_count_Preference.setSummary(prefs.getString("recognizing_lock_count", "8"));
+            //recognizing_lock_count_Preference.setSummary(prefs.getString("recognizing_lock_count", "8"));
+            recognizing_lock_count_Preference.setSummary(recognizing_lock_count_Preference.getEntry());
         }
         prefs.registerOnSharedPreferenceChangeListener(prefListener);
     }
@@ -103,11 +105,13 @@ public class SettingPreferenceFragment extends PreferenceFragment {
             }
 
             if(key.equals("recognizing_count")){
-                recognizing_count_Preference.setSummary(prefs.getString("recognizing_count","30"));
+                //recognizing_count_Preference.setSummary(prefs.getString("recognizing_count_value","30"));
+                recognizing_count_Preference.setSummary(recognizing_count_Preference.getEntry());
                 EventBus.getDefault().post(new ServiceEvent.reCreateDetectM_Event());
             }
             if (!prefs.getString("recognizing_lock_count", "").equals("")) {
-                recognizing_lock_count_Preference.setSummary(prefs.getString("recognizing_lock_count", "8"));
+                //recognizing_lock_count_Preference.setSummary(prefs.getString("recognizing_lock_count", "8"));
+                recognizing_lock_count_Preference.setSummary(recognizing_lock_count_Preference.getEntry());
                 EventBus.getDefault().post(new ServiceEvent.reCreateDetectM_Event());
             }
 
