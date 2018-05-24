@@ -54,22 +54,41 @@
         </activity>
         <activity
             android:name=".ScanListActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:launchMode="singleTop"
+            android:showWhenLocked="true"
+            android:turnScreenOn="true"/>
+
         <activity
             android:name=".SystemControl.SystemControlActivity"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
             android:name=".CameraView.CameraActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:launchMode="singleTop"
+            android:showWhenLocked="true"
+            android:turnScreenOn="true"/>
         <activity android:name=".CameraView.PicturePreviewActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar"
+            android:launchMode="singleTop"
+            android:showWhenLocked="true"
+            android:turnScreenOn="true"/>
         <activity android:name=".CameraView.VideoPreviewActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar"
+            android:launchMode="singleTop"
+            android:showWhenLocked="true"
+            android:turnScreenOn="true"/>
         <activity android:name=".ImageViewer.CommentGalleryActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:launchMode="singleTop"
+            android:showWhenLocked="true"
+            android:turnScreenOn="true"/>
         <activity android:name=".ImageViewer.GalleryActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:launchMode="singleTop"
+            android:showWhenLocked="true"
+            android:turnScreenOn="true"/>
         <service
             android:name=".myo_manage.MyoService"
             android:enabled="true"
@@ -147,7 +166,8 @@
         <activity
             android:name=".myo_music.activities.activitys.SettingsActivity"
             android:label="@string/settings"
-            android:parentActivityName=".myo_music.activities.activitys.MainActivity"/>
+            android:parentActivityName=".myo_music.activities.activitys.MainActivity"
+            />
 
         <activity
             android:name=".myo_music.activities.activitys.PlaylistsActivity"
@@ -156,10 +176,16 @@
 
         <activity android:name=".TutorialActivity"
             android:label="tutorial"
-            android:theme="@style/Theme.Transparent_tutorial"/>
+            android:theme="@style/Theme.Transparent_tutorial"
+            android:launchMode="singleTop"
+            android:showWhenLocked="true"
+            android:turnScreenOn="true"/>
         <activity android:name=".TestPageActivity"
             android:label="TestPage"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:launchMode="singleTop"
+            android:showWhenLocked="true"
+            android:turnScreenOn="true"/>
 
         <service
             android:name=".myo_music.activities.services.MusicService"
