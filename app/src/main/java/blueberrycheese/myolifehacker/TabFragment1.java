@@ -110,8 +110,8 @@ public class TabFragment1 extends Fragment {
     private boolean myoConnection;
     private boolean myoConnection_lock;
     private boolean first=true;
-
-
+    private static final int CURRENT_ACTIVITY = 4;
+    private static boolean islock=true;
     int[] smoothcount = new int[6];
     private int gestureNum = -1;
 
@@ -151,7 +151,7 @@ public class TabFragment1 extends Fragment {
         icon_4 = getResources().getDrawable(R.drawable.gesture_4_w);
         icon_5 = getResources().getDrawable(R.drawable.gesture_5_w);
         icon_6 = getResources().getDrawable(R.drawable.gesture_6_w);
-
+        islock=true;
     }
     public Button btn_hello;
     @Override
@@ -378,11 +378,12 @@ public class TabFragment1 extends Fragment {
     @Override
     public void onResume(){
         super.onResume();
-
+        //Log.d("flag_test",islock?"lock":"unlock");
         try {
             EventBus.getDefault().register(this);           //이벤트 버스 다시 키는 역활
         }catch (Exception e){}
-
+        //Post event to notify that user's watching the activity.
+        EventBus.getDefault().postSticky(new ServiceEvent.currentActivity_Event(CURRENT_ACTIVITY));
     }
 
 //    @Subscribe(threadMode = ThreadMode.MAIN)
@@ -520,7 +521,7 @@ public class TabFragment1 extends Fragment {
         Log.d("MenuEvent","MenuEvent Gesture num : "+event.gestureNumber);
         switch(gestureNum){
             case 0 :
-                if(smoothcount[gestureNum]>1) {
+                if(islock&&smoothcount[gestureNum]>1) {
                     circleMenu.onOpenAnimationStart();
                     circleMenu.toggle();
                     circleMenu.onOpenAnimationEnd();
@@ -531,16 +532,47 @@ public class TabFragment1 extends Fragment {
                     EventBus.getDefault().post(new ServiceEvent.restartLockTimerEvent(ADDITIONAL_DELAY));
 
                     smoothcount[gestureNum]=-1;
+                    islock = false;
                     resetSmoothCount();
                    // Toasty.success(getContext(), "Open menu", Toast.LENGTH_SHORT, false).show();
                     Toasty.normal(getContext(),"Open menu",Toast.LENGTH_SHORT, icon_1).show();
+                }
+                if(!islock&&smoothcount[gestureNum]>1) {
+                    circleMenu.onOpenAnimationStart();
+                    circleMenu.toggle();
+                    circleMenu.onOpenAnimationEnd();
+
+                    //Send Vibration Event
+                    EventBus.getDefault().post(new ServiceEvent.VibrateEvent(VIBRATION_A));
+                    //Restart lock Timer so user can use gesture continuously
+                    EventBus.getDefault().post(new ServiceEvent.restartLockTimerEvent(ADDITIONAL_DELAY));
+
+                    smoothcount[gestureNum]=-1;
+                    islock = true;
+                    resetSmoothCount();
+                    // Toasty.success(getContext(), "Open menu", Toast.LENGTH_SHORT, false).show();
+                    Toasty.normal(getContext(),"Close menu",Toast.LENGTH_SHORT, icon_1).show();
                 }
                 smoothcount[gestureNum]++;
 
                 break;
 
             case 1 :
-                if(smoothcount[gestureNum]>1) {
+                if(!islock&&smoothcount[gestureNum]>1) {
+                    circleMenu.onSelectAnimationStart(circleMenuButton_gallery);
+                    circleMenu.onSelectAnimationEnd(circleMenuButton_gallery);
+
+                    //Send Vibration Event
+
+                    EventBus.getDefault().post(new ServiceEvent.VibrateEvent(VIBRATION_A));
+                    //Restart lock Timer so user can use gesture continuously
+                    EventBus.getDefault().post(new ServiceEvent.restartLockTimerEvent(ADDITIONAL_DELAY));
+
+                    resetSmoothCount();
+                    smoothcount[gestureNum]=-1;
+                    Toasty.normal(getContext(),"Open gallery",Toast.LENGTH_SHORT, icon_4).show();
+                }
+                if(islock&&smoothcount[gestureNum]>4) {
                     circleMenu.onSelectAnimationStart(circleMenuButton_gallery);
                     circleMenu.onSelectAnimationEnd(circleMenuButton_gallery);
 
@@ -558,7 +590,21 @@ public class TabFragment1 extends Fragment {
                 break;
 
             case 2 :
-                if(smoothcount[gestureNum]>1) {
+                if(!islock&&smoothcount[gestureNum]>1) {
+                    circleMenu.onSelectAnimationStart(circleMenuButton_camera);
+                    circleMenu.onSelectAnimationEnd(circleMenuButton_camera);
+
+                    //Send Vibration Event
+
+                    EventBus.getDefault().post(new ServiceEvent.VibrateEvent(VIBRATION_A));
+                    //Restart lock Timer so user can use gesture continuously
+                    EventBus.getDefault().post(new ServiceEvent.restartLockTimerEvent(ADDITIONAL_DELAY));
+
+                    resetSmoothCount();
+                    smoothcount[gestureNum]=-1;
+                    Toasty.normal(getContext(),"Open camera",Toast.LENGTH_SHORT, icon_3).show();
+                }
+                if(islock&&smoothcount[gestureNum]>4) {
                     circleMenu.onSelectAnimationStart(circleMenuButton_camera);
                     circleMenu.onSelectAnimationEnd(circleMenuButton_camera);
 
@@ -577,7 +623,22 @@ public class TabFragment1 extends Fragment {
 
             case 3 :
 
-                if(smoothcount[gestureNum]>1) {
+                if(!islock&&smoothcount[gestureNum]>1) {
+                    circleMenu.onSelectAnimationStart(circleMenuButton_volume);
+                    circleMenu.onSelectAnimationEnd(circleMenuButton_volume);
+
+                    //Send Vibration Event
+
+                    EventBus.getDefault().post(new ServiceEvent.VibrateEvent(VIBRATION_A));
+                    //Restart lock Timer so user can use gesture continuously
+                    EventBus.getDefault().post(new ServiceEvent.restartLockTimerEvent(ADDITIONAL_DELAY));
+
+                    resetSmoothCount();
+                    smoothcount[gestureNum]=-1;
+
+                    Toasty.normal(getContext(),"Open nterior function",Toast.LENGTH_SHORT, icon_2).show();
+                }
+                if(islock&&smoothcount[gestureNum]>4) {
                     circleMenu.onSelectAnimationStart(circleMenuButton_volume);
                     circleMenu.onSelectAnimationEnd(circleMenuButton_volume);
 
@@ -595,7 +656,7 @@ public class TabFragment1 extends Fragment {
                 smoothcount[gestureNum]++;
                 break;
             case 5 :
-                if(smoothcount[gestureNum]>1) {
+                if(!islock&&smoothcount[gestureNum]>1) {
                 circleMenu.onSelectAnimationStart(circleMenuButton_music);
                 circleMenu.onSelectAnimationEnd(circleMenuButton_music);
 
@@ -609,6 +670,20 @@ public class TabFragment1 extends Fragment {
                 smoothcount[gestureNum]=-1;
                 Toasty.normal(getContext(),"Open music",Toast.LENGTH_SHORT, icon_5).show();
             }
+                if(islock&&smoothcount[gestureNum]>4) {
+                    circleMenu.onSelectAnimationStart(circleMenuButton_music);
+                    circleMenu.onSelectAnimationEnd(circleMenuButton_music);
+
+                    //Send Vibration Event
+
+                    EventBus.getDefault().post(new ServiceEvent.VibrateEvent(VIBRATION_A));
+                    //Restart lock Timer so user can use gesture continuously
+                    EventBus.getDefault().post(new ServiceEvent.restartLockTimerEvent(ADDITIONAL_DELAY));
+
+                    resetSmoothCount();
+                    smoothcount[gestureNum]=-1;
+                    Toasty.normal(getContext(),"Open music",Toast.LENGTH_SHORT, icon_5).show();
+                }
                 smoothcount[gestureNum]++;
                 break;
             default :

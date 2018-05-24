@@ -112,7 +112,7 @@ public class TutorialActivity extends Activity {
                 tutorialpage_textview.setText(" ");
                 normalText1 = "손을 ";
                 boldText = "안으로";
-                normalText2 = "구부리면\n볼륨/밝기 조작을 시작합니다.";
+                normalText2 = "구부리면\n갤러리를 시작합니다.";
                 str = new SpannableString(normalText1+ boldText + normalText2);
                 btn_pointer.setVisibility(View.INVISIBLE);
                 imageGesture_view.setVisibility(View.VISIBLE);
@@ -154,7 +154,7 @@ public class TutorialActivity extends Activity {
                 tutorialpage_textview.setText(" ");
                 normalText1 = "";
                 boldText = "보자기";
-                normalText2 = "를 내면\n갤러리를 시작합니다.";
+                normalText2 = "를 내면\n볼륨/밝기 조작를 시작합니다.";
                 str = new SpannableString(normalText1+ boldText + normalText2);
                 btn_pointer.setVisibility(View.INVISIBLE);
                 imageGesture_view.setVisibility(View.VISIBLE);

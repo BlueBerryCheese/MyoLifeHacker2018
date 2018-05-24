@@ -10,6 +10,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.PixelFormat;
@@ -18,6 +19,7 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
+import android.os.PowerManager;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
@@ -38,7 +40,7 @@ public class MyoService extends Service {
     private static final String TAG = "Myo_Service";
     //Previous SCAN_PERIOD was 5000.
     private static final long SCAN_PERIOD = 4500;
-    private static final int TIMETOLOCK = 8000;
+    private static int TIMETOLOCK = 8000;
 
     private static final int VIBRATION_A = 1;
     private static final int VIBRATION_B = 2;
@@ -102,7 +104,7 @@ public class MyoService extends Service {
         locked = getResources().getDrawable(R.drawable.locked);
         unlocked = getResources().getDrawable(R.drawable.unlocked);
         setting_vibrate();
-
+        TIMETOLOCK = Integer.parseInt(sharedPreferences.getString("recognizing_lock_count","8"))*1000;
     }
 
     @Override
@@ -295,15 +297,19 @@ public class MyoService extends Service {
         }else{
             switch(gestureNum) {
                 case LITTLEFINGER:
-                    if(currentActivity == -1){
-                        //test
-                        EventBus.getDefault().post(new ServiceEvent.startActivity_Event());
-                    }
 
                     if(currentActivity == MUSIC_ACTIVITY){
                         EventBus.getDefault().post(new ServiceEvent.GestureEvent(gestureNum));
                     }else{
                         smoothcount[gestureNum]++;
+
+                        //When screen is off or no activity is on. It will start main activity.
+                        if(currentActivity == -1 && smoothcount[gestureNum] > 1){
+                            Log.d(TAG,"Start main activity... - by little finger");
+                            EventBus.getDefault().post(new ServiceEvent.startActivity_Event());
+                            resetSmoothCount();
+                            return;
+                        }
 
                         if (smoothcount[gestureNum] > 2) {
                             if(!myoApp.isUnlocked()){
@@ -433,8 +439,9 @@ public class MyoService extends Service {
 
     @Subscribe(sticky = true)
     public void setCurrentActivity(ServiceEvent.currentActivity_Event event){
+        Log.e(TAG,"Set current activity from: " + this.currentActivity + "  to : " + event.currentActivity);
         currentActivity = event.currentActivity;
-        Log.e(TAG,"Set current activity to : " + currentActivity);
+
     }
 
     @Subscribe(sticky = true)
@@ -472,6 +479,7 @@ public class MyoService extends Service {
     @Subscribe(sticky = true)
     public void setting_event(ServiceEvent.SettingEvent event){
         Log.d(TAG, "setting_event" + event.lock_vibrate_p + ","+ event.recog_vibrate_p + ","+ event.conn_vibrate_p + "," + event.recognizing_Num + "," +event.is_vibrate);
+
         lock_vibrate_state=3;
         recog_vibrate_state=3;
         conn_vibrate_state=3;
@@ -499,7 +507,8 @@ public class MyoService extends Service {
         Log.d(TAG,"Recreating Detect for using new model");
         saveMethod  = new GestureSaveMethod(-1, getApplicationContext(),1);
         if (saveMethod.getSaveState() == GestureSaveMethod.SaveState.Have_Saved) {
-            int recog_cnt = Integer.parseInt(sharedPreferences.getString("recognizing_count","30"));
+            int recog_cnt = Integer.parseInt(sharedPreferences.getString("recognizing_count","50"));
+            TIMETOLOCK = Integer.parseInt(sharedPreferences.getString("recognizing_lock_count","8"))*1000;
             detectMethod = new GestureDetectMethod(mHandler, saveMethod.getCompareDataList(),recog_cnt);
             detectModel = new GestureDetectModel(detectMethod);
             model = detectModel;
@@ -512,9 +521,13 @@ public class MyoService extends Service {
 
     @Subscribe
     public void startActivity(ServiceEvent.startActivity_Event event) {
+        PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+        PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, "My Tag");
+        wl.acquire(3000);
         Intent actIntent = new Intent(this, MainActivity.class);
         actIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(actIntent);
+        wl.release();
     }
 
 

@@ -7,10 +7,45 @@
     </string-array>
 
     <string-array name="recognizing_count">
+        <item>8단계</item>
+        <item>7단계</item>
+        <item>6단계</item>
+        <item>5단계</item>
+        <item>4단계</item>
+        <item>3단계</item>
+        <item>2단계</item>
+        <item>1단계</item>
+    </string-array>
+    <string-array name="recognizing_count_value">
+        <item>100</item>
+        <item>70</item>
+        <item>60</item>
         <item>50</item>
         <item>40</item>
         <item>30</item>
         <item>20</item>
         <item>10</item>
+    </string-array>
+
+    <string-array name="recognizing_lock_count">
+        <item>14초</item>
+        <item>12초</item>
+        <item>10초</item>
+        <item>8초</item>
+        <item>6초</item>
+        <item>5초</item>
+        <item>4초</item>
+        <item>3초</item>
+    </string-array>
+
+    <string-array name="recognizing_lock_count_value">
+        <item>14</item>
+        <item>12</item>
+        <item>10</item>
+        <item>8</item>
+        <item>6</item>
+        <item>5</item>
+        <item>4</item>
+        <item>3</item>
     </string-array>
 </resources>

@@ -24,6 +24,7 @@ public class SettingPreferenceFragment extends PreferenceFragment {
     ListPreference recog_vibratePowerPreference;
     ListPreference conn_vibratePowerPreference;
     ListPreference recognizing_count_Preference;
+    ListPreference recognizing_lock_count_Preference;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState){
@@ -35,7 +36,7 @@ public class SettingPreferenceFragment extends PreferenceFragment {
         recog_vibratePowerPreference  = (ListPreference)findPreference("recog_vibrate_power");
         conn_vibratePowerPreference  = (ListPreference)findPreference("conn_vibrate_power");
         recognizing_count_Preference = (ListPreference)findPreference("recognizing_count");
-
+        recognizing_lock_count_Preference = (ListPreference)findPreference("recognizing_lock_count") ;
         prefs  = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
         if (prefs.getBoolean("vibrate",true)) {
@@ -54,8 +55,13 @@ public class SettingPreferenceFragment extends PreferenceFragment {
         }
 
         if (!prefs.getString("recognizing_count", "").equals("")) {
-            recognizing_count_Preference.setSummary(prefs.getString("recognizing_count", "30"));
+       //     recognizing_count_Preference.setSummary(prefs.getString("recognizing_count", "30"));
+            recognizing_count_Preference.setSummary(recognizing_count_Preference.getEntry());
 
+        }
+        if (!prefs.getString("recognizing_lock_count", "").equals("")) {
+            //recognizing_lock_count_Preference.setSummary(prefs.getString("recognizing_lock_count", "8"));
+            recognizing_lock_count_Preference.setSummary(recognizing_lock_count_Preference.getEntry());
         }
         prefs.registerOnSharedPreferenceChangeListener(prefListener);
     }
@@ -99,7 +105,13 @@ public class SettingPreferenceFragment extends PreferenceFragment {
             }
 
             if(key.equals("recognizing_count")){
-                recognizing_count_Preference.setSummary(prefs.getString("recognizing_count","30"));
+                //recognizing_count_Preference.setSummary(prefs.getString("recognizing_count_value","30"));
+                recognizing_count_Preference.setSummary(recognizing_count_Preference.getEntry());
+                EventBus.getDefault().post(new ServiceEvent.reCreateDetectM_Event());
+            }
+            if (!prefs.getString("recognizing_lock_count", "").equals("")) {
+                //recognizing_lock_count_Preference.setSummary(prefs.getString("recognizing_lock_count", "8"));
+                recognizing_lock_count_Preference.setSummary(recognizing_lock_count_Preference.getEntry());
                 EventBus.getDefault().post(new ServiceEvent.reCreateDetectM_Event());
             }
 
