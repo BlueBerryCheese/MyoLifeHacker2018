@@ -1,4 +1,4 @@
-![Myo Life Hacker](app\src\main\res\mipmap-xxxhdpi\ic_launcher.png)
+![Myo Life Hacker](app/src/main/res/mipmap-xxxhdpi/ic_launcher.png)
 # Myo Life Hacker
 
 This repository contains the source code of Android application for Capstone design project.
